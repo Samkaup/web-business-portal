@@ -21,7 +21,7 @@ export default async function Item({
           Back to dashboard
         </Link>
         <h1 className="text-lg text-black">Item</h1>
-        <p>Name: {item.name}</p>
+        <p>Name sucka: {item.name}</p>
         <p>Description: {item.description}</p>
       </div>
     );
