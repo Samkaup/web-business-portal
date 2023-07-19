@@ -22,6 +22,12 @@ export default {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: '*.samkaup.is',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
 };

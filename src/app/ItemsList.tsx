@@ -12,7 +12,7 @@ export const ItemsList = ({
   return (
     <div className="space-y-8">
       <div className="flex justify-between items-baseline">
-        <h1 className="mt-1 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
+        <h1 className="mt-1 text-xl font-bold tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
           Items
         </h1>
         <div>
