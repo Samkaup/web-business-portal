@@ -1,7 +1,7 @@
 'use client';
 import { Table } from '@/types';
 import Link from 'next/link';
-import { useItems } from './utils/react-query-hooks';
+import { useItems } from '@/utils/react-query-hooks';
 
 export const ItemsList = ({
   initialItems,

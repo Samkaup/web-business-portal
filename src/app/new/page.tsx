@@ -1,6 +1,6 @@
 'use client';
 
-import { useInsertItem } from '../utils/react-query-hooks';
+import { useInsertItem } from '@/utils/react-query-hooks';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 

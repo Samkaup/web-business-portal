@@ -1,7 +1,7 @@
 import { ClientLayout } from './ClientLayout';
-import Footer from './footer/page';
+import Footer from './footer';
 import './globals.css';
-import Navigation from './navigation/page';
+import Navigation from './navigation';
 // do not cache this layout
 export const revalidate = 0;
 
@@ -15,13 +15,13 @@ export default async function RootLayout({
       <head />
       <body className="h-full">
         <ClientLayout>
-          <Navigation></Navigation>
+          <Navigation />
           <main>
             <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 min-h-full">
               {children}
             </div>
           </main>
-          <Footer></Footer>
+          <Footer />
         </ClientLayout>
       </body>
     </html>

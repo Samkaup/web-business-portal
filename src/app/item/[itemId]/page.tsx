@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getItem } from '../../utils/supabase-queries';
-import createClient from '../../utils/supabase-server';
+import { getItem } from '@/utils/supabase-queries';
+import createClient from '@/utils/supabase-server';
 
 export default async function Item({
   params,
