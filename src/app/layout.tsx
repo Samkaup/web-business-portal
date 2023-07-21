@@ -1,7 +1,8 @@
 import './globals.css';
 import { ClientLayout } from './ClientLayout';
 import Footer from '@/components/Footer/Footer';
-import Navigation from '../components/Navigation/Navigation';
+import Navigation from '@/components/Navigation/Navigation';
+//
 // do not cache this layout
 export const revalidate = 0;
 
