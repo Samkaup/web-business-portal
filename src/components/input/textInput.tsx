@@ -2,6 +2,8 @@ import { ExclamationCircleIcon } from '@heroicons/react/20/solid';
 
 type Props = {
   name: string;
+  value: string;
+  onChange: (value: string) => void;
   autoComplete?: string | null;
   label?: string | null;
   type?: string | null;
@@ -21,6 +23,8 @@ export default function TextInput({
   required,
   isError,
   errorText,
+  value,
+  onChange,
 }: Props) {
   const baseStyle =
     'block w-full rounded-md border-0 py-1.5 pl-2 focus:ring-2 focus:ring-inset sm:leading-6';
@@ -41,6 +45,8 @@ export default function TextInput({
           className={`${baseStyle} ${isError ? errorStyle : normalStyle}`}
           placeholder={placeholder ? placeholder : ''}
           required={required}
+          onChange={(e) => onChange(e.target.value)}
+          value={value}
         />
 
         {isError ? <ErrorIcon /> : <></>}
