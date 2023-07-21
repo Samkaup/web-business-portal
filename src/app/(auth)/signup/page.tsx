@@ -10,15 +10,55 @@ import Link from 'next/link';
 
 export default function Login() {
   const [fullName, setFullName] = useState('');
+  const [fullNameError, setFullNameError] = useState('');
   const [phoneNr, setPhoneNr] = useState('');
+  const [phoneNrError, setPhoneNrError] = useState('');
   const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState('');
   const [password, setPassword] = useState('');
-  // const [rePassword, setRePassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [rePassword, setRePassword] = useState('');
+  const [rePasswordError, setRePasswordError] = useState('');
 
   const router = useRouter();
   const supabase = createClientComponentClient<Database>();
 
+  const signUpValid = (): boolean => {
+    let valid = true;
+
+    if (fullName === '') {
+      setFullNameError('Vantar Fullt Nafn!');
+      valid = false;
+    }
+    if (phoneNr === '') {
+      setPhoneNrError('Vantar Síma númer!');
+      valid = false;
+    }
+    if (email === '') {
+      setEmailError('Vantar Netfang!');
+      valid = false;
+    }
+    if (password !== rePassword) {
+      setRePassword('Lykilorðin passa ekki saman');
+      valid = false;
+    }
+    if (password === '') {
+      setPasswordError('Vantar Lykilorð');
+      valid = false;
+    }
+    if (rePassword === '') {
+      setRePasswordError('Vantar Lykilorð Aftur');
+      valid = false;
+    }
+    return valid;
+  };
+
   const handleSignUp = async () => {
+    if (!signUpValid()) {
+      console.log('Invalid');
+      return;
+    }
+
     await supabase.auth.signUp({
       email,
       password,
@@ -34,7 +74,7 @@ export default function Login() {
       <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
         <div className="mx-auto w-full max-w-sm lg:w-96">
           <h2 className="mt-8 text-2xl font-bold leading-9 tracking-tight text-gray-900">
-            Nýsráning
+            Nýskráning
           </h2>
           <div className="mt-10">
             <form action="#" method="POST" className="space-y-6">
@@ -46,7 +86,7 @@ export default function Login() {
                 label="Fullt Nafn"
                 autoComplete="given-name"
                 placeholder="Jón Jónsson"
-                errorText="Full Name invalid"
+                errorText={fullNameError}
               />
               <TextInput
                 value={phoneNr}
@@ -54,9 +94,9 @@ export default function Login() {
                 name="phoneNr"
                 type="tel"
                 autoComplete="tel"
-                label="Netfang"
+                label="Síma Númer"
                 placeholder="you@example.com"
-                errorText="Email invalid"
+                errorText={phoneNrError}
               />
               <TextInput
                 value={email}
@@ -66,7 +106,7 @@ export default function Login() {
                 autoComplete="email"
                 label="Netfang"
                 placeholder="you@example.com"
-                errorText="Email invalid"
+                errorText={emailError}
               />
               <TextInput
                 value={password}
@@ -76,6 +116,17 @@ export default function Login() {
                 autoComplete="current-password"
                 label="Lykilorð"
                 placeholder="**************"
+                errorText={passwordError}
+              />
+              <TextInput
+                value={rePassword}
+                onChange={setRePassword}
+                name="password"
+                type="password"
+                autoComplete="current-password"
+                label="Lykilorð Aftur"
+                placeholder="**************"
+                errorText={rePasswordError}
               />
 
               <div className="flex items-center justify-between">
