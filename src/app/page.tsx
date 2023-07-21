@@ -2,7 +2,7 @@ import { AppSupabaseClient } from '@/types';
 import { ItemsList } from './ItemsList';
 import { getAllItems } from './utils/supabase-queries';
 import createClient from './utils/supabase-server';
-import Header from './header/page';
+import Header from '../components/Header/Header';
 
 async function fetchData(supabaseClient: AppSupabaseClient) {
   return await getAllItems(supabaseClient);
