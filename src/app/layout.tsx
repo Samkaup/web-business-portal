@@ -15,13 +15,15 @@ export default async function RootLayout({
       <head />
       <body className="h-full">
         <ClientLayout>
-          <Navigation />
-          <main>
-            <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 min-h-full">
-              {children}
-            </div>
-          </main>
-          <Footer />
+          <Navigation></Navigation>
+          <div className="flex flex-col min-h-screen">
+            <main className="flex-1">
+              <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 ">
+                {children}
+              </div>
+            </main>
+            <Footer></Footer>
+          </div>
         </ClientLayout>
       </body>
     </html>
