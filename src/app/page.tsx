@@ -16,7 +16,7 @@ export default async function HomePage() {
     <>
       <CompanyHeader></CompanyHeader>
       <div className="pt-10">
-        <ItemsList initialItems={initialItems} />
+        // <ItemsList initialItems={initialItems} />
       </div>
     </>
   );
