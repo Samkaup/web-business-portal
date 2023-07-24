@@ -17,42 +17,20 @@ const defaultNavigation = [
   { name: 'Úttektaraðilar', href: '#', current: false },
   { name: 'Stillingar fyrirtækis', href: '#', current: false },
 ];
-const defaultUserNavigation = [
-  { name: 'Your Profile', href: '#' },
-  { name: 'Settings', href: '#' },
-  { name: 'Sign out', href: '#' },
-];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
-type User = {
-  name: string;
-  email: string;
-  initals: string;
-  selectedCompany: string;
-};
-type Navigation = {
-  name: string;
-  href: string;
-};
+export default function Navigation() {
+  const userNavigation = [
+    {
+      name: 'Your Profile',
+      onClick: () => console.log('Your Profile clicked'),
+    },
+    { name: 'Settings', onClick: () => console.log('Settings clicked') },
+  ];
 
-interface NavigationLink extends Navigation {
-  current: boolean;
-}
-
-type Props = {
-  user: User;
-  navigation: NavigationLink[];
-  userNavigation: Navigation[];
-};
-
-export default function Navigation({
-  user = defaultUser,
-  navigation = defaultNavigation,
-  userNavigation = defaultUserNavigation,
-}: Props) {
   return (
     <>
       <div className="">
@@ -120,18 +98,32 @@ export default function Navigation({
                             {userNavigation.map((item) => (
                               <Menu.Item key={item.name}>
                                 {({ active }) => (
-                                  <Link
-                                    href={item.href}
+                                  <button
                                     className={classNames(
                                       active ? 'bg-gray-100' : '',
-                                      'block px-4 py-2 text-sm text-gray-700'
+                                      'block px-4 py-2 text-sm text-gray-700 w-full'
                                     )}
                                   >
                                     {item.name}
-                                  </Link>
+                                  </button>
                                 )}
                               </Menu.Item>
                             ))}
+                            <Menu.Item>
+                              {({ active }) => (
+                                <form action="/auth/signout" method="post">
+                                  <button
+                                    type="submit"
+                                    className={classNames(
+                                      active ? 'bg-gray-100' : '',
+                                      'block px-4 py-2 text-sm text-gray-700 w-full'
+                                    )}
+                                  >
+                                    Sign Out
+                                  </button>
+                                </form>
+                              )}
+                            </Menu.Item>
                           </Menu.Items>
                         </Transition>
                       </Menu>
@@ -206,8 +198,7 @@ export default function Navigation({
                       <Disclosure.Button
                         key={item.name}
                         as="a"
-                        href={item.href}
-                        className="block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-company hover:bg-opacity-75"
+                        className="block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-company-950 hover:bg-opacity-75"
                       >
                         {item.name}
                       </Disclosure.Button>

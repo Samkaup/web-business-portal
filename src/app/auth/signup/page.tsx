@@ -63,7 +63,11 @@ export default function Login() {
       email,
       password,
       options: {
-        emailRedirectTo: `${location.origin}/callback`,
+        data: {
+          full_name: fullName,
+          phone: phoneNr,
+        },
+        emailRedirectTo: `${location.origin}/auth/callback`,
       },
     });
     router.refresh();
@@ -95,7 +99,7 @@ export default function Login() {
                 type="tel"
                 autoComplete="tel"
                 label="Síma Númer"
-                placeholder="you@example.com"
+                placeholder="7771234"
                 errorText={phoneNrError}
               />
               <TextInput

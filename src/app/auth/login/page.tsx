@@ -102,7 +102,7 @@ export default function Login() {
 
                   <div>
                     <Link
-                      href="/signup"
+                      href="/auth/signup"
                       className="flex w-full justify-center rounded-md bg-indigo-50 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100"
                     >
                       Nýskrá
