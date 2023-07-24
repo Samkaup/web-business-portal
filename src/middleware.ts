@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import type { Database } from '@/lib/database.types';
 
-const UNAUTHORIZED_ROUTES = ['/auth/login', '/auth/signup', '/'];
+const UNAUTHORIZED_ROUTES = ['/auth/login', '/auth/signup'];
 
 export async function middleware(req: NextRequest) {
   const res = NextResponse.next();
@@ -16,7 +16,7 @@ export async function middleware(req: NextRequest) {
 
   // if user is signed in and the current path is / redirect the user to /account
   if (user && UNAUTHORIZED_ROUTES.includes(req.nextUrl.pathname)) {
-    return NextResponse.redirect(new URL('/home', req.url));
+    return NextResponse.redirect(new URL('/', req.url));
   }
 
   // if user is not signed in and the current path is not / redirect the user to /
@@ -26,3 +26,16 @@ export async function middleware(req: NextRequest) {
 
   return res;
 }
+
+export const config = {
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+  ],
+};
