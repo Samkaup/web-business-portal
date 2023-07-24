@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import type { Database } from '@/lib/database.types';
-import TextInput from '@/components/input/textInput';
+import TextInput from '@/components/Input/textInput';
 import Link from 'next/link';
 
 export default function Login() {
