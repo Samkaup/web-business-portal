@@ -3,6 +3,7 @@
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { toast } from 'react-hot-toast';
 
 import type { Database } from '@/lib/database.types';
 import TextInput from '@/components/Input/textInput';
@@ -38,16 +39,24 @@ export default function Login() {
       setEmailError('Vantar Netfang!');
       valid = false;
     }
-    if (password !== rePassword) {
-      setRePassword('Lykilorðin passa ekki saman');
-      valid = false;
-    }
     if (password === '') {
       setPasswordError('Vantar Lykilorð');
       valid = false;
     }
+    if (password.length > 72) {
+      setPasswordError('Lykilorð má ekki vera lengra en 72 stafir');
+      valid = false;
+    }
+    if (password.length < 6) {
+      setPasswordError('Lykilorð má ekki vera styttra en 6 stafir');
+      valid = false;
+    }
     if (rePassword === '') {
       setRePasswordError('Vantar Lykilorð Aftur');
+      valid = false;
+    }
+    if (password !== rePassword) {
+      setRePasswordError('Lykilorðin passa ekki saman');
       valid = false;
     }
     return valid;
@@ -55,16 +64,27 @@ export default function Login() {
 
   const handleSignUp = async () => {
     if (!signUpValid()) {
+      toast.error('Unabel to create user');
       console.log('Invalid');
       return;
     }
-    await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
+        data: {
+          fullName,
+          phoneNr,
+        },
         emailRedirectTo: `${location.origin}/auth/callback`,
       },
     });
+    if (error) {
+      toast.error('Unabel to create user');
+      console.log(error);
+      return;
+    }
+
     router.refresh();
   };
 
@@ -76,7 +96,7 @@ export default function Login() {
             Nýskráning
           </h2>
           <div className="mt-10">
-            <form action="#" method="POST" className="space-y-6">
+            <form className="space-y-6">
               <TextInput
                 value={fullName}
                 onChange={setFullName}
@@ -85,6 +105,7 @@ export default function Login() {
                 label="Fullt Nafn"
                 autoComplete="given-name"
                 placeholder="Jón Jónsson"
+                isError={fullNameError.length !== 0}
                 errorText={fullNameError}
               />
               <TextInput
@@ -95,6 +116,7 @@ export default function Login() {
                 autoComplete="tel"
                 label="Síma Númer"
                 placeholder="7771234"
+                isError={phoneNrError.length !== 0}
                 errorText={phoneNrError}
               />
               <TextInput
@@ -105,6 +127,7 @@ export default function Login() {
                 autoComplete="email"
                 label="Netfang"
                 placeholder="you@example.com"
+                isError={emailError.length !== 0}
                 errorText={emailError}
               />
               <TextInput
@@ -115,6 +138,7 @@ export default function Login() {
                 autoComplete="current-password"
                 label="Lykilorð"
                 placeholder="**************"
+                isError={passwordError.length !== 0}
                 errorText={passwordError}
               />
               <TextInput
@@ -125,6 +149,7 @@ export default function Login() {
                 autoComplete="current-password"
                 label="Lykilorð Aftur"
                 placeholder="**************"
+                isError={rePasswordError.length !== 0}
                 errorText={rePasswordError}
               />
 
@@ -178,7 +203,7 @@ export default function Login() {
 
                   <div>
                     <Link
-                      href="/login"
+                      href="/auth/login"
                       className="flex w-full justify-center rounded-md bg-indigo-50 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100"
                     >
                       Inskrá
