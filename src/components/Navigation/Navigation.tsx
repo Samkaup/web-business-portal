@@ -3,20 +3,21 @@ import { Fragment } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import Logo from '@/components/Logo/Logo';
+import Link from 'next/link';
 
-const user = {
+const defaultUser = {
   name: 'Tom Cook',
   email: 'tom@example.com',
   initals: 'TC',
   selectedCompany: 'Samherji hf.',
 };
-const navigation = [
+const defaultNavigation = [
   { name: 'Heim', href: '#', current: true },
   { name: 'Hreyfingaryfirlit', href: '#', current: false },
   { name: 'Úttektaraðilar', href: '#', current: false },
   { name: 'Stillingar fyrirtækis', href: '#', current: false },
 ];
-const userNavigation = [
+const defaultUserNavigation = [
   { name: 'Your Profile', href: '#' },
   { name: 'Settings', href: '#' },
   { name: 'Sign out', href: '#' },
@@ -26,11 +27,36 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
-export default function Navigation() {
+type User = {
+  name: string;
+  email: string;
+  initals: string;
+  selectedCompany: string;
+};
+type Navigation = {
+  name: string;
+  href: string;
+};
+
+interface NavigationLink extends Navigation {
+  current: boolean;
+}
+
+type Props = {
+  user: User;
+  navigation: NavigationLink[];
+  userNavigation: Navigation[];
+};
+
+export default function Navigation({
+  user = defaultUser,
+  navigation = defaultNavigation,
+  userNavigation = defaultUserNavigation,
+}: Props) {
   return (
     <>
       <div className="">
-        <Disclosure as="nav" className="bg-company-950">
+        <Disclosure as="nav" className="bg-company">
           {({ open }) => (
             <>
               <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -42,19 +68,19 @@ export default function Navigation() {
                     <div className="hidden md:block">
                       <div className="ml-10 flex items-baseline space-x-4">
                         {navigation.map((item) => (
-                          <a
+                          <Link
                             key={item.name}
                             href={item.href}
                             className={classNames(
                               item.current
                                 ? 'bg-white/10 text-white'
-                                : 'text-white hover:bg-company-950 hover:bg-opacity-75',
+                                : 'text-white hover:bg-company hover:bg-opacity-75',
                               'rounded-md px-3 py-2 text-sm font-medium'
                             )}
                             aria-current={item.current ? 'page' : undefined}
                           >
                             {item.name}
-                          </a>
+                          </Link>
                         ))}
                       </div>
                     </div>
@@ -94,7 +120,7 @@ export default function Navigation() {
                             {userNavigation.map((item) => (
                               <Menu.Item key={item.name}>
                                 {({ active }) => (
-                                  <a
+                                  <Link
                                     href={item.href}
                                     className={classNames(
                                       active ? 'bg-gray-100' : '',
@@ -102,7 +128,7 @@ export default function Navigation() {
                                     )}
                                   >
                                     {item.name}
-                                  </a>
+                                  </Link>
                                 )}
                               </Menu.Item>
                             ))}
@@ -113,7 +139,7 @@ export default function Navigation() {
                   </div>
                   <div className="-mr-2 flex md:hidden">
                     {/* Mobile menu button */}
-                    <Disclosure.Button className="inline-flex items-center justify-center rounded-md bg-company p-2 text-white hover:bg-company-950 hover:bg-opacity-75 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-company">
+                    <Disclosure.Button className="inline-flex items-center justify-center rounded-md bg-company p-2 text-white hover:bg-company hover:bg-opacity-75 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-company">
                       <span className="sr-only">Open main menu</span>
                       {open ? (
                         <XMarkIcon
@@ -140,8 +166,8 @@ export default function Navigation() {
                       href={item.href}
                       className={classNames(
                         item.current
-                          ? 'bg-company-950 text-white'
-                          : 'text-white hover:bg-company-950 hover:bg-opacity-75',
+                          ? 'bg-company text-white'
+                          : 'text-white hover:bg-company hover:bg-opacity-75',
                         'block rounded-md px-3 py-2 text-base font-medium'
                       )}
                       aria-current={item.current ? 'page' : undefined}
@@ -169,9 +195,9 @@ export default function Navigation() {
                     </div>
                     <button
                       type="button"
-                      className="ml-auto flex-shrink-0 rounded-full bg-company-950 p-1 text-company hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-company"
+                      className="ml-auto flex-shrink-0 rounded-full bg-company p-1 text-company hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-company"
                     >
-                      <span className="sr-only">View notifications</span>
+                      <span className="sr-only">Tilkynningar</span>
                       <BellIcon className="h-6 w-6" aria-hidden="true" />
                     </button>
                   </div>
@@ -181,7 +207,7 @@ export default function Navigation() {
                         key={item.name}
                         as="a"
                         href={item.href}
-                        className="block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-company-950 hover:bg-opacity-75"
+                        className="block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-company hover:bg-opacity-75"
                       >
                         {item.name}
                       </Disclosure.Button>

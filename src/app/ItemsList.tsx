@@ -16,10 +16,7 @@ export const ItemsList = ({
           Items
         </h1>
         <div>
-          <Link
-            className="text-white bg-blue-600 rounded px-3 py-2"
-            href="/new"
-          >
+          <Link className="text-white bg-company rounded px-3 py-2" href="/new">
             New Item
           </Link>
         </div>
@@ -33,7 +30,7 @@ export const ItemsList = ({
               key={item.id}
             >
               <div className="space-y-2">
-                <p className="text-blue-600 text-lg">{item.name}</p>
+                <p className="text-company text-lg">{item.name}</p>
                 <p className="text-gray-600 text-sm">{item.description}</p>
               </div>
             </Link>
