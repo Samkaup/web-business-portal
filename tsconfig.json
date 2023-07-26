@@ -15,6 +15,7 @@
     "isolatedModules": true,
     "noUnusedLocals": true,
     "jsx": "preserve",
+    "outDir": "./lib",
     "plugins": [
       {
         "name": "next"

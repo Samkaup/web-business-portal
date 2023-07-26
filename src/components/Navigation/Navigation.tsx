@@ -3,56 +3,36 @@ import { Fragment } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import Logo from '@/components/Logo/Logo';
+import { useGetProfile } from '@/utils/react_query_hooks/profiles';
 import Link from 'next/link';
 
-const defaultUser = {
-  name: 'Tom Cook',
-  email: 'tom@example.com',
-  initals: 'TC',
-  selectedCompany: 'Samherji hf.',
-};
-const defaultNavigation = [
+const navigation = [
   { name: 'Heim', href: '#', current: true },
   { name: 'Hreyfingaryfirlit', href: '#', current: false },
   { name: 'Úttektaraðilar', href: '#', current: false },
   { name: 'Stillingar fyrirtækis', href: '#', current: false },
 ];
-const defaultUserNavigation = [
-  { name: 'Your Profile', href: '#' },
-  { name: 'Settings', href: '#' },
-  { name: 'Sign out', href: '#' },
+const userNavigation = [
+  {
+    name: 'Your Profile',
+    onClick: () => console.log('Your Profile clicked'),
+  },
+  { name: 'Settings', onClick: () => console.log('Settings clicked') },
 ];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
-type User = {
-  name: string;
-  email: string;
-  initals: string;
-  selectedCompany: string;
-};
-type Navigation = {
-  name: string;
-  href: string;
-};
-
-interface NavigationLink extends Navigation {
-  current: boolean;
+function getInitals(fullName: string) {
+  const parts: string[] = fullName.split(' ');
+  const initalsArr = parts.map((part: string) => part.at(0)).slice(0, 2);
+  return initalsArr.join('');
 }
 
-type Props = {
-  user: User;
-  navigation: NavigationLink[];
-  userNavigation: Navigation[];
-};
+export default function Navigation() {
+  const { data, isSuccess } = useGetProfile();
 
-export default function Navigation({
-  user = defaultUser,
-  navigation = defaultNavigation,
-  userNavigation = defaultUserNavigation,
-}: Props) {
   return (
     <>
       <div className="">
@@ -63,7 +43,7 @@ export default function Navigation({
                 <div className="flex h-16 items-center justify-between">
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
-                      <Logo></Logo>
+                      <Logo />
                     </div>
                     <div className="hidden md:block">
                       <div className="ml-10 flex items-baseline space-x-4">
@@ -102,7 +82,7 @@ export default function Navigation({
                             <span className="sr-only">Open user menu</span>
                             <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white ">
                               <span className="font-medium leading-none text-company-950">
-                                {user.initals}
+                                {isSuccess ? getInitals(data.full_name) : ''}
                               </span>
                             </span>
                           </Menu.Button>
@@ -120,18 +100,32 @@ export default function Navigation({
                             {userNavigation.map((item) => (
                               <Menu.Item key={item.name}>
                                 {({ active }) => (
-                                  <Link
-                                    href={item.href}
+                                  <button
                                     className={classNames(
                                       active ? 'bg-gray-100' : '',
-                                      'block px-4 py-2 text-sm text-gray-700'
+                                      'block px-4 py-2 text-sm text-gray-700 w-full'
                                     )}
                                   >
                                     {item.name}
-                                  </Link>
+                                  </button>
                                 )}
                               </Menu.Item>
                             ))}
+                            <Menu.Item>
+                              {({ active }) => (
+                                <form action="/auth/signout" method="post">
+                                  <button
+                                    type="submit"
+                                    className={classNames(
+                                      active ? 'bg-gray-100' : '',
+                                      'block px-4 py-2 text-sm text-gray-700 w-full'
+                                    )}
+                                  >
+                                    Sign Out
+                                  </button>
+                                </form>
+                              )}
+                            </Menu.Item>
                           </Menu.Items>
                         </Transition>
                       </Menu>
@@ -181,16 +175,13 @@ export default function Navigation({
                     <div className="flex-shrink-0">
                       <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white ">
                         <span className="font-medium leading-none text-company-950">
-                          {user.initals}
+                          {isSuccess ? getInitals(data.full_name) : ''}
                         </span>
                       </span>
                     </div>
                     <div className="ml-3">
                       <div className="text-base font-medium text-white">
-                        {user.name}
-                      </div>
-                      <div className="text-sm font-medium text-white/75">
-                        {user.email}
+                        {isSuccess ? data?.full_name : ''}
                       </div>
                     </div>
                     <button
@@ -206,8 +197,7 @@ export default function Navigation({
                       <Disclosure.Button
                         key={item.name}
                         as="a"
-                        href={item.href}
-                        className="block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-company hover:bg-opacity-75"
+                        className="block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-company-950 hover:bg-opacity-75"
                       >
                         {item.name}
                       </Disclosure.Button>
