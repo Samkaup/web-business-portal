@@ -6,18 +6,36 @@ import { useState } from 'react';
 
 import TextInput from '@/components/Input/textInput';
 import Link from 'next/link';
+import { toast } from 'react-hot-toast';
 
 export default function Login() {
   const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState(false);
   const [password, setPassword] = useState('');
+  const [passwordError, setPasswordError] = useState(false);
   const router = useRouter();
 
-  const handleSignIn = async () => {
-    await supabaseClient.auth.signInWithPassword({
-      email,
-      password,
-    });
-    router.refresh();
+  const handleSignIn = async (e: React.FormEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    let emailHasError = email.length === 0;
+    let passwordHasError = password.length === 0;
+
+    if (!emailHasError && !passwordHasError) {
+      const { error } = await supabaseClient.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        toast.error(error.message);
+        emailHasError = true;
+        passwordHasError = true;
+      } else router.refresh();
+    }
+
+    setEmailError(emailHasError);
+    setPasswordError(passwordHasError);
   };
 
   return (
@@ -37,7 +55,7 @@ export default function Login() {
                 autoComplete="email"
                 label="Netfang"
                 placeholder="you@example.com"
-                errorText="Email invalid"
+                isError={emailError}
               />
               <TextInput
                 value={password}
@@ -47,32 +65,16 @@ export default function Login() {
                 autoComplete="current-password"
                 label="Lykilorð"
                 placeholder="**************"
+                isError={passwordError}
               />
 
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <input
-                    id="remember-me"
-                    name="remember-me"
-                    type="checkbox"
-                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                  />
-                  <label
-                    htmlFor="remember-me"
-                    className="ml-3 block text-sm leading-6 text-gray-700"
-                  >
-                    Remember me
-                  </label>
-                </div>
-
-                <div className="text-sm leading-6">
-                  <a
-                    href="#"
-                    className="font-semibold text-indigo-600 hover:text-indigo-500"
-                  >
-                    Forgot password?
-                  </a>
-                </div>
+              <div className="text-sm leading-6">
+                <Link
+                  href="/auth/forgotPassword"
+                  className="font-semibold text-indigo-600 hover:text-indigo-500"
+                >
+                  Forgot password?
+                </Link>
               </div>
 
               <div>
@@ -83,30 +85,6 @@ export default function Login() {
                 >
                   Inskrá
                 </button>
-                <div className="mt-3">
-                  <div className="relative">
-                    <div
-                      className="absolute inset-0 flex items-center"
-                      aria-hidden="true"
-                    >
-                      <div className="w-full border-t border-gray-200" />
-                    </div>
-                    <div className="relative flex justify-center text-sm font-medium leading-6">
-                      <span className="bg-white px-6 text-gray-900">
-                        eða búa til aðgang
-                      </span>
-                    </div>
-                  </div>
-
-                  <div>
-                    <Link
-                      href="/auth/signup"
-                      className="flex w-full justify-center rounded-md bg-indigo-50 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100"
-                    >
-                      Nýskrá
-                    </Link>
-                  </div>
-                </div>
               </div>
             </form>
           </div>

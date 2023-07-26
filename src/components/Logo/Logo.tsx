@@ -10,9 +10,5 @@ export default function Logo({
   if (variant !== 'white') {
     src = '/logos/samkaup_logo_blue.png';
   }
-  return (
-    <>
-      <Image src={src} width={width} height={height} alt={alt} />
-    </>
-  );
+  return <Image src={src} width={width} height={height} alt={alt} />;
 }
