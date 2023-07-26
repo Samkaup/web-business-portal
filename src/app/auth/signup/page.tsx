@@ -1,13 +1,12 @@
 'use client';
 
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 
-import type { Database } from '@/lib/database.types';
 import TextInput from '@/components/Input/textInput';
 import Link from 'next/link';
+import supabaseClient from '@/utils/supabase-browser';
 
 export default function Login() {
   const [fullName, setFullName] = useState('');
@@ -22,7 +21,6 @@ export default function Login() {
   const [rePasswordError, setRePasswordError] = useState('');
 
   const router = useRouter();
-  const supabase = createClientComponentClient<Database>();
 
   const signUpValid = (): boolean => {
     let valid = true;
@@ -62,13 +60,15 @@ export default function Login() {
     return valid;
   };
 
-  const handleSignUp = async () => {
+  const handleSignUp = async (e: React.FormEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
     if (!signUpValid()) {
       toast.error('Unabel to create user');
       console.log('Invalid');
       return;
     }
-    const { error } = await supabase.auth.signUp({
+    const { error } = await supabaseClient.auth.signUp({
       email,
       password,
       options: {
@@ -183,6 +183,7 @@ export default function Login() {
                 <button
                   className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                   onClick={handleSignUp}
+                  type="submit"
                 >
                   Nýskrá
                 </button>

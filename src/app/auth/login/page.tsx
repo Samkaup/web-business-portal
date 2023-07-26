@@ -1,10 +1,9 @@
 'use client';
 
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import supabaseClient from '@/utils/supabase-browser';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-import type { Database } from '@/lib/database.types';
 import TextInput from '@/components/Input/textInput';
 import Link from 'next/link';
 
@@ -12,10 +11,9 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
-  const supabase = createClientComponentClient<Database>();
 
   const handleSignIn = async () => {
-    await supabase.auth.signInWithPassword({
+    await supabaseClient.auth.signInWithPassword({
       email,
       password,
     });

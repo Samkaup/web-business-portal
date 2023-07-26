@@ -3,33 +3,34 @@ import { Fragment } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import Logo from '@/components/Logo/Logo';
-import Link from 'next/link';
+import { useGetProfile } from '@/utils/react_query_hooks/profiles';
 
-const defaultUser = {
-  name: 'Tom Cook',
-  email: 'tom@example.com',
-  initals: 'TC',
-  selectedCompany: 'Samherji hf.',
-};
-const defaultNavigation = [
+const navigation = [
   { name: 'Heim', href: '#', current: true },
   { name: 'Hreyfingaryfirlit', href: '#', current: false },
   { name: 'Úttektaraðilar', href: '#', current: false },
   { name: 'Stillingar fyrirtækis', href: '#', current: false },
+];
+const userNavigation = [
+  {
+    name: 'Your Profile',
+    onClick: () => console.log('Your Profile clicked'),
+  },
+  { name: 'Settings', onClick: () => console.log('Settings clicked') },
 ];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
+function getInitals(fullName: string) {
+  const parts: string[] = fullName.split(' ');
+  const initalsArr = parts.map((part: string) => part.at(0)).slice(0, 2);
+  return initalsArr.join('');
+}
+
 export default function Navigation() {
-  const userNavigation = [
-    {
-      name: 'Your Profile',
-      onClick: () => console.log('Your Profile clicked'),
-    },
-    { name: 'Settings', onClick: () => console.log('Settings clicked') },
-  ];
+  const { data, isSuccess } = useGetProfile();
 
   return (
     <>
@@ -41,7 +42,7 @@ export default function Navigation() {
                 <div className="flex h-16 items-center justify-between">
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
-                      <Logo></Logo>
+                      <Logo />
                     </div>
                     <div className="hidden md:block">
                       <div className="ml-10 flex items-baseline space-x-4">
@@ -80,7 +81,7 @@ export default function Navigation() {
                             <span className="sr-only">Open user menu</span>
                             <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white ">
                               <span className="font-medium leading-none text-company-950">
-                                {user.initals}
+                                {isSuccess ? getInitals(data.full_name) : ''}
                               </span>
                             </span>
                           </Menu.Button>
@@ -173,16 +174,13 @@ export default function Navigation() {
                     <div className="flex-shrink-0">
                       <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white ">
                         <span className="font-medium leading-none text-company-950">
-                          {user.initals}
+                          {isSuccess ? getInitals(data.full_name) : ''}
                         </span>
                       </span>
                     </div>
                     <div className="ml-3">
                       <div className="text-base font-medium text-white">
-                        {user.name}
-                      </div>
-                      <div className="text-sm font-medium text-white/75">
-                        {user.email}
+                        {isSuccess ? data?.full_name : ''}
                       </div>
                     </div>
                     <button
