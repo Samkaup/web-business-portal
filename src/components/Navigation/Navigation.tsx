@@ -4,6 +4,7 @@ import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import Logo from '@/components/Logo/Logo';
 import { useGetProfile } from '@/utils/react_query_hooks/profiles';
+import Link from 'next/link';
 
 const navigation = [
   { name: 'Heim', href: '#', current: true },
