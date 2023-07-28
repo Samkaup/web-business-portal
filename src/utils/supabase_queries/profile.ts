@@ -2,7 +2,7 @@ import { AppSupabaseClient, Table } from '@/types';
 
 export const getProfile = async (
   supabase: AppSupabaseClient
-): Promise<Table<'profiles'>> => {
+): Promise<Table<'profile'>> => {
   const { data: userData, error: getUserError } = await supabase.auth.getUser();
 
   if (getUserError) {
@@ -11,7 +11,7 @@ export const getProfile = async (
   }
 
   const { data: profileData, error } = await supabase
-    .from('profiles')
+    .from('profile')
     .select('*')
     .eq('id', userData.user?.id)
     .single();

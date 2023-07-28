@@ -3,7 +3,8 @@ import { Fragment } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import Logo from '@/components/Logo/Logo';
-import { useGetProfile } from '@/utils/react_query_hooks/profiles';
+import { useGetProfile } from '@/utils/react_query_hooks/profile';
+import { useGetSelectedCompany } from '@/utils/react_query_hooks/selected_company';
 import Link from 'next/link';
 
 const navigation = [
@@ -32,6 +33,7 @@ function getInitals(fullName: string) {
 
 export default function Navigation() {
   const { data, isSuccess } = useGetProfile();
+  const { data: selectedCompany } = useGetSelectedCompany();
 
   return (
     <>
@@ -67,11 +69,14 @@ export default function Navigation() {
                   </div>
                   <div className="hidden md:block">
                     <div className="ml-4 flex items-center md:ml-6">
+                      <p className="text-white">
+                        Selected company: {selectedCompany}
+                      </p>
                       <button
                         type="button"
                         className="rounded-full bg-company p-1 text-white hover:text-white/50 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-company"
                       >
-                        <span className="sr-only">View notifications</span>
+                        <span className="sr-only">Tilkynningar</span>
                         <BellIcon className="h-6 w-6" aria-hidden="true" />
                       </button>
 

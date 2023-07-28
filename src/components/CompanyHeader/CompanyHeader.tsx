@@ -1,13 +1,27 @@
+'use client';
+import { Table } from '@/types';
+import { setSelectedCompany } from '@/utils/react_query_hooks/selected_company';
 type Props = {
-  company?: string;
+  companies?: Table<'company'>[];
 };
 
-export default function CompanyHeader({ company = 'Company ehf.' }: Props) {
+export default function CompanyHeader({ companies = [] }: Props) {
   return (
     <>
       <div className="border-b border-gray-200 pb-5 sm:flex sm:items-center sm:justify-between">
         <h3 className="text-base font-semibold leading-6 text-gray-900">
-          {company}
+          <div>
+            <select
+              id="location"
+              name="location"
+              onChange={(e) => setSelectedCompany(e.target.value)}
+              className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            >
+              {companies.map((c) => (
+                <option value={c.id}>{c.name}</option>
+              ))}
+            </select>
+          </div>
         </h3>
         <div className="mt-3 flex sm:ml-4 sm:mt-0">
           <button
