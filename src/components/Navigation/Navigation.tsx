@@ -4,7 +4,7 @@ import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import Logo from '@/components/Logo/Logo';
 import { useGetProfile } from '@/utils/react_query_hooks/profile';
-import { useGetSelectedCompany } from '@/utils/react_query_hooks/selected_company';
+// import { useGetSelectedCompany } from '@/utils/react_query_hooks/selected_company';
 import Link from 'next/link';
 
 const navigation = [
@@ -33,7 +33,7 @@ function getInitals(fullName: string) {
 
 export default function Navigation() {
   const { data, isSuccess } = useGetProfile();
-  const { data: selectedCompany } = useGetSelectedCompany();
+  // const { data: selectedCompany } = useGetSelectedCompany();
 
   return (
     <>
@@ -70,7 +70,7 @@ export default function Navigation() {
                   <div className="hidden md:block">
                     <div className="ml-4 flex items-center md:ml-6">
                       <p className="text-white">
-                        Selected company: {selectedCompany}
+                        Selected company: {/*selectedCompany*/}
                       </p>
                       <button
                         type="button"

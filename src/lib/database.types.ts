@@ -199,7 +199,12 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      user_can_access_transaction: {
+        Args: {
+          transaction_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never

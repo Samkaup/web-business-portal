@@ -1,11 +1,16 @@
 'use client';
 import { Table } from '@/types';
-import { setSelectedCompany } from '@/utils/react_query_hooks/selected_company';
+import { useState } from 'react';
+
 type Props = {
   companies?: Table<'company'>[];
 };
 
 export default function CompanyHeader({ companies = [] }: Props) {
+  const [_, setSelectedCompany] = useState<string>(
+    companies.at(0)['id'].toString()
+  );
+
   return (
     <>
       <div className="border-b border-gray-200 pb-5 sm:flex sm:items-center sm:justify-between">
