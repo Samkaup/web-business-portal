@@ -166,6 +166,34 @@ export interface Database {
           }
         ]
       }
+      transaction: {
+        Row: {
+          amount: number
+          contact_id: number
+          created_at: string
+          id: string
+        }
+        Insert: {
+          amount: number
+          contact_id: number
+          created_at?: string
+          id?: string
+        }
+        Update: {
+          amount?: number
+          contact_id?: number
+          created_at?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transaction_contact_id_fkey"
+            columns: ["contact_id"]
+            referencedRelation: "contact"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
     }
     Views: {
       [_ in never]: never
