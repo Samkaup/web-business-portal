@@ -12,7 +12,6 @@ import {
 
 import { Props } from './ReactTable.types';
 
-import { LoadingBlock } from '@/components/ui/LoadingBlock/LoadingBlock';
 import {
   ArrowDownIcon as ChevronDownIcon,
   ArrowUpIcon as ChevronUpIcon,
@@ -114,90 +113,108 @@ export default function ReactTable<
     getSortedRowModel: getSortedRowModel(),
   });
 
-  if (isLoading) {
-    return <LoadingBlock className="grid mx-5 pt-10"></LoadingBlock>;
-  }
+  const Skeleton = () => (
+    <div className="max-w-sm animate-pulse h-2.5 bg-gray-100 rounded-full dark:bg-gray-500 w-full mb-4" />
+  );
 
   return (
-    <div>
-      <table className="min-w-full divide-y divide-gray-200/50">
-        <thead className="bg-black">
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id} className="divide-x divide-gray-200/25">
-              {headerGroup.headers.map((header) => (
-                <th
-                  key={header.id}
-                  scope="col"
-                  className=" text-left text-sm font-semibold text-white"
-                >
-                  <div className="flex items-center space-x-3 py-3.5 pl-4 pr-4 sm:pl-6 group">
-                    {header.isPlaceholder ? null : (
-                      <div
-                        {...{
-                          className: header.column.getCanSort()
-                            ? 'cursor-pointer select-none'
-                            : '',
-                          onClick: header.column.getToggleSortingHandler(),
-                        }}
+    <div className="px-4 sm:px-6 lg:px-8">
+      <div className="mt-8 flow-root">
+        <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+          <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+            <table className="min-w-full divide-y divide-gray-300">
+              <thead>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <tr key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => (
+                      <th
+                        key={header.id}
+                        scope="col"
+                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900"
                       >
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
+                        {header.isPlaceholder ? null : (
+                          <div
+                            {...{
+                              className: header.column.getCanSort()
+                                ? 'cursor-pointer select-none'
+                                : '',
+                              onClick: header.column.getToggleSortingHandler(),
+                            }}
+                          >
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                            {{
+                              desc: (
+                                <ChevronUpIcon className="inline-block ml-3 -mr-1 h-5 w-5" />
+                              ),
+                              asc: (
+                                <ChevronDownIcon className="inline-block ml-3 -mr-1 h-5 w-5" />
+                              ),
+                            }[header.column.getIsSorted() as string] ?? null}
+                          </div>
                         )}
-                        {{
-                          desc: (
-                            <ChevronUpIcon className="inline-block ml-3 -mr-1 h-5 w-5 text-white"></ChevronUpIcon>
-                          ),
-                          asc: (
-                            <ChevronDownIcon className="inline-block ml-3 -mr-1 h-5 w-5 text-white"></ChevronDownIcon>
-                          ),
-                        }[header.column.getIsSorted() as string] ?? null}
-                      </div>
-                    )}
-                  </div>
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody className="divide-y divide-gray-200/25 bg-black">
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id} className="divide-x divide-gray-200/25">
-              {row.getVisibleCells().map((cell) => (
-                <td
-                  key={cell.id}
-                  className="whitespace-nowrap py-4 pl-4 pr-4 text-sm font-medium text-white sm:pl-6"
-                >
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-        <tfoot className="md:hidden">
-          {table.getFooterGroups().map((footerGroup) => (
-            <tr key={footerGroup.id}>
-              {footerGroup.headers.map((header) => (
-                <th key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.footer,
-                        header.getContext()
-                      )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </tfoot>
-      </table>
-
+                      </th>
+                    ))}
+                  </tr>
+                ))}
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {isLoading
+                  ? Array.from({ length: basePageSize }).map((_, idx) => (
+                      <tr key={idx}>
+                        {columns.map((_, idx) => (
+                          <td
+                            key={idx}
+                            className="whitespace-nowrap px-3 py-4 text-sm text-gray-500"
+                          >
+                            <Skeleton />
+                          </td>
+                        ))}
+                      </tr>
+                    ))
+                  : table.getRowModel().rows.map((row) => (
+                      <tr key={row.id}>
+                        {row.getVisibleCells().map((cell) => (
+                          <td
+                            key={cell.id}
+                            className="whitespace-nowrap px-3 py-4 text-sm text-gray-500"
+                          >
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+              </tbody>
+              <tfoot className="md:hidden">
+                {table.getFooterGroups().map((footerGroup) => (
+                  <tr key={footerGroup.id}>
+                    {footerGroup.headers.map((header) => (
+                      <th key={header.id}>
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.footer,
+                              header.getContext()
+                            )}
+                      </th>
+                    ))}
+                  </tr>
+                ))}
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
       <div className="px-4 py-3 flex items-center justify-center border-t border-gray-200/50 sm:px-6">
         <div className="sm:flex-1 sm:flex sm:items-center sm:justify-between mt-4">
           <div>
             <p className="text-sm ml-4 mt">
               <select
-                className={'bg-black text-white'}
                 value={table.getState().pagination.pageSize}
                 onChange={(e) => {
                   table.setPageSize(Number(e.target.value));
@@ -209,13 +226,13 @@ export default function ReactTable<
                   </option>
                 ))}
               </select>
-              <span className="font-medium text-white ml-4">{`af ${rowCount} niðurstöðum`}</span>
+              <span className="font-medium ml-4">{`af ${rowCount} niðurstöðum`}</span>
             </p>
           </div>
           <div className="flex-1 flex justify-between sm:justify-end">
             {pageIndex > 5 && (
               <button
-                className="hover:cursor-pointer relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-white bg-black hover:bg-white/10"
+                className="hover:cursor-pointer relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md hover:bg-white/10"
                 onClick={() => table.setPageIndex(0)}
                 disabled={!table.getCanPreviousPage()}
               >
@@ -224,21 +241,21 @@ export default function ReactTable<
             )}
             {table.getCanPreviousPage() && (
               <button
-                className="ml-5 hover:cursor-pointer relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-white bg-black hover:bg-white/10"
+                className="ml-5 hover:cursor-pointer relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md hover:bg-white/10"
                 onClick={() => table.previousPage()}
               >
                 Fyrri síða
               </button>
             )}
             <button
-              className="ml-5 hover:cursor-pointer relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-white bg-black hover:bg-white/10"
+              className="ml-5 hover:cursor-pointer relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md hover:bg-white/10"
               disabled={true}
             >
               <span>Síða: {pageIndex + 1}</span>
             </button>
             {table.getCanNextPage() && (
               <button
-                className="ml-5 hover:cursor-pointer relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-white bg-black hover:bg-white/10"
+                className="ml-5 hover:cursor-pointer relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md hover:bg-white/10"
                 onClick={() => table.nextPage()}
               >
                 Næsta síða
