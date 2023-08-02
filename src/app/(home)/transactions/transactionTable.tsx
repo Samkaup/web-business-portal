@@ -20,11 +20,6 @@ export default function ({ initialData }: Props) {
   const columns = useMemo(
     () => [
       {
-        accessorKey: 'id',
-        id: 'id',
-        header: () => <span>ID</span>,
-      },
-      {
         accessorKey: 'created_at',
         id: 'created_at',
         header: () => <span>Stofnað</span>,
@@ -38,11 +33,23 @@ export default function ({ initialData }: Props) {
         accessorKey: 'amount',
         id: 'amount',
         header: () => <span>Amount</span>,
+        cell: (props: any) => `${props.getValue()} kr`,
       },
       {
-        accessorKey: 'contact_id',
-        id: 'contact_id',
+        accessorKey: 'contact',
+        id: 'department',
+        header: () => <span>Deild</span>,
+        cell: (contact: any) => {
+          return <span>{contact.getValue().department.name}</span>;
+        },
+      },
+      {
+        accessorKey: 'contact',
+        id: 'contact',
         header: () => <span>Contact</span>,
+        cell: (contact: any) => {
+          return <span>{contact.getValue().full_name}</span>;
+        },
       },
     ],
     []
@@ -52,8 +59,8 @@ export default function ({ initialData }: Props) {
     <ReactTable<'transaction'>
       columns={columns}
       tableName={'transaction'}
-      selectQuery={'*'}
-      searchColumns={['id', 'contact_id']}
+      selectQuery={'created_at, amount, contact (full_name, department (name))'}
+      searchColumns={['id']}
       searchValue={searchValue}
       defaultSort={defaultSort}
       initialData={initialData}

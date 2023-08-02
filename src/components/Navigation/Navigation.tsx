@@ -4,14 +4,14 @@ import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import Logo from '@/components/Logo/Logo';
 import { useGetProfile } from '@/utils/react_query_hooks/profile';
-// import { useGetSelectedCompany } from '@/utils/react_query_hooks/selected_company';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 const navigation = [
-  { name: 'Heim', href: '#', current: true },
-  { name: 'Hreyfingaryfirlit', href: '#', current: false },
-  { name: 'Úttektaraðilar', href: '#', current: false },
-  { name: 'Stillingar fyrirtækis', href: '#', current: false },
+  { name: 'Heim', href: '/' },
+  { name: 'Hreyfingaryfirlit', href: '/transactions' },
+  { name: 'Úttektaraðilar', href: '#' },
+  { name: 'Stillingar fyrirtækis', href: '#' },
 ];
 const userNavigation = [
   {
@@ -33,7 +33,7 @@ function getInitals(fullName: string) {
 
 export default function Navigation() {
   const { data, isSuccess } = useGetProfile();
-  // const { data: selectedCompany } = useGetSelectedCompany();
+  const pathname = usePathname();
 
   return (
     <>
@@ -54,7 +54,7 @@ export default function Navigation() {
                             key={item.name}
                             href={item.href}
                             className={classNames(
-                              item.current
+                              pathname === item.href
                                 ? 'bg-white/10 text-white'
                                 : 'text-white hover:bg-company hover:bg-opacity-75',
                               'rounded-md px-3 py-2 text-sm font-medium'
