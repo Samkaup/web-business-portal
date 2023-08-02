@@ -8,6 +8,7 @@ import {
   getSortedRowModel,
   SortingState,
   useReactTable,
+  Table as ReactTable,
 } from '@tanstack/react-table';
 
 import { Props } from './ReactTable.types';
@@ -16,15 +17,12 @@ import {
   ArrowDownIcon as ChevronDownIcon,
   ArrowUpIcon as ChevronUpIcon,
 } from '@heroicons/react/24/outline';
-import { Database } from '@/lib/database.types';
 import supabaseBrowser from '@/utils/supabase-browser';
-import { getTransactionCount } from '@/utils/supabase_queries/transaction';
 import { getTable } from '@/utils/supabase-queries';
+import { TableName } from '@/types';
 // A debounced input react component
 
-export default function ReactTable<
-  T extends keyof Database['public']['Tables']
->({
+export default function ReactTable<T extends TableName>({
   columns,
   tableName,
   defaultSort,
@@ -34,8 +32,8 @@ export default function ReactTable<
   filter,
   selectQuery,
 }: Props<T>) {
-  const [rowCount, setRowCount] = useState<any>(0);
-  const [pageCount, setPageCount] = useState<any>(0);
+  const [rowCount, setRowCount] = useState<number>(0);
+  const [pageCount, setPageCount] = useState<number>(0);
   const [sorting, setSorting] = useState<SortingState>([defaultSort]);
   const basePageSize = 20;
   const pageSizes = [basePageSize, 50, 100];
@@ -54,20 +52,10 @@ export default function ReactTable<
   );
 
   const fetchData = async () => {
-    // Gets counts for pagination
-    getTransactionCount(supabaseBrowser).then((count) => {
-      let pCount = 1;
-      if (count) {
-        pCount = Math.ceil(count / pageSize);
-      }
-      setPageCount(pCount);
-      setRowCount(count);
-    });
-
     const rangeFrom = pageIndex * pageSize;
     const rangeTo = (pageIndex + 1) * pageSize - 1;
 
-    return await getTable({
+    const { data, count } = await getTable({
       supabaseClient: supabaseBrowser,
       table: tableName,
       selectQuery: selectQuery,
@@ -84,8 +72,16 @@ export default function ReactTable<
       },
       searchColumns: searchColumns,
       searchValue: searchValue,
-      filter: filter,
+      filter,
     });
+    let pCount = 1;
+    if (count) {
+      pCount = Math.ceil(count / pageSize);
+    }
+    setPageCount(pCount);
+    setRowCount(count);
+
+    return data;
   };
 
   const { data: tableData, isLoading } = useQuery(
@@ -130,7 +126,7 @@ export default function ReactTable<
                       <th
                         key={header.id}
                         scope="col"
-                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900"
+                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white bg-company"
                       >
                         {header.isPlaceholder ? null : (
                           <div
@@ -147,10 +143,10 @@ export default function ReactTable<
                             )}
                             {{
                               desc: (
-                                <ChevronUpIcon className="inline-block ml-3 -mr-1 h-5 w-5" />
+                                <ChevronUpIcon className="inline-block ml-3 -mr-1 h-4 w-4" />
                               ),
                               asc: (
-                                <ChevronDownIcon className="inline-block ml-3 -mr-1 h-5 w-5" />
+                                <ChevronDownIcon className="inline-block ml-3 -mr-1 h-4 w-4" />
                               ),
                             }[header.column.getIsSorted() as string] ?? null}
                           </div>
@@ -164,10 +160,10 @@ export default function ReactTable<
                 {isLoading
                   ? Array.from({ length: basePageSize }).map((_, idx) => (
                       <tr key={idx}>
-                        {columns.map((_, idx) => (
+                        {columns.map((_: any, idx: number) => (
                           <td
                             key={idx}
-                            className="whitespace-nowrap px-3 py-4 text-sm text-gray-500"
+                            className="whitespace-nowrap px-3 py-4 text-sm text-gray-600"
                           >
                             <Skeleton />
                           </td>
@@ -179,7 +175,7 @@ export default function ReactTable<
                         {row.getVisibleCells().map((cell) => (
                           <td
                             key={cell.id}
-                            className="whitespace-nowrap px-3 py-4 text-sm text-gray-500"
+                            className="whitespace-nowrap px-3 py-4 text-sm text-gray-600"
                           >
                             {flexRender(
                               cell.column.columnDef.cell,
@@ -213,7 +209,7 @@ export default function ReactTable<
       <div className="px-4 py-3 flex items-center justify-center border-t border-gray-200/50 sm:px-6">
         <div className="sm:flex-1 sm:flex sm:items-center sm:justify-between mt-4">
           <div>
-            <p className="text-sm ml-4 mt">
+            <p className="text-sm mt font-medium ml-4 text-gray-600">
               <select
                 value={table.getState().pagination.pageSize}
                 onChange={(e) => {
@@ -229,7 +225,7 @@ export default function ReactTable<
               <span className="font-medium ml-4">{`af ${rowCount} niðurstöðum`}</span>
             </p>
           </div>
-          <div className="flex-1 flex justify-between sm:justify-end">
+          <div className="flex-1 flex justify-between sm:justify-end text-gray-600">
             {pageIndex > 5 && (
               <button
                 className="hover:cursor-pointer relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md hover:bg-white/10"

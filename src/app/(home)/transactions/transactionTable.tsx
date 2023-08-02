@@ -1,12 +1,12 @@
 'use client';
 
-import { Table } from '@/types';
+import { TableRow } from '@/types';
 import { useMemo, useState } from 'react';
 import ReactTable from '@/components/ReactTable/ReactTable';
 import { format } from 'date-fns';
 
 type Props = {
-  initialData: Table<'transaction'>[];
+  initialData: TableRow<'transaction'>[];
 };
 
 export default function ({ initialData }: Props) {

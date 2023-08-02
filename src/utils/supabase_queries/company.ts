@@ -1,8 +1,8 @@
-import { AppSupabaseClient, Table } from '@/types';
+import { AppSupabaseClient, TableRow } from '@/types';
 
 export const getCompany = async (
   supabase: AppSupabaseClient
-): Promise<Table<'company'>[]> => {
+): Promise<TableRow<'company'>[]> => {
   // RLS is enabled
   const { data: companyData, error } = await supabase
     .from('company')

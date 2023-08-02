@@ -1,8 +1,8 @@
-import { AppSupabaseClient, Table } from '@/types';
+import { AppSupabaseClient, TableRow } from '@/types';
 
 export const getProfile = async (
   supabase: AppSupabaseClient
-): Promise<Table<'profile'>> => {
+): Promise<TableRow<'profile'>> => {
   const { data: userData, error: getUserError } = await supabase.auth.getUser();
 
   if (getUserError) {

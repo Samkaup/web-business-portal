@@ -1,22 +1,21 @@
-import { Database } from '@/lib/database.types';
-import { Table } from '@/types';
-import { ColumnDef } from '@tanstack/react-table';
+import { TableName, TableRow } from '@/types';
+import { type ColumnDef } from '@tanstack/react-table';
 
 export type DefaultSort = {
   id: string;
   desc: boolean;
 };
 
-export type Props<T extends keyof Database['public']['Tables']> = {
-  columns: ColumnDef<Table<T>>[];
-  tableName: string;
+export type Props<T extends TableName> = {
+  columns: any;
+  tableName: T;
   defaultSort: DefaultSort;
   selectQuery: string;
   queryKey?: string;
   searchColumns?: string[];
   searchValue?: string;
   filter?: string;
-  initialData?: Table<T>[] | null;
+  initialData?: TableRow<T>[] | null;
 };
 
 export type ManualProps = {

@@ -1,12 +1,10 @@
-import { AppSupabaseClient } from '@/types';
+import { AppSupabaseClient, TableName, TableRow } from '@/types';
 
-// type TableCountProps = {
-//   table: any
-// }
 type RangeProps = {
   from: number;
   to: number;
 };
+
 type SortingProps = {
   column: string;
   options: {
@@ -14,9 +12,9 @@ type SortingProps = {
   };
 };
 
-type TableProps = {
+type TableProps<T extends TableName> = {
   supabaseClient: AppSupabaseClient;
-  table: string;
+  table: T;
   selectQuery: string;
   range?: RangeProps;
   sorting?: SortingProps;
@@ -25,7 +23,7 @@ type TableProps = {
   filter?: string;
 };
 
-export const getTable = async ({
+export const getTable = async <T extends TableName>({
   supabaseClient,
   table,
   range,
@@ -34,17 +32,19 @@ export const getTable = async ({
   searchColumns,
   searchValue,
   filter,
-}: TableProps) => {
-  let query = supabaseClient.from(table).select(selectQuery);
+}: TableProps<T>) => {
+  let query = supabaseClient
+    .from(table)
+    .select(selectQuery, { count: 'exact' });
 
-  if (range) {
-    query = query.range(range.from, range.to);
-  }
-  if (sorting) {
-    query = query.order(sorting.column, {
+  if (range) query = query.range(range.from, range.to);
+
+  /* eslint-disable */
+  if (sorting)
+    query = query.order(sorting.column as string & keyof TableRow<T>, {
       ascending: sorting.options.ascending,
     });
-  }
+  /* eslint-enable */
 
   if (searchColumns && searchValue) {
     const orStr = searchColumns.map(
@@ -52,14 +52,14 @@ export const getTable = async ({
     );
 
     query = query.or(orStr.join(', '));
-  } else if (filter) {
-    query.or(filter);
-  }
+  } else if (filter) query.or(filter);
 
-  const { data, error } = await query;
+  const { data, count, error } = await query;
+
   if (error) {
     console.log(error.message);
     throw error;
   }
-  return (data as any) || [];
+
+  return { data, count };
 };

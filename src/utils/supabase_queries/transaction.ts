@@ -1,8 +1,8 @@
-import { AppSupabaseClient, Table } from '@/types';
+import { AppSupabaseClient, TableRow } from '@/types';
 
 export const getTransactions = async (
   supabase: AppSupabaseClient
-): Promise<Table<'transaction'>[]> => {
+): Promise<TableRow<'transaction'>[]> => {
   const { data: transactionData, error } = await supabase
     .from('transaction')
     .select('*');
