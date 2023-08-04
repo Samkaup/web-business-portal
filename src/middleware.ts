@@ -35,6 +35,7 @@ export const config = {
   matcher: [
     '/',
     '/transactions',
+    '/contacts',
     '/about',
     '/item/:path*',
     '/new',
