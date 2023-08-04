@@ -7,6 +7,7 @@ import { useState } from 'react';
 import TextInput from '@/components/Input/textInput';
 import Link from 'next/link';
 import { toast } from 'react-hot-toast';
+import Button from '@/components/ui/Button/button';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -71,20 +72,16 @@ export default function Login() {
               <div className="text-sm leading-6">
                 <Link
                   href="/auth/forgotPassword"
-                  className="font-semibold text-indigo-600 hover:text-indigo-500"
+                  className="font-semibold text-company hover:text-company-500"
                 >
                   Forgot password?
                 </Link>
               </div>
 
               <div>
-                <button
-                  type="submit"
-                  className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                  onClick={handleSignIn}
-                >
+                <Button className="w-full" onClick={handleSignIn}>
                   Inskrá
-                </button>
+                </Button>
               </div>
             </form>
           </div>

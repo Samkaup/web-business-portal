@@ -1,6 +1,7 @@
 'use client';
 import { TableRow } from '@/types';
 import { useState } from 'react';
+import Button from '../ui/Button/button';
 
 type Props = {
   companies?: TableRow<'company'>[];
@@ -31,12 +32,7 @@ export default function CompanyHeader({ companies = [] }: Props) {
           </div>
         </h3>
         <div className="mt-3 flex sm:ml-4 sm:mt-0">
-          <button
-            type="button"
-            className="inline-flex items-center btn-outline rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-          >
-            Stillingar
-          </button>
+          <Button secondary>Stillingar</Button>
           {/* <button
             type="button"
             className="ml-3 inline-flex items-center rounded-md bg-company px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-company-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-company-900"
