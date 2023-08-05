@@ -1,7 +1,7 @@
 'use client';
 import { TableRow } from '@/types';
 import { Context } from '@/utils/context-store';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 type Props = {
   companies?: TableRow<'company'>[];
 };
@@ -14,6 +14,8 @@ export default function CompanyHeader({ companies = [] }: Props) {
     setCompany(selectedCompany);
   };
 
+  useEffect(() => console.log(company), [company]);
+
   return (
     <>
       <div className="border-b border-gray-200 pb-5 sm:flex sm:items-center sm:justify-between">
@@ -23,7 +25,7 @@ export default function CompanyHeader({ companies = [] }: Props) {
               id="company"
               name="company"
               onChange={(e) => updateCompany(e.target.value)}
-              defaultValue={company.id}
+              defaultValue={company?.id}
               className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-company-600 sm:text-sm sm:leading-6"
             >
               {companies.map((c) => (
