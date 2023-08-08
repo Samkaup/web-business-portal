@@ -1,71 +1,65 @@
-import { AppSupabaseClient, Table } from '@/types';
+import { AppSupabaseClient, TableName, TableRow } from '@/types';
 
-export const getAllItems = async (
-  supabase: AppSupabaseClient
-): Promise<Array<Table<'items'>>> => {
-  const { data, error } = await supabase.from('items').select('*');
-
-  if (error) {
-    console.log(error);
-    throw error;
-  }
-
-  return data;
+type RangeProps = {
+  from: number;
+  to: number;
 };
 
-export const insertItem = async (
-  supabase: AppSupabaseClient,
-  item: { name: string; description: string }
-): Promise<Table<'items'>> => {
-  const { data, error } = await supabase
-    .from('items')
-    .insert(item)
-    .select('*')
-    .single();
-
-  if (error) {
-    throw error;
-  }
-
-  return data;
+type SortingProps = {
+  column: string;
+  options: {
+    ascending: boolean;
+  };
 };
 
-export const updateItem = async (
-  supabase: AppSupabaseClient,
-  item: { id: string; name: string; description: string }
-) => {
-  const { data, error } = await supabase.from('items').update(item).single();
-
-  if (error) {
-    throw error;
-  }
-
-  return data;
+type TableProps<T extends TableName> = {
+  supabaseClient: AppSupabaseClient;
+  table: T;
+  selectQuery: string;
+  range?: RangeProps;
+  sorting?: SortingProps;
+  searchColumns?: string[];
+  searchValue?: string | string[];
+  filter?: string;
 };
 
-export const deleteItem = async (supabase: AppSupabaseClient, id: string) => {
-  const { error } = await supabase.from('items').delete().match({ id });
+export const getTable = async <T extends TableName>({
+  supabaseClient,
+  table,
+  range,
+  selectQuery,
+  sorting,
+  searchColumns,
+  searchValue,
+  filter,
+}: TableProps<T>) => {
+  let query = supabaseClient
+    .from(table)
+    .select(selectQuery, { count: 'exact' });
+
+  if (range) query = query.range(range.from, range.to);
+
+  /* eslint-disable */
+  if (sorting)
+    query = query.order(sorting.column as string & keyof TableRow<T>, {
+      ascending: sorting.options.ascending,
+    });
+  /* eslint-enable */
+
+  if (searchColumns && searchValue) {
+    const orStr = searchColumns.map(
+      (col: string) => `${col}.ilike.%${searchValue}%`
+    );
+
+    query = query.or(orStr.join(', '));
+  } else if (filter) query.or(filter);
+
+  const { data, count, error } = await query;
 
   if (error) {
+    console.log(error.message);
     throw error;
   }
 
-  return true;
-};
-
-export const getItem = async (
-  supabase: AppSupabaseClient,
-  id: string
-): Promise<Table<'items'>> => {
-  const { data, error } = await supabase
-    .from('items')
-    .select('*')
-    .eq('id', id)
-    .single();
-
-  if (error) {
-    throw error;
-  }
-
-  return data;
+  return { data, count };
 };

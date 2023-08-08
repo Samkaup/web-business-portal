@@ -1,9 +1,9 @@
 'use client';
-import { Table } from '@/types';
+import { TableRow } from '@/types';
 import { Context } from '@/utils/context-store';
 import { useContext } from 'react';
 type Props = {
-  companies?: Table<'company'>[];
+  companies?: TableRow<'company'>[];
 };
 
 export default function CompanyHeader({ companies = [] }: Props) {
