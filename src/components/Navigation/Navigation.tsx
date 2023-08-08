@@ -18,9 +18,14 @@ const navigation = [
 const userNavigation = [
   {
     name: 'Mínar stillingar',
+    href: '/profile',
     onClick: () => console.log('Mínar stillingar'),
   },
-  { name: 'Fyrirtækin mín', onClick: () => console.log('Settings clicked') },
+  {
+    name: 'Fyrirtækin mín',
+    href: '/company',
+    onClick: () => console.log('Settings clicked'),
+  },
 ];
 
 function classNames(...classes) {
@@ -114,14 +119,16 @@ export default function Navigation() {
                             {userNavigation.map((item) => (
                               <Menu.Item key={item.name}>
                                 {({ active }) => (
-                                  <button
-                                    className={classNames(
-                                      active ? 'bg-gray-100' : '',
-                                      'block px-4 py-2 text-sm text-gray-700 w-full'
-                                    )}
-                                  >
-                                    {item.name}
-                                  </button>
+                                  <Link key={item.name} href={item.href}>
+                                    <button
+                                      className={classNames(
+                                        active ? 'bg-gray-100' : '',
+                                        'block px-4 py-2 text-sm text-gray-700 w-full'
+                                      )}
+                                    >
+                                      {item.name}
+                                    </button>
+                                  </Link>
                                 )}
                               </Menu.Item>
                             ))}
