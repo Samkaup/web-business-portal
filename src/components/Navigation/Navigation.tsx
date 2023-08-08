@@ -3,14 +3,10 @@ import { Fragment } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import Logo from '@/components/Logo/Logo';
+import { useGetProfile } from '@/utils/react_query_hooks/profile';
+import { useGetSelectedCompany } from '@/utils/react_query_hooks/selected_company';
 import Link from 'next/link';
 
-const user = {
-  name: 'Tom Cook',
-  email: 'tom@example.com',
-  initals: 'TC',
-  selectedCompany: 'Samherji hf.',
-};
 const navigation = [
   { name: 'Heim', href: '#', current: true },
   { name: 'Hreyfingaryfirlit', href: '#', current: false },
@@ -18,20 +14,31 @@ const navigation = [
   { name: 'Stillingar fyrirtækis', href: '#', current: false },
 ];
 const userNavigation = [
-  { name: 'Your Profile', href: '#' },
-  { name: 'Settings', href: '#' },
-  { name: 'Sign out', href: '#' },
+  {
+    name: 'Your Profile',
+    onClick: () => console.log('Your Profile clicked'),
+  },
+  { name: 'Settings', onClick: () => console.log('Settings clicked') },
 ];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
+function getInitals(fullName: string) {
+  const parts: string[] = fullName.split(' ');
+  const initalsArr = parts.map((part: string) => part.at(0)).slice(0, 2);
+  return initalsArr.join('');
+}
+
 export default function Navigation() {
+  const { data, isSuccess } = useGetProfile();
+  const { data: selectedCompany } = useGetSelectedCompany();
+
   return (
     <>
       <div className="">
-        <Disclosure as="nav" className="bg-company-950">
+        <Disclosure as="nav" className="bg-company">
           {({ open }) => (
             <>
               <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -45,30 +52,33 @@ export default function Navigation() {
                     <div className="hidden md:block">
                       <div className="ml-10 flex items-baseline space-x-4">
                         {navigation.map((item) => (
-                          <a
+                          <Link
                             key={item.name}
                             href={item.href}
                             className={classNames(
                               item.current
                                 ? 'bg-white/10 text-white'
-                                : 'text-white hover:bg-company-950 hover:bg-opacity-75',
+                                : 'text-white hover:bg-company hover:bg-opacity-75',
                               'rounded-md px-3 py-2 text-sm font-medium'
                             )}
                             aria-current={item.current ? 'page' : undefined}
                           >
                             {item.name}
-                          </a>
+                          </Link>
                         ))}
                       </div>
                     </div>
                   </div>
                   <div className="hidden md:block">
                     <div className="ml-4 flex items-center md:ml-6">
+                      <p className="text-white">
+                        Selected company: {selectedCompany}
+                      </p>
                       <button
                         type="button"
                         className="rounded-full bg-company p-1 text-white hover:text-white/50 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-company"
                       >
-                        <span className="sr-only">View notifications</span>
+                        <span className="sr-only">Tilkynningar</span>
                         <BellIcon className="h-6 w-6" aria-hidden="true" />
                       </button>
 
@@ -79,7 +89,7 @@ export default function Navigation() {
                             <span className="sr-only">Open user menu</span>
                             <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white ">
                               <span className="font-medium leading-none text-company-950">
-                                {user.initals}
+                                {isSuccess ? getInitals(data.full_name) : ''}
                               </span>
                             </span>
                           </Menu.Button>
@@ -97,18 +107,32 @@ export default function Navigation() {
                             {userNavigation.map((item) => (
                               <Menu.Item key={item.name}>
                                 {({ active }) => (
-                                  <a
-                                    href={item.href}
+                                  <button
                                     className={classNames(
                                       active ? 'bg-gray-100' : '',
-                                      'block px-4 py-2 text-sm text-gray-700'
+                                      'block px-4 py-2 text-sm text-gray-700 w-full'
                                     )}
                                   >
                                     {item.name}
-                                  </a>
+                                  </button>
                                 )}
                               </Menu.Item>
                             ))}
+                            <Menu.Item>
+                              {({ active }) => (
+                                <form action="/auth/signout" method="post">
+                                  <button
+                                    type="submit"
+                                    className={classNames(
+                                      active ? 'bg-gray-100' : '',
+                                      'block px-4 py-2 text-sm text-gray-700 w-full'
+                                    )}
+                                  >
+                                    Sign Out
+                                  </button>
+                                </form>
+                              )}
+                            </Menu.Item>
                           </Menu.Items>
                         </Transition>
                       </Menu>
@@ -116,7 +140,7 @@ export default function Navigation() {
                   </div>
                   <div className="-mr-2 flex md:hidden">
                     {/* Mobile menu button */}
-                    <Disclosure.Button className="inline-flex items-center justify-center rounded-md bg-company p-2 text-white hover:bg-company-950 hover:bg-opacity-75 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-company">
+                    <Disclosure.Button className="inline-flex items-center justify-center rounded-md bg-company p-2 text-white hover:bg-company hover:bg-opacity-75 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-company">
                       <span className="sr-only">Open main menu</span>
                       {open ? (
                         <XMarkIcon
@@ -143,8 +167,8 @@ export default function Navigation() {
                       href={item.href}
                       className={classNames(
                         item.current
-                          ? 'bg-company-950 text-white'
-                          : 'text-white hover:bg-company-950 hover:bg-opacity-75',
+                          ? 'bg-company text-white'
+                          : 'text-white hover:bg-company hover:bg-opacity-75',
                         'block rounded-md px-3 py-2 text-base font-medium'
                       )}
                       aria-current={item.current ? 'page' : undefined}
@@ -158,23 +182,20 @@ export default function Navigation() {
                     <div className="flex-shrink-0">
                       <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white ">
                         <span className="font-medium leading-none text-company-950">
-                          {user.initals}
+                          {isSuccess ? getInitals(data.full_name) : ''}
                         </span>
                       </span>
                     </div>
                     <div className="ml-3">
                       <div className="text-base font-medium text-white">
-                        {user.name}
-                      </div>
-                      <div className="text-sm font-medium text-white/75">
-                        {user.email}
+                        {isSuccess ? data?.full_name : ''}
                       </div>
                     </div>
                     <button
                       type="button"
-                      className="ml-auto flex-shrink-0 rounded-full bg-company-950 p-1 text-company hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-company"
+                      className="ml-auto flex-shrink-0 rounded-full bg-company p-1 text-company hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-company"
                     >
-                      <span className="sr-only">View notifications</span>
+                      <span className="sr-only">Tilkynningar</span>
                       <BellIcon className="h-6 w-6" aria-hidden="true" />
                     </button>
                   </div>
@@ -183,7 +204,6 @@ export default function Navigation() {
                       <Disclosure.Button
                         key={item.name}
                         as="a"
-                        href={item.href}
                         className="block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-company-950 hover:bg-opacity-75"
                       >
                         {item.name}
