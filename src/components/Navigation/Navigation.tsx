@@ -1,10 +1,11 @@
 'use client';
-import { Fragment } from 'react';
+import { Fragment, useContext } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import Logo from '@/components/Logo/Logo';
+import { Context } from '@/utils/context-store';
+
 import { useGetProfile } from '@/utils/react_query_hooks/profile';
-import { useGetSelectedCompany } from '@/utils/react_query_hooks/selected_company';
 import Link from 'next/link';
 
 const navigation = [
@@ -15,10 +16,10 @@ const navigation = [
 ];
 const userNavigation = [
   {
-    name: 'Your Profile',
-    onClick: () => console.log('Your Profile clicked'),
+    name: 'Mínar stillingar',
+    onClick: () => console.log('Mínar stillingar'),
   },
-  { name: 'Settings', onClick: () => console.log('Settings clicked') },
+  { name: 'Fyrirtækin mín', onClick: () => console.log('Settings clicked') },
 ];
 
 function classNames(...classes) {
@@ -33,7 +34,7 @@ function getInitals(fullName: string) {
 
 export default function Navigation() {
   const { data, isSuccess } = useGetProfile();
-  const { data: selectedCompany } = useGetSelectedCompany();
+  const { company } = useContext(Context);
 
   return (
     <>
@@ -71,9 +72,11 @@ export default function Navigation() {
                   </div>
                   <div className="hidden md:block">
                     <div className="ml-4 flex items-center md:ml-6">
-                      <p className="text-white">
-                        Selected company: {selectedCompany}
-                      </p>
+                      {company && (
+                        <p className="text-white font-extralight mr-8">
+                          Fyrirtæki: {company.name}
+                        </p>
+                      )}
                       <button
                         type="button"
                         className="rounded-full bg-company p-1 text-white hover:text-white/50 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-company"

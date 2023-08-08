@@ -7,6 +7,7 @@ import { useState } from 'react';
 import TextInput from '@/components/Input/textInput';
 import Link from 'next/link';
 import { toast } from 'react-hot-toast';
+import Logo from '@/components/Logo/Logo';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -41,9 +42,12 @@ export default function Login() {
   return (
     <>
       <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24 bg-white rounded-lg">
-        <div className="mx-auto w-full max-w-sm lg:w-96">
-          <h2 className="mt-8 text-2xl font-bold leading-9 tracking-tight text-gray-900">
-            Inskráning
+        <div className="mx-auto w-full max-w-sm lg:w-96 ">
+          <div className="flex justify-center">
+            <Logo width={250} variant="blue"></Logo>
+          </div>
+          <h2 className="mt-8 text-2xl font-bold leading-9 tracking-tight text-gray-900 text-center">
+            Innskráning
           </h2>
           <div className="mt-10">
             <form action="#" method="POST" className="space-y-6">
@@ -54,7 +58,7 @@ export default function Login() {
                 type="email"
                 autoComplete="email"
                 label="Netfang"
-                placeholder="you@example.com"
+                placeholder="Netfangið þitt"
                 isError={emailError}
               />
               <TextInput
@@ -71,19 +75,19 @@ export default function Login() {
               <div className="text-sm leading-6">
                 <Link
                   href="/auth/forgotPassword"
-                  className="font-semibold text-indigo-600 hover:text-indigo-500"
+                  className="font-semibold text-company-900 hover:text-company-800"
                 >
-                  Forgot password?
+                  Gleymt lykilorð?
                 </Link>
               </div>
 
               <div>
                 <button
                   type="submit"
-                  className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  className="flex w-full justify-center rounded-md bg-company-900 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-company-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-company-900"
                   onClick={handleSignIn}
                 >
-                  Inskrá
+                  Skrá inn
                 </button>
               </div>
             </form>
