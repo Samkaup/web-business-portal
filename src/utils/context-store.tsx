@@ -1,9 +1,9 @@
-import { Table } from '@/types';
+import { TableRow } from '@/types';
 import React from 'react';
 import { createContext } from 'react';
 import { useSessionStorage } from 'usehooks-ts';
 
-type CompanyType = Table<'company'>;
+type CompanyType = TableRow<'company'>;
 
 export const Context = createContext<{
   company: CompanyType | undefined;
