@@ -18,7 +18,6 @@ type TableProps<T extends TableName> = {
   selectQuery: string;
   range?: RangeProps;
   sorting?: SortingProps;
-  searchColumns?: string[];
   searchValue?: string | string[];
   filter?: string;
 };
@@ -29,7 +28,6 @@ export const getTable = async <T extends TableName>({
   range,
   selectQuery,
   sorting,
-  searchColumns,
   searchValue,
   filter,
 }: TableProps<T>) => {
@@ -46,12 +44,10 @@ export const getTable = async <T extends TableName>({
     });
   /* eslint-enable */
 
-  if (searchColumns && searchValue) {
-    const orStr = searchColumns.map(
-      (col: string) => `${col}.ilike.%${searchValue}%`
-    );
-
-    query = query.or(orStr.join(', '));
+  if (searchValue) {
+    query = query.textSearch('full_text_search', `'${searchValue}'`, {
+      type: 'websearch',
+    });
   } else if (filter) query.or(filter);
 
   const { data, count, error } = await query;

@@ -27,7 +27,6 @@ export default function ReactTable<T extends TableName>({
   tableName,
   defaultSort,
   queryKey,
-  searchColumns,
   searchValue,
   filter,
   selectQuery,
@@ -70,7 +69,6 @@ export default function ReactTable<T extends TableName>({
           ascending: !sorting[0].desc,
         },
       },
-      searchColumns: searchColumns,
       searchValue: searchValue,
       filter,
     });
@@ -87,7 +85,7 @@ export default function ReactTable<T extends TableName>({
   const { data: tableData, isLoading } = useQuery(
     [
       queryKey ? queryKey : tableName,
-      { pageIndex, pageSize, sorting, searchColumns, searchValue, filter },
+      { pageIndex, pageSize, sorting, searchValue, filter },
     ],
     async () => fetchData(),
     { keepPreviousData: true }

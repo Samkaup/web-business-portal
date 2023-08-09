@@ -3,9 +3,10 @@
 import { useMemo, useState } from 'react';
 import ReactTable from '@/components/ReactTable/ReactTable';
 import { format } from 'date-fns';
+import TextInput from '@/components/Input/textInput';
 
 export default function () {
-  const [searchValue, _] = useState('');
+  const [searchValue, setSearchValue] = useState('');
 
   const defaultSort = {
     id: 'created_at',
@@ -51,13 +52,20 @@ export default function () {
   );
 
   return (
-    <ReactTable<'transaction'>
-      columns={columns}
-      tableName={'transaction'}
-      selectQuery={'created_at, amount, contact (full_name, department (name))'}
-      searchColumns={['id']}
-      searchValue={searchValue}
-      defaultSort={defaultSort}
-    />
+    <>
+      <TextInput
+        value={searchValue}
+        onChange={setSearchValue}
+        name="search"
+        placeholder="Leita í Lista"
+      />
+      <ReactTable<'transaction'>
+        columns={columns}
+        tableName={'transaction'}
+        selectQuery={'*, contact!inner(full_name, department!inner (name))'}
+        searchValue={searchValue}
+        defaultSort={defaultSort}
+      />
+    </>
   );
 }
