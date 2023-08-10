@@ -13,6 +13,24 @@ export const getContacts = async (
   return contacts;
 };
 
+export const getContact = async (
+  supabase: AppSupabaseClient,
+  id: string
+): Promise<TableRow<'contact'>> => {
+  const { data: contact, error } = await supabase
+    .from('contact')
+    .select('*, department(*)')
+    .eq('id', id)
+    .single();
+
+  if (error) {
+    console.log(error);
+    throw error;
+  }
+
+  return contact;
+};
+
 export const getDepartmentsWithContacts = async (
   supabase: AppSupabaseClient
 ): Promise<any> => {

@@ -4,11 +4,11 @@ import supabaseClient from '@/utils/supabase-browser';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-import TextInput from '@/components/Input/textInput';
+import TextInput from '@/components/ui/Input/textInput';
 import Link from 'next/link';
 import { toast } from 'react-hot-toast';
 import Logo from '@/components/Logo/Logo';
-import Button from '@/components/ui/Button/button';
+import Button from '@/components/ui/Button/Button';
 
 export default function Login() {
   const [email, setEmail] = useState('');

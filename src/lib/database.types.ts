@@ -172,6 +172,7 @@ export interface Database {
           contact_id: number
           created_at: string
           id: string
+          full_text_search: string | null
         }
         Insert: {
           amount: number
@@ -199,6 +200,12 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
+      full_text_search: {
+        Args: {
+          "": unknown
+        }
+        Returns: string
+      }
       user_can_access_contact: {
         Args: {
           contact_id: number

@@ -20,7 +20,7 @@ export default function Button({
   children,
 }: Props) {
   let baseClassName =
-    'font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2';
+    'inline-flex items-center font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2';
 
   if (primary && !secondary)
     baseClassName =
