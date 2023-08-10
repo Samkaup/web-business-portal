@@ -1,12 +1,15 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import ReactTable from '@/components/ReactTable/ReactTable';
 import { format } from 'date-fns';
 import TextInput from '@/components/Input/textInput';
+import DateRangePicker from '@/components/ui/DateRangePicker';
+import { DatePickerProvider } from '@rehookify/datepicker';
 
 export default function () {
   const [searchValue, setSearchValue] = useState('');
+  const [selectedDates, onDatesChange] = useState<Date[]>([]);
 
   const defaultSort = {
     id: 'created_at',
@@ -51,8 +54,16 @@ export default function () {
     []
   );
 
+  useEffect(() => console.log(selectedDates), [selectedDates]);
   return (
-    <>
+    <DatePickerProvider
+      config={{
+        selectedDates,
+        onDatesChange,
+        dates: { mode: 'range' },
+      }}
+    >
+      <DateRangePicker />
       <TextInput
         value={searchValue}
         onChange={setSearchValue}
@@ -66,6 +77,6 @@ export default function () {
         searchValue={searchValue}
         defaultSort={defaultSort}
       />
-    </>
+    </DatePickerProvider>
   );
 }

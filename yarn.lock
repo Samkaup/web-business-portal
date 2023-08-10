@@ -2122,6 +2122,11 @@
     "@react-types/overlays" "^3.8.0"
     "@react-types/shared" "^3.18.1"
 
+"@rehookify/datepicker@^6.1.0":
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/@rehookify/datepicker/-/datepicker-6.1.0.tgz#3ed3139dd63d6a48ea6125fec6fc824f7e9a904c"
+  integrity sha512-SnIhM5BX9IpJCuEFvxZfRh92dLe8mj5uPHLh0fDOs7Jla5b+TJZsrXFQQQFceMFIPU42NaaRhNyWCgmadEgf5g==
+
 "@semantic-release/changelog@^6.0.3":
   version "6.0.3"
   resolved "https://registry.yarnpkg.com/@semantic-release/changelog/-/changelog-6.0.3.tgz#6195630ecbeccad174461de727d5f975abc23eeb"
