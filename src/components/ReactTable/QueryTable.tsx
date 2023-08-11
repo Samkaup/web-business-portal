@@ -1,109 +1,48 @@
+/* A Table component adapted from the ReactTable component (from Sport) created
+ * to decouple the component.
+ * */
+
 import * as React from 'react';
-import { useMemo, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import {
-  PaginationState,
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
-  SortingState,
   useReactTable,
-  Table as ReactTable,
 } from '@tanstack/react-table';
 
-import { Props } from './ReactTable.types';
+import { NewTableProps } from './ReactTable.types';
 
 import {
   ArrowDownIcon as ChevronDownIcon,
   ArrowUpIcon as ChevronUpIcon,
 } from '@heroicons/react/24/outline';
-import supabaseBrowser from '@/utils/supabase-browser';
-import { getTable } from '@/utils/supabase-queries';
-import { TableName, ViewName } from '@/types';
-// A debounced input react component
 
-export default function ReactTable<T extends TableName | ViewName>({
+export default function QueryTable<T extends object>({
+  query,
   columns,
-  tableName,
-  defaultSort,
-  queryKey,
-  searchValue,
-  filter,
-  selectQuery,
+  sortingState,
+  setSortingState,
+  paginationState,
+  setPaginationState,
+  pageSizes = [20, 50, 100],
   className,
-}: Props<T>) {
-  const [rowCount, setRowCount] = useState<number>(0);
-  const [pageCount, setPageCount] = useState<number>(0);
-  const [sorting, setSorting] = useState<SortingState>([defaultSort]);
-  const basePageSize = 20;
-  const pageSizes = [basePageSize, 50, 100];
+}: NewTableProps<T>) {
+  const basePageSize = pageSizes.at(0);
 
-  const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: basePageSize,
-  });
-
-  const pagination = useMemo(
-    () => ({
-      pageIndex,
-      pageSize,
-    }),
-    [pageIndex, pageSize]
-  );
-
-  const fetchData = async () => {
-    const rangeFrom = pageIndex * pageSize;
-    const rangeTo = (pageIndex + 1) * pageSize - 1;
-
-    const { data, count } = await getTable({
-      supabaseClient: supabaseBrowser,
-      table: tableName,
-      selectQuery: selectQuery,
-      range: {
-        from: rangeFrom,
-        to: rangeTo,
-      },
-
-      sorting: {
-        column: sorting[0].id,
-        options: {
-          ascending: !sorting[0].desc,
-        },
-      },
-      searchValue: searchValue,
-      filter,
-    });
-    let pCount = 1;
-    if (count) {
-      pCount = Math.ceil(count / pageSize);
-    }
-    setPageCount(pCount);
-    setRowCount(count);
-
-    return data;
-  };
-
-  const { data: tableData, isLoading } = useQuery(
-    [
-      queryKey ? queryKey : tableName,
-      { pageIndex, pageSize, sorting, searchValue, filter },
-    ],
-    async () => fetchData(),
-    { keepPreviousData: true }
-  );
+  const { data, isLoading } = query;
 
   const table = useReactTable({
-    data: tableData,
+    data: data?.data,
     columns,
-    pageCount,
+    pageCount: Math.ceil(data?.rowCount / paginationState.pageSize),
     state: {
-      pagination,
-      sorting,
+      pagination: paginationState,
+      sorting: sortingState,
     },
     manualPagination: true,
     manualSorting: true,
-    onPaginationChange: setPagination,
-    onSortingChange: setSorting,
+    onPaginationChange: setPaginationState,
+    onSortingChange: setSortingState,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
   });
@@ -221,11 +160,11 @@ export default function ReactTable<T extends TableName | ViewName>({
                   </option>
                 ))}
               </select>
-              <span className="font-medium ml-4">{`af ${rowCount} niðurstöðum`}</span>
+              <span className="font-medium ml-4">{`af ${data?.rowCount} niðurstöðum`}</span>
             </p>
           </div>
           <div className="flex-1 flex justify-between sm:justify-end text-gray-600">
-            {pageIndex > 5 && (
+            {paginationState.pageIndex > 5 && (
               <button
                 className="hover:cursor-pointer relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md hover:bg-white/10"
                 onClick={() => table.setPageIndex(0)}
@@ -246,7 +185,7 @@ export default function ReactTable<T extends TableName | ViewName>({
               className="ml-5 hover:cursor-pointer relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md hover:bg-white/10"
               disabled={true}
             >
-              <span>Síða: {pageIndex + 1}</span>
+              <span>Síða: {paginationState.pageIndex + 1}</span>
             </button>
             {table.getCanNextPage() && (
               <button
