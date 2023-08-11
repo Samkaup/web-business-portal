@@ -1,7 +1,7 @@
 import Header from '@/components/Header/Header';
 import { TableRow } from '@/types';
 import supabaseServer from '@/utils/supabase-server';
-import { getContacts } from '@/utils/supabase_queries/contacts';
+import { getContacts } from '@/utils/supabase_queries/contact';
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import Link from 'next/link';
 import { format } from 'date-fns';
