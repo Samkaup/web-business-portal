@@ -172,6 +172,7 @@ export interface Database {
           contact_id: number
           created_at: string
           id: string
+          full_text_search: string | null
         }
         Insert: {
           amount: number
@@ -191,14 +192,38 @@ export interface Database {
             columns: ["contact_id"]
             referencedRelation: "contact"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transaction_contact_id_fkey"
+            columns: ["contact_id"]
+            referencedRelation: "detailed_transaction"
+            referencedColumns: ["contact_id"]
           }
         ]
       }
     }
     Views: {
-      [_ in never]: never
+      detailed_transaction: {
+        Row: {
+          amount: number | null
+          contact_email: string | null
+          contact_id: number | null
+          contact_name: string | null
+          contact_phone: string | null
+          created_at: string | null
+          department_external_id: string | null
+          department_name: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
+      full_text_search: {
+        Args: {
+          "": unknown
+        }
+        Returns: string
+      }
       user_can_access_contact: {
         Args: {
           contact_id: number
