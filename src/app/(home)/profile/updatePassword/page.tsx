@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 
-import TextInput from '@/components/Input/textInput';
+import TextInput from '@/components/ui/Input/textInput';
 import supabaseClient from '@/utils/supabase-browser';
 
 export default function Login() {

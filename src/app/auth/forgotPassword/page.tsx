@@ -3,7 +3,7 @@
 import supabaseClient from '@/utils/supabase-browser';
 import { useState } from 'react';
 
-import TextInput from '@/components/Input/textInput';
+import TextInput from '@/components/ui/Input/textInput';
 import { toast } from 'react-hot-toast';
 import Logo from '@/components/Logo/Logo';
 import Link from 'next/link';

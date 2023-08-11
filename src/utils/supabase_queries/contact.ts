@@ -3,16 +3,48 @@ import { AppSupabaseClient, TableRow } from '@/types';
 export const getContacts = async (
   supabase: AppSupabaseClient
 ): Promise<TableRow<'contact'>[]> => {
-  const { data: transactionData, error } = await supabase
-    .from('contact')
-    .select('*');
+  const { data: contacts, error } = await supabase.from('contact').select('*');
 
   if (error) {
     console.log(error);
     throw error;
   }
 
-  return transactionData;
+  return contacts;
+};
+
+export const getContact = async (
+  supabase: AppSupabaseClient,
+  id: string
+): Promise<TableRow<'contact'>> => {
+  const { data: contact, error } = await supabase
+    .from('contact')
+    .select('*, department(*)')
+    .eq('id', id)
+    .single();
+
+  if (error) {
+    console.log(error);
+    throw error;
+  }
+
+  return contact;
+};
+
+export const getDepartmentsWithContacts = async (
+  supabase: AppSupabaseClient
+): Promise<any> => {
+  const { data: departments, error } = await supabase
+    .from('department')
+    .select('*, contact(*)');
+  // console.log(departments)
+
+  if (error) {
+    console.log(error);
+    throw error;
+  }
+
+  return departments;
 };
 
 export const getContactCount = async (
