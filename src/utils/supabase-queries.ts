@@ -1,4 +1,5 @@
-import { AppSupabaseClient, TableName, TableRow } from '@/types';
+import { AppSupabaseClient, Row, RowName } from '@/types';
+import { formatDate } from './dateUtils';
 
 type RangeProps = {
   from: number;
@@ -12,7 +13,7 @@ type SortingProps = {
   };
 };
 
-type TableProps<T extends TableName> = {
+type TableProps<T extends RowName> = {
   supabaseClient: AppSupabaseClient;
   table: T;
   selectQuery: string;
@@ -20,9 +21,10 @@ type TableProps<T extends TableName> = {
   sorting?: SortingProps;
   searchValue?: string | string[];
   filter?: string;
+  dateRange?: Date[];
 };
 
-export const getTable = async <T extends TableName>({
+export const getTable = async <T extends RowName>({
   supabaseClient,
   table,
   range,
@@ -30,6 +32,7 @@ export const getTable = async <T extends TableName>({
   sorting,
   searchValue,
   filter,
+  dateRange,
 }: TableProps<T>) => {
   let query = supabaseClient
     .from(table)
@@ -39,16 +42,28 @@ export const getTable = async <T extends TableName>({
 
   /* eslint-disable */
   if (sorting)
-    query = query.order(sorting.column as string & keyof TableRow<T>, {
+    query = query.order(sorting.column as string & keyof Row<T>, {
       ascending: sorting.options.ascending,
     });
   /* eslint-enable */
 
   if (searchValue) {
-    query = query.textSearch('full_text_search', `'${searchValue}'`, {
-      type: 'websearch',
-    });
+    // query = query.or(
+    //   `full_name.ilike.*${searchValue}*, name.ilike.*${searchValue}*`,
+    //   {
+    //     foreignTable: 'contact, contact.department',
+    //   }
+    // );
+    // query = query.textSearch('full_text_search', `'${searchValue}'`, {
+    //   type: 'websearch',
+    // });
   } else if (filter) query.or(filter);
+
+  // Set Date Range
+  const start: Date | null = dateRange.at(0);
+  const end: Date | null = dateRange.at(1);
+  query = start ? query.filter('created_at', 'gte', formatDate(start)) : query;
+  query = end ? query.filter('created_at', 'lte', formatDate(end)) : query;
 
   const { data, count, error } = await query;
 
