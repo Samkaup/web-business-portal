@@ -1,4 +1,4 @@
-'use client';
+import classNames from '@/utils/style/classNames';
 import { ExclamationCircleIcon } from '@heroicons/react/20/solid';
 
 type Props = {
@@ -13,6 +13,7 @@ type Props = {
   required?: boolean;
   isError?: boolean;
   errorText?: string | null;
+  className?: string | null;
 };
 
 export default function TextInput({
@@ -26,6 +27,7 @@ export default function TextInput({
   errorText,
   value,
   onChange,
+  className,
 }: Props) {
   const baseStyle =
     'block w-full rounded-md border-0 py-1.5 pl-2 focus:ring-2 focus:ring-inset sm:leading-6';
@@ -36,14 +38,14 @@ export default function TextInput({
     'pr-10 text-red-900 ring-1 ring-inset ring-red-300 placeholder:text-red-300 focus:ring-2 focus:ring-inset focus:ring-red-500 sm:text-sm sm:leading-6';
 
   return (
-    <div>
+    <div className={className}>
       {label ? <Label label={label} name={name} /> : <></>}
-      <div className="relative mt-2 rounded-md shadow-sm">
+      <div className="relative rounded-md shadow-sm">
         <input
           type={type ? type : ''}
           name={name ? name : ''}
           autoComplete={autoComplete ? autoComplete : ''}
-          className={`${baseStyle} ${isError ? errorStyle : normalStyle}`}
+          className={classNames(baseStyle, isError ? errorStyle : normalStyle)}
           placeholder={placeholder ? placeholder : ''}
           required={required}
           onChange={(e) => onChange(e.target.value)}
