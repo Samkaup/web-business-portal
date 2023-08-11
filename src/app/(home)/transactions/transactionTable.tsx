@@ -1,20 +1,37 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
-import ReactTable from '@/components/ReactTable/ReactTable';
+import { useMemo, useState } from 'react';
 import { format } from 'date-fns';
-import TextInput from '@/components/Input/textInput';
-import DateRangePicker from '@/components/ui/DateRangePicker';
-import { DatePickerProvider } from '@rehookify/datepicker';
+import QueryTable from '@/components/ReactTable/QueryTable';
+import { PaginationState, SortingState } from '@tanstack/react-table';
+import { getDetailedTransactions } from '@/utils/supabase_queries/detailed_transaction';
+import { useQuery } from '@tanstack/react-query';
+import supabaseBrowser from '@/utils/supabase-browser';
+import { Row } from '@/types';
 
-export default function () {
-  const [searchValue, setSearchValue] = useState('');
-  const [selectedDates, onDatesChange] = useState<Date[]>([]);
+type Props = {
+  searchValue: string;
+  dates: Date[];
+  contact: Row<'contact'>;
+};
 
+export default function TransactionTable({
+  searchValue,
+  dates,
+  contact,
+}: Props) {
   const defaultSort = {
     id: 'created_at',
     desc: true,
   };
+  const [sorting, setSorting] = useState<SortingState>([defaultSort]);
+  const basePageSize = 20;
+  const pageSizes = [basePageSize, 50, 100];
+
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: basePageSize,
+  });
 
   const columns = useMemo(
     () => [
@@ -35,48 +52,71 @@ export default function () {
         cell: (props: any) => `${props.getValue()} kr`,
       },
       {
-        accessorKey: 'contact',
-        id: 'department',
+        accessorKey: 'department_name',
+        id: 'department_name',
         header: () => <span>Deild</span>,
         cell: (contact: any) => {
-          return <span>{contact.getValue().department.name}</span>;
+          return <span>{contact.getValue()}</span>;
         },
       },
       {
-        accessorKey: 'contact',
-        id: 'contact',
-        header: () => <span>Contact</span>,
+        accessorKey: 'contact_name',
+        id: 'contact_name',
+        header: () => <span>Úttektaraðili</span>,
         cell: (contact: any) => {
-          return <span>{contact.getValue().full_name}</span>;
+          return <span>{contact.getValue()}</span>;
         },
       },
     ],
     []
   );
 
-  useEffect(() => console.log(selectedDates), [selectedDates]);
+  const fetchData = async () => {
+    const rangeFrom = pagination.pageIndex * pagination.pageSize;
+    const rangeTo = (pagination.pageIndex + 1) * pagination.pageSize - 1;
+
+    // Filters
+    const filters: string[] = [];
+    if (contact) filters.push(`contact_id.eq.${contact.id}`);
+
+    const { data, count } = await getDetailedTransactions({
+      supabaseClient: supabaseBrowser,
+      range: {
+        from: rangeFrom,
+        to: rangeTo,
+      },
+      sorting: {
+        column: sorting[0].id,
+        options: {
+          ascending: !sorting[0].desc,
+        },
+      },
+      searchValue: searchValue,
+      dateRange: dates,
+      filters,
+    });
+
+    return { data, rowCount: count };
+  };
+
+  const query = useQuery(
+    [
+      'detailed_transaction',
+      { pagination, sorting, searchValue, dates, contact },
+    ],
+    async () => fetchData(),
+    { keepPreviousData: true }
+  );
+
   return (
-    <DatePickerProvider
-      config={{
-        selectedDates,
-        onDatesChange,
-        dates: { mode: 'range' },
-      }}
-    >
-      <DateRangePicker />
-      <TextInput
-        value={searchValue}
-        onChange={setSearchValue}
-        name="search"
-        placeholder="Leita í Lista"
-      />
-      <ReactTable<'transaction'>
-        columns={columns}
-        tableName={'transaction'}
-        selectQuery={'*, contact!inner(full_name, department!inner (name))'}
-        searchValue={searchValue}
-        defaultSort={defaultSort}
-      />
-    </DatePickerProvider>
+    <QueryTable
+      query={query}
+      columns={columns}
+      sortingState={sorting}
+      setSortingState={setSorting}
+      paginationState={pagination}
+      setPaginationState={setPagination}
+      pageSizes={pageSizes}
+    />
   );
 }
