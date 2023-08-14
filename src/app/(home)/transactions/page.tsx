@@ -1,6 +1,6 @@
 'use client';
 import Header from '@/components/Header/Header';
-import TextInput from '@/components/Input/textInput';
+import TextInput from '@/components/ui/Input/textInput';
 import DateRangePicker from '@/components/ui/DateRangePicker';
 import { DateRangePreset } from '@/components/ui/DateRangePicker/index.types';
 import {
