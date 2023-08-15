@@ -54,7 +54,7 @@ export default function Transactions() {
   ];
   return (
     <>
-      <Header title="Hreyfingaryfirlit" />
+      <Header title="Reikningar og hreyfingar" />
 
       <DatePickerProvider
         config={{
@@ -75,7 +75,7 @@ export default function Transactions() {
                 options={
                   contacts.isSuccess
                     ? [
-                        { id: null, label: 'Allir Úttektaraðiliar' },
+                        { id: null, label: 'Allir úttektaraðilar' },
                         ...contacts.data.map((c) => ({
                           id: c.id,
                           label: c.full_name,
