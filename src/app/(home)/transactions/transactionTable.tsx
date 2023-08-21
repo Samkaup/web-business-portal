@@ -53,8 +53,8 @@ export default function TransactionTable({
         },
       },
       {
-        accessorKey: 'store',
-        id: 'store',
+        accessorKey: 'store_number',
+        id: 'store_number',
         header: () => <span>Verslun</span>,
         cell: (props: any) => {
           return <span>{props.getValue()}</span>;
