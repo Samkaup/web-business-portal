@@ -18,20 +18,13 @@ type Props = {
   contact: Row<'contact'>;
 };
 
-const stores = [
-  { id: 255, name: 'Kjörbúðin Dalvík' },
-  { id: 210, name: 'Nettó Krossmói' },
-  { id: 475, name: 'Nettó Mosfellsbæ' },
-  { id: 200, name: 'Krambúðin Hringbraut' },
-];
-
 export default function TransactionTable({
   searchValue,
   dates,
   contact,
 }: Props) {
   const defaultSort = {
-    id: 'created_at',
+    id: 'date',
     desc: true,
   };
   const [sorting, setSorting] = useState<SortingState>([defaultSort]);
@@ -46,8 +39,8 @@ export default function TransactionTable({
   const columns = useMemo(
     () => [
       {
-        accessorKey: 'created_at',
-        id: 'created_at',
+        accessorKey: 'date',
+        id: 'date',
         header: () => <span>Dagsetning</span>,
         cell: (props: any) => {
           return (
@@ -63,8 +56,9 @@ export default function TransactionTable({
         accessorKey: 'store',
         id: 'store',
         header: () => <span>Verslun</span>,
-        cell: (props: any) =>
-          `${stores[Math.floor(Math.random() * stores.length)].name}`,
+        cell: (props: any) => {
+          return <span>{props.getValue()}</span>;
+        },
       },
       {
         accessorKey: 'department_name',
@@ -83,9 +77,9 @@ export default function TransactionTable({
         },
       },
       {
-        accessorKey: 'amount',
-        id: 'amount',
-        header: () => <span>Upphæð</span>,
+        accessorKey: 'amount_debit',
+        id: 'amount_debit',
+        header: () => <span>Upphæð (Deb)</span>,
         cell: (props: any) => {
           return (
             <span>
@@ -120,7 +114,7 @@ export default function TransactionTable({
 
     // Filters
     const filters: string[] = [];
-    if (contact) filters.push(`contact_id.eq.${contact.id}`);
+    if (contact) filters.push(`contact_id.eq.${contact.external_identifier}`);
 
     const { data, count } = await getDetailedTransactions({
       supabaseClient: supabaseBrowser,

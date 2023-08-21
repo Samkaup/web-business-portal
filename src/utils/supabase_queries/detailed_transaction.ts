@@ -57,8 +57,8 @@ export const getDetailedTransactions = async ({
 
   const start: Date | null = dateRange.at(0);
   const end: Date | null = dateRange.at(1);
-  query = start ? query.filter('created_at', 'gte', formatDate(start)) : query;
-  query = end ? query.filter('created_at', 'lte', formatDate(end)) : query;
+  query = start ? query.filter('date', 'gte', formatDate(start)) : query;
+  query = end ? query.filter('date', 'lte', formatDate(end)) : query;
 
   const { data, count, error } = await query;
 

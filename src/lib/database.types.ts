@@ -12,43 +12,46 @@ export interface Database {
       company: {
         Row: {
           created_at: string | null
-          id: number
+          credit_limit_amount: number | null
+          external_identifier: string
           name: string | null
-          ssn: string | null
           updated_at: string | null
         }
         Insert: {
           created_at?: string | null
-          id?: number
+          credit_limit_amount?: number | null
+          external_identifier: string
           name?: string | null
-          ssn?: string | null
           updated_at?: string | null
         }
         Update: {
           created_at?: string | null
-          id?: number
+          credit_limit_amount?: number | null
+          external_identifier?: string
           name?: string | null
-          ssn?: string | null
           updated_at?: string | null
         }
         Relationships: []
       }
       company_profile: {
         Row: {
-          company_id: number
+          company_id: string | null
           created_at: string | null
+          id: string
           profile_id: string
           updated_at: string | null
         }
         Insert: {
-          company_id: number
+          company_id?: string | null
           created_at?: string | null
+          id?: string
           profile_id: string
           updated_at?: string | null
         }
         Update: {
-          company_id?: number
+          company_id?: string | null
           created_at?: string | null
+          id?: string
           profile_id?: string
           updated_at?: string | null
         }
@@ -57,7 +60,7 @@ export interface Database {
             foreignKeyName: "company_profile_company_id_fkey"
             columns: ["company_id"]
             referencedRelation: "company"
-            referencedColumns: ["id"]
+            referencedColumns: ["external_identifier"]
           },
           {
             foreignKeyName: "company_profile_profile_id_fkey"
@@ -69,30 +72,39 @@ export interface Database {
       }
       contact: {
         Row: {
-          cell_phone: string
+          cell_phone: string | null
+          closed: boolean | null
+          closed_at: string | null
           created_at: string | null
-          department_id: number | null
+          department_id: string | null
           email_address: string | null
-          full_name: string
-          id: number
+          external_identifier: string
+          full_name: string | null
+          main_contact: boolean | null
           updated_at: string | null
         }
         Insert: {
-          cell_phone: string
+          cell_phone?: string | null
+          closed?: boolean | null
+          closed_at?: string | null
           created_at?: string | null
-          department_id?: number | null
+          department_id?: string | null
           email_address?: string | null
-          full_name: string
-          id?: number
+          external_identifier: string
+          full_name?: string | null
+          main_contact?: boolean | null
           updated_at?: string | null
         }
         Update: {
-          cell_phone?: string
+          cell_phone?: string | null
+          closed?: boolean | null
+          closed_at?: string | null
           created_at?: string | null
-          department_id?: number | null
+          department_id?: string | null
           email_address?: string | null
-          full_name?: string
-          id?: number
+          external_identifier?: string
+          full_name?: string | null
+          main_contact?: boolean | null
           updated_at?: string | null
         }
         Relationships: [
@@ -100,32 +112,41 @@ export interface Database {
             foreignKeyName: "contact_department_id_fkey"
             columns: ["department_id"]
             referencedRelation: "department"
-            referencedColumns: ["id"]
+            referencedColumns: ["external_identifier"]
+          },
+          {
+            foreignKeyName: "contact_department_id_fkey"
+            columns: ["department_id"]
+            referencedRelation: "detailed_transaction"
+            referencedColumns: ["department_external_id"]
           }
         ]
       }
       department: {
         Row: {
-          company_id: number | null
+          closed: boolean | null
+          company_id: string | null
           created_at: string | null
-          external_identifier: string | null
-          id: number
+          discount_scheme: string | null
+          external_identifier: string
           name: string | null
           updated_at: string | null
         }
         Insert: {
-          company_id?: number | null
+          closed?: boolean | null
+          company_id?: string | null
           created_at?: string | null
-          external_identifier?: string | null
-          id?: number
+          discount_scheme?: string | null
+          external_identifier: string
           name?: string | null
           updated_at?: string | null
         }
         Update: {
-          company_id?: number | null
+          closed?: boolean | null
+          company_id?: string | null
           created_at?: string | null
-          external_identifier?: string | null
-          id?: number
+          discount_scheme?: string | null
+          external_identifier?: string
           name?: string | null
           updated_at?: string | null
         }
@@ -134,7 +155,7 @@ export interface Database {
             foreignKeyName: "department_company_id_fkey"
             columns: ["company_id"]
             referencedRelation: "company"
-            referencedColumns: ["id"]
+            referencedColumns: ["external_identifier"]
           }
         ]
       }
@@ -168,51 +189,110 @@ export interface Database {
       }
       transaction: {
         Row: {
-          amount: number
-          contact_id: number
+          account_number: string | null
+          amount_credit: number | null
+          amount_debit: number | null
+          closed_date: string | null
           created_at: string
+          date: string | null
+          description: string | null
+          due_date: string | null
+          external_row_number: number
           id: string
+          invoice_number: number | null
+          journal_customer_address: string | null
+          journal_customer_name: string | null
+          journal_edi_reference: number | null
+          journal_invoice_amount: number | null
+          journal_invoice_date: string | null
+          journal_invoice_due_date: string | null
+          journal_invoice_reference: string | null
+          journal_quantity: number | null
+          journal_sales_number: number | null
+          journal_vat: number | null
+          statement_date: string | null
+          statement_number: number | null
+          store_number: number | null
+          transaction_type: number | null
+          voucher_number: number | null
           full_text_search: string | null
         }
         Insert: {
-          amount: number
-          contact_id: number
+          account_number?: string | null
+          amount_credit?: number | null
+          amount_debit?: number | null
+          closed_date?: string | null
           created_at?: string
+          date?: string | null
+          description?: string | null
+          due_date?: string | null
+          external_row_number: number
           id?: string
+          invoice_number?: number | null
+          journal_customer_address?: string | null
+          journal_customer_name?: string | null
+          journal_edi_reference?: number | null
+          journal_invoice_amount?: number | null
+          journal_invoice_date?: string | null
+          journal_invoice_due_date?: string | null
+          journal_invoice_reference?: string | null
+          journal_quantity?: number | null
+          journal_sales_number?: number | null
+          journal_vat?: number | null
+          statement_date?: string | null
+          statement_number?: number | null
+          store_number?: number | null
+          transaction_type?: number | null
+          voucher_number?: number | null
         }
         Update: {
-          amount?: number
-          contact_id?: number
+          account_number?: string | null
+          amount_credit?: number | null
+          amount_debit?: number | null
+          closed_date?: string | null
           created_at?: string
+          date?: string | null
+          description?: string | null
+          due_date?: string | null
+          external_row_number?: number
           id?: string
+          invoice_number?: number | null
+          journal_customer_address?: string | null
+          journal_customer_name?: string | null
+          journal_edi_reference?: number | null
+          journal_invoice_amount?: number | null
+          journal_invoice_date?: string | null
+          journal_invoice_due_date?: string | null
+          journal_invoice_reference?: string | null
+          journal_quantity?: number | null
+          journal_sales_number?: number | null
+          journal_vat?: number | null
+          statement_date?: string | null
+          statement_number?: number | null
+          store_number?: number | null
+          transaction_type?: number | null
+          voucher_number?: number | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "transaction_contact_id_fkey"
-            columns: ["contact_id"]
-            referencedRelation: "contact"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "transaction_contact_id_fkey"
-            columns: ["contact_id"]
-            referencedRelation: "detailed_transaction"
-            referencedColumns: ["contact_id"]
-          }
-        ]
+        Relationships: []
       }
     }
     Views: {
       detailed_transaction: {
         Row: {
-          amount: number | null
-          contact_email: string | null
-          contact_id: number | null
-          contact_name: string | null
-          contact_phone: string | null
-          created_at: string | null
+          amount_credit: number | null
+          amount_debit: number | null
+          date: string | null
           department_external_id: string | null
           department_name: string | null
+          description: string | null
+          store_number: number | null
+          transaction_type: number | null
+        }
+        Relationships: []
+      }
+      max_rowcounter_transaction: {
+        Row: {
+          max: number | null
         }
         Relationships: []
       }
@@ -223,6 +303,12 @@ export interface Database {
           "": unknown
         }
         Returns: string
+      }
+      user_can_access_company: {
+        Args: {
+          external_identifier: string
+        }
+        Returns: boolean
       }
       user_can_access_contact: {
         Args: {
