@@ -23,9 +23,7 @@ export default function Transactions() {
     getDateDaysAgo(14),
     dateToday,
   ]);
-  const [selectedContact, setSelectedContact] = useState<Row<'contact'> | null>(
-    null
-  );
+  const [_, setSelectedContact] = useState<Row<'contact'> | null>(null);
   const contacts = useGetContacts();
 
   const updateContact = (id: string) => {
@@ -102,11 +100,7 @@ export default function Transactions() {
               className="w-80"
             />
           </div>
-          <TransactionTable
-            searchValue={searchValue}
-            dates={selectedDates}
-            contact={selectedContact}
-          />
+          <TransactionTable searchValue={searchValue} dates={selectedDates} />
         </div>
       </DatePickerProvider>
     </>
