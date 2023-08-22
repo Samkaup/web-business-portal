@@ -10,6 +10,7 @@ type Props = {
   options: Option[];
   onChange: (e: ChangeEvent<HTMLSelectElement>) => void;
   defaultValue?: Option['id'];
+  value?: string;
   className?: string;
 };
 
@@ -17,11 +18,13 @@ export default function Select({
   options,
   onChange,
   defaultValue = null,
+  value,
   className,
 }: Props) {
   return (
     <select
       onChange={onChange}
+      value={value}
       defaultValue={defaultValue}
       className={classNames(
         'block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-company-600 sm:text-sm sm:leading-6',

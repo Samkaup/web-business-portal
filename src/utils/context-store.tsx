@@ -15,6 +15,7 @@ export const ContextProvider = ({ children }) => {
     'selected-company',
     undefined
   );
+  console.log('COMPANY SESSION ', company);
   if (typeof window !== 'undefined') {
     return (
       <Context.Provider value={{ company, setCompany }}>
