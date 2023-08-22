@@ -19,6 +19,7 @@ export default function TransactionTable({ searchValue, dates }: Props) {
     id: 'date',
     desc: true,
   };
+
   const [sorting, setSorting] = useState<SortingState>([defaultSort]);
   const basePageSize = 20;
   const pageSizes = [basePageSize, 50, 100];
@@ -48,25 +49,17 @@ export default function TransactionTable({ searchValue, dates }: Props) {
         accessorKey: 'store_number',
         id: 'store_number',
         header: () => <span>Verslun</span>,
-        cell: (props: any) => {
-          return <span>{props.getValue()}</span>;
-        },
       },
       {
-        accessorKey: 'department_name',
-        id: 'department_name',
+        accessorKey: 'account_number',
+        id: 'accessor_number',
         header: () => <span>Deild</span>,
-        cell: (contact: any) => {
-          return <span>{contact.getValue()}</span>;
-        },
+        cell: async (dep: any) => <span>{dep.getValue()}</span>,
       },
       {
         accessorKey: 'description',
         id: 'description',
         header: () => <span>Skýring</span>,
-        cell: (contact: any) => {
-          return <span>{contact.getValue()}</span>;
-        },
       },
       {
         accessorKey: 'amount_debit',
@@ -88,7 +81,7 @@ export default function TransactionTable({ searchValue, dates }: Props) {
         accessorKey: 'actions',
         id: 'actions',
         header: () => <span></span>,
-        cell: (contact: any) => {
+        cell: (_: any) => {
           return (
             <Link href="#" className="hover:text-company-700 inline-flex">
               <DocumentIcon className="h-4 w-4 mr-2"></DocumentIcon>Reikningur

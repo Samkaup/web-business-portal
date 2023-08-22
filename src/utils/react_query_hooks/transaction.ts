@@ -1,4 +1,4 @@
-import { TableRow } from '@/types';
+import { Row, TableRow } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import supabaseClient from '@/utils/supabase-browser';
 import {
@@ -7,11 +7,16 @@ import {
 } from '../supabase_queries/transaction';
 import { QueryDataAndCount } from '../utilTypes';
 import { PaginationState, SortingState } from '@tanstack/react-table';
+import { getDepartments } from '../supabase_queries/department';
 
 export const useTransactions = () => {
   return useQuery<TableRow<'transaction'>[]>(['transactions'], async () => {
     return getTransactions(supabaseClient);
   });
+};
+
+export type DepartmentsMap = {
+  [key: Row<'department'>['external_identifier']]: Row<'department'>['name'];
 };
 
 type Payload = {
@@ -41,10 +46,12 @@ export const useTransactionsTable = ({
       },
     ],
     async () => {
+      // Construct range
       const rangeFrom = pagination.pageIndex * pagination.pageSize;
       const rangeTo = (pagination.pageIndex + 1) * pagination.pageSize - 1;
 
-      return getTransactionsTable({
+      // Extract transactions
+      const transactions = await getTransactionsTable({
         supabaseClient,
         range: {
           from: rangeFrom,
@@ -60,6 +67,28 @@ export const useTransactionsTable = ({
         dateRange,
         filters,
       });
+
+      // Extract departments
+      const departments = await getDepartments(supabaseClient);
+
+      // Create a departments hashmap for quicker lookup
+      const departmentsMap = departments.reduce(function (
+        map: DepartmentsMap,
+        dep: Row<'department'>
+      ) {
+        map[dep.external_identifier] = dep.name;
+        return map;
+      },
+      {});
+
+      // Construct response
+      return {
+        rowCount: transactions.rowCount,
+        data: transactions.data.map((t: Row<'transaction'>) => ({
+          ...t,
+          account_number: departmentsMap[t.account_number],
+        })),
+      };
     },
     { keepPreviousData: true }
   );
