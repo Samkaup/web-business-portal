@@ -11,7 +11,9 @@ export default function CompanyHeader({ companies = [] }: Props) {
   const { company, setCompany } = useContext(Context);
 
   const updateCompany = (id: string) => {
-    const selectedCompany = companies.find((c) => c.id.toString() === id);
+    const selectedCompany = companies.find(
+      (c) => c.external_identifier.toString() === id
+    );
     setCompany(selectedCompany);
   };
 
@@ -23,8 +25,11 @@ export default function CompanyHeader({ companies = [] }: Props) {
         <h3 className="text-base font-semibold leading-6 text-gray-900">
           <div>
             <Select
-              options={companies.map((c) => ({ id: c.id, label: c.name }))}
-              defaultValue={companies.at(0).id}
+              options={companies.map((c) => ({
+                id: c.external_identifier,
+                label: c.name,
+              }))}
+              defaultValue={companies.at(0).external_identifier}
               onChange={(e) => updateCompany(e.target.value)}
             />
           </div>

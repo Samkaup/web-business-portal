@@ -318,7 +318,7 @@ export interface Database {
       }
       user_can_access_department: {
         Args: {
-          department_id: number
+          department_id: string
         }
         Returns: boolean
       }

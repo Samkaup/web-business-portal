@@ -16,19 +16,24 @@ import { Row } from '@/types';
 import { useGetContacts } from '@/utils/react_query_hooks/contact';
 
 export default function Transactions() {
+  const dateToday = getDateNow();
+
   const [searchValue, setSearchValue] = useState('');
-  const [selectedDates, onDatesChange] = useState<Date[]>([]);
+  const [selectedDates, onDatesChange] = useState<Date[]>([
+    getDateDaysAgo(14),
+    dateToday,
+  ]);
   const [selectedContact, setSelectedContact] = useState<Row<'contact'> | null>(
     null
   );
   const contacts = useGetContacts();
 
   const updateContact = (id: string) => {
-    const selectedCompany = contacts.data.find((c) => c.id.toString() === id);
+    const selectedCompany = contacts.data.find(
+      (c) => c.external_identifier.toString() === id
+    );
     setSelectedContact(selectedCompany);
   };
-
-  const dateToday = getDateNow();
 
   const dateRangePresets: DateRangePreset[] = [
     {
@@ -77,8 +82,9 @@ export default function Transactions() {
                     ? [
                         { id: null, label: 'Allir úttektaraðilar' },
                         ...contacts.data.map((c) => ({
-                          id: c.id,
+                          id: c.external_identifier,
                           label: c.full_name,
+                          key: c.external_identifier,
                         })),
                       ]
                     : [{ id: '', label: '' }]

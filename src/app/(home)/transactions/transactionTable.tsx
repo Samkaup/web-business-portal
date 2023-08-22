@@ -45,7 +45,7 @@ export default function TransactionTable({
         cell: (props: any) => {
           return (
             <span>
-              {format(new Date(props.getValue()), 'dd. MMM HH:mm', {
+              {format(new Date(props.getValue()), 'dd. MMM yyyy', {
                 locale: is,
               })}
             </span>
@@ -53,8 +53,8 @@ export default function TransactionTable({
         },
       },
       {
-        accessorKey: 'store',
-        id: 'store',
+        accessorKey: 'store_number',
+        id: 'store_number',
         header: () => <span>Verslun</span>,
         cell: (props: any) => {
           return <span>{props.getValue()}</span>;
@@ -69,9 +69,9 @@ export default function TransactionTable({
         },
       },
       {
-        accessorKey: 'contact_name',
-        id: 'contact_name',
-        header: () => <span>Úttektaraðili</span>,
+        accessorKey: 'description',
+        id: 'description',
+        header: () => <span>Skýring</span>,
         cell: (contact: any) => {
           return <span>{contact.getValue()}</span>;
         },
