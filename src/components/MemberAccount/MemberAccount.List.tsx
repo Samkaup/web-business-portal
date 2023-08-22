@@ -9,8 +9,11 @@ import { format } from 'date-fns';
 import DropdownMinimal from '@/components/ui/Dropdown/DropdownMinimal';
 import ModalSimpleWithDismiss from '@/components/ui/ModalSimpleWithDismiss/ModalSimpleWithDismiss';
 import { useState } from 'react';
-
-export default function MemberAccountListWithContacts({ departments }) {
+import { DepartmentWithContacts } from '@/utils/supabase_queries/contact';
+type Props = {
+  departments: DepartmentWithContacts[];
+};
+export default function MemberAccountListWithContacts({ departments }: Props) {
   const [showModal, setShowModal] = useState(false);
   const [loading] = useState(false);
   const [errorDeletingText] = useState('');
@@ -44,7 +47,7 @@ export default function MemberAccountListWithContacts({ departments }) {
             className="divide-y divide-gray-100 overflow-hidden bg-white shadow-sm ring-1 ring-gray-900/5"
           >
             <li
-              key={department.id}
+              key={department.external_identifier}
               className="relative flex justify-between gap-x-6 px-4 py-5 bg-gray-50  sm:px-6"
             >
               <div className="flex min-w-0 gap-x-4">
@@ -70,7 +73,10 @@ export default function MemberAccountListWithContacts({ departments }) {
               className="divide-y divide-gray-100 overflow-hidden bg-white shadow-sm ring-1 ring-gray-900/5"
             >
               {department.contact.map((c) => (
-                <MemberContact key={c.id} contact={c}></MemberContact>
+                <MemberContact
+                  key={c.external_identifier}
+                  contact={c}
+                ></MemberContact>
               ))}
             </ul>
           </ul>

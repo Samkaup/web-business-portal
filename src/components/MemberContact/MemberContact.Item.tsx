@@ -11,7 +11,7 @@ export default function MemberContact({ contact }) {
       <div className="flex min-w-0 gap-x-4">
         <div className="min-w-0 flex-auto">
           <p className="text-sm font-semibold leading-6 text-gray-900">
-            <Link href={`contacts/${contact.id}`}>
+            <Link href={`contacts/${contact.external_identifier}`}>
               <span className="absolute inset-x-0 -top-px bottom-0" />
               {contact.full_name}
             </Link>
@@ -29,8 +29,8 @@ export default function MemberContact({ contact }) {
       <div className="flex shrink-0 items-center gap-x-4">
         <div className="hidden sm:flex sm:flex-col sm:items-end">
           <p className="text-sm leading-6 text-gray-900">
-            {contact.cell_phone.substring(0, 3)}{' '}
-            {contact.cell_phone.substring(3)}
+            {contact.cell_phone?.substring(0, 3)}{' '}
+            {contact.cell_phone?.substring(3)}
           </p>
           <p className="mt-1 text-xs leading-5 text-gray-500">
             Bætt við: {format(new Date(contact.created_at), 'dd. MMM HH:mm')}
