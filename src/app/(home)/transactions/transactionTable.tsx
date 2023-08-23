@@ -4,29 +4,28 @@ import { useMemo, useState } from 'react';
 import { format } from 'date-fns';
 import QueryTable from '@/components/ReactTable/QueryTable';
 import { PaginationState, SortingState } from '@tanstack/react-table';
-import { getDetailedTransactions } from '@/utils/supabase_queries/detailed_transaction';
-import { useQuery } from '@tanstack/react-query';
-import supabaseBrowser from '@/utils/supabase-browser';
-import { Row } from '@/types';
 import { DocumentIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { is } from 'date-fns/locale';
+import { useTransactionsTable } from '@/utils/react_query_hooks/transaction';
+import { Row } from '@/types';
 
 type Props = {
   searchValue: string;
   dates: Date[];
-  contact: Row<'contact'>;
+  selectedDepartmentIds: Row<'department'>['external_identifier'][];
 };
 
 export default function TransactionTable({
   searchValue,
   dates,
-  contact,
+  selectedDepartmentIds,
 }: Props) {
   const defaultSort = {
     id: 'date',
     desc: true,
   };
+
   const [sorting, setSorting] = useState<SortingState>([defaultSort]);
   const basePageSize = 20;
   const pageSizes = [basePageSize, 50, 100];
@@ -56,25 +55,17 @@ export default function TransactionTable({
         accessorKey: 'store_number',
         id: 'store_number',
         header: () => <span>Verslun</span>,
-        cell: (props: any) => {
-          return <span>{props.getValue()}</span>;
-        },
       },
       {
-        accessorKey: 'department_name',
-        id: 'department_name',
+        accessorKey: 'account_number',
+        id: 'accessor_number',
         header: () => <span>Deild</span>,
-        cell: (contact: any) => {
-          return <span>{contact.getValue()}</span>;
-        },
+        cell: async (dep: any) => <span>{dep.getValue()}</span>,
       },
       {
         accessorKey: 'description',
         id: 'description',
         header: () => <span>Skýring</span>,
-        cell: (contact: any) => {
-          return <span>{contact.getValue()}</span>;
-        },
       },
       {
         accessorKey: 'amount_debit',
@@ -96,7 +87,7 @@ export default function TransactionTable({
         accessorKey: 'actions',
         id: 'actions',
         header: () => <span></span>,
-        cell: (contact: any) => {
+        cell: (_: any) => {
           return (
             <Link href="#" className="hover:text-company-700 inline-flex">
               <DocumentIcon className="h-4 w-4 mr-2"></DocumentIcon>Reikningur
@@ -108,42 +99,15 @@ export default function TransactionTable({
     []
   );
 
-  const fetchData = async () => {
-    const rangeFrom = pagination.pageIndex * pagination.pageSize;
-    const rangeTo = (pagination.pageIndex + 1) * pagination.pageSize - 1;
-
-    // Filters
-    const filters: string[] = [];
-    if (contact) filters.push(`contact_id.eq.${contact.external_identifier}`);
-
-    const { data, count } = await getDetailedTransactions({
-      supabaseClient: supabaseBrowser,
-      range: {
-        from: rangeFrom,
-        to: rangeTo,
-      },
-      sorting: {
-        column: sorting[0].id,
-        options: {
-          ascending: !sorting[0].desc,
-        },
-      },
-      searchValue: searchValue,
-      dateRange: dates,
-      filters,
-    });
-
-    return { data, rowCount: count };
-  };
-
-  const query = useQuery(
-    [
-      'detailed_transaction',
-      { pagination, sorting, searchValue, dates, contact },
-    ],
-    async () => fetchData(),
-    { keepPreviousData: true }
-  );
+  const query = useTransactionsTable({
+    pagination,
+    sorting,
+    searchValue,
+    dateRange: dates,
+    filters: selectedDepartmentIds.map(
+      (id: string) => `account_number.eq.${id}`
+    ),
+  });
 
   return (
     <QueryTable
