@@ -13,7 +13,7 @@ export default function MemberContact({ contact }) {
           <p className="text-sm font-semibold leading-6 text-gray-900">
             <Link href={`contacts/${contact.external_identifier}`}>
               <span className="absolute inset-x-0 -top-px bottom-0" />
-              {contact.full_name}
+              {contact.full_name} ({contact.external_identifier})
             </Link>
           </p>
           <p className="mt-1 flex text-xs leading-5 text-gray-500">
