@@ -1,4 +1,3 @@
-import { Row, TableName, ViewName } from '@/types';
 import { UseQueryResult } from '@tanstack/react-query';
 import {
   SortingState,
@@ -9,19 +8,6 @@ import {
 export type DefaultSort = {
   id: string;
   desc: boolean;
-};
-
-export type Props<T extends TableName | ViewName> = {
-  columns: any;
-  tableName: T;
-  defaultSort: DefaultSort;
-  selectQuery: string;
-  queryKey?: string;
-  searchColumns?: string[];
-  searchValue?: string;
-  filter?: string;
-  initialData?: Row<T>[] | null;
-  className?: string;
 };
 
 export type ManualProps = {

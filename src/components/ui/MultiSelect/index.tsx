@@ -13,9 +13,10 @@ export type Option = {
 type Props = {
   options: Option[];
   onSelect: (options: Option[]) => void;
+  lable: string;
 };
 
-const MultiSelect = ({ options, onSelect }: Props) => {
+const MultiSelect = ({ options, onSelect, lable }: Props) => {
   const toggleOption = (id: any) =>
     onSelect(
       options.map((o: Option) => {
@@ -44,7 +45,7 @@ const MultiSelect = ({ options, onSelect }: Props) => {
     //     </>
     //   );
 
-    return <div className={className}>Deildir</div>;
+    return <div className={className}>{lable}</div>;
   };
 
   return (
@@ -59,12 +60,12 @@ const MultiSelect = ({ options, onSelect }: Props) => {
                 </div>
 
                 {options.filter((o: Option) => o.selected).length > 0 && (
-                  <button
+                  <div
                     onClick={deselectAll}
-                    className="text-gray-500 hover:text-gray-800 mr-1"
+                    className="text-gray-500 hover:text-gray-800 mr-1 cursor-pointer"
                   >
                     <XMarkIcon className="h-5 w-5" aria-hidden="true" />
-                  </button>
+                  </div>
                 )}
                 <div className="text-gray-800 w-8 justify-center border-l flex items-center border-gray-300">
                   <ChevronDownIcon className="h-5 w-5" aria-hidden="true" />
