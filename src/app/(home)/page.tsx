@@ -1,7 +1,13 @@
+import Dashboard from '@/components/Dashboard/Dashboard';
+import Header from '@/components/Header/Header';
+
 export default async function HomePage() {
   return (
     <>
-      <div className="pt-10"></div>
+      <Header title="Heim"></Header>
+      <div className="pt-10">
+        <Dashboard></Dashboard>
+      </div>
     </>
   );
 }
