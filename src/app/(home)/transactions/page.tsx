@@ -58,6 +58,7 @@ export default function Transactions() {
       dates: [getDateMonthsAgo(6), dateToday],
     },
   ];
+
   return (
     <>
       <Header title="Reikningar og hreyfingar" />
@@ -80,6 +81,7 @@ export default function Transactions() {
               <MultiSelect
                 options={departmentOptions}
                 onSelect={setDepartmentOptions}
+                lable="Deildir"
               />
             </div>
 
