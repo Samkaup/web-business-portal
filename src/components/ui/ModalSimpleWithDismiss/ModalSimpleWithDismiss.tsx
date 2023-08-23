@@ -6,10 +6,10 @@ import { Props } from './ModalSimpleWithDismiss.types';
 import { Spinner } from '@/components/ui/Spinner/Spinner';
 export default function ModalSimpleWithDismiss({
   open,
-  title,
-  description,
-  cancelButtonText,
-  actionButtonText,
+  title = 'Eyða',
+  description = 'Ertu viss um að þú viljir eyða þessum upplýsingum?',
+  cancelButtonText = 'Hætta við',
+  actionButtonText = 'Eyða',
   isLoading,
   errorText,
   onAction,
@@ -104,10 +104,3 @@ export default function ModalSimpleWithDismiss({
     </Transition.Root>
   );
 }
-
-ModalSimpleWithDismiss.defaultProps = {
-  title: 'Eyða',
-  description: 'Ertu viss um að þú viljir eyða þessum upplýsingum?',
-  cancelButtonText: 'Hætta við',
-  actionButtonText: 'Eyða',
-};

@@ -4,7 +4,7 @@ export type Props = {
   title?: string;
   description?: string;
   cancelButtonText?: string;
-  actionButtonText: string;
+  actionButtonText?: string;
   isLoading?: boolean;
   errorText?: string;
   onAction: () => void;
