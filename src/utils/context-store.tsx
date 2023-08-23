@@ -6,12 +6,12 @@ import { useSessionStorage } from 'usehooks-ts';
 type CompanyType = TableRow<'company'>;
 
 export const Context = createContext<{
-  company: CompanyType | undefined;
+  company: CompanyType | null;
   setCompany: React.Dispatch<React.SetStateAction<CompanyType>>;
 }>(undefined);
 
 export const ContextProvider = ({ children }) => {
-  const [company, setCompany] = useSessionStorage<CompanyType | undefined>(
+  const [company, setCompany] = useSessionStorage<CompanyType | null>(
     'selected-company',
     undefined
   );

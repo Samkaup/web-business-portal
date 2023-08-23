@@ -38,7 +38,7 @@ export default function DropdownMinimal({ items }: Props) {
           <div className="py-1">
             {items.map((item) => {
               return (
-                <Menu.Item>
+                <Menu.Item key={item.name}>
                   {({ active }) => (
                     <a
                       href="#"
