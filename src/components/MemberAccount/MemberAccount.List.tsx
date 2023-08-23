@@ -53,7 +53,7 @@ export default function MemberAccountListWithContacts({ departments }: Props) {
               <div className="flex min-w-0 gap-x-4">
                 <div className="min-w-0 flex-auto">
                   <p className="font-semibold inline-flex">
-                    {department.name}{' '}
+                    {department.name} ({department.external_identifier})
                   </p>
                 </div>
               </div>
