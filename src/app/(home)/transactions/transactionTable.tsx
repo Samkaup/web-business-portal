@@ -1,14 +1,14 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { format } from 'date-fns';
-import QueryTable from '@/components/ReactTable/QueryTable';
 import { PaginationState, SortingState } from '@tanstack/react-table';
 import { DocumentIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { is } from 'date-fns/locale';
 import { useTransactionsTable } from '@/utils/react_query_hooks/transaction';
 import { Row } from '@/types';
+import QueryTable from '@/components/QueryTable/QueryTable';
 
 type Props = {
   searchValue: string;
@@ -27,13 +27,25 @@ export default function TransactionTable({
   };
 
   const [sorting, setSorting] = useState<SortingState>([defaultSort]);
-  const basePageSize = 20;
-  const pageSizes = [basePageSize, 50, 100];
+  const basePageSize = 15;
+  const pageSizes = [basePageSize, 30, 50, 100];
 
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: basePageSize,
   });
+
+  const query = useTransactionsTable({
+    pagination,
+    sorting,
+    searchValue,
+    dateRange: dates,
+    filters: selectedDepartmentIds.map(
+      (id: string) => `account_number.eq.${id}`
+    ),
+  });
+
+  useEffect(() => console.log(query), [query]);
 
   const columns = useMemo(
     () => [
@@ -98,16 +110,6 @@ export default function TransactionTable({
     ],
     []
   );
-
-  const query = useTransactionsTable({
-    pagination,
-    sorting,
-    searchValue,
-    dateRange: dates,
-    filters: selectedDepartmentIds.map(
-      (id: string) => `account_number.eq.${id}`
-    ),
-  });
 
   return (
     <QueryTable

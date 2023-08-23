@@ -33,8 +33,8 @@ export const useTransactionsTable = ({
   searchValue,
   dateRange,
   filters,
-}: Payload) => {
-  return useQuery<QueryDataAndCount<TableRow<'transaction'>>>(
+}: Payload) =>
+  useQuery<QueryDataAndCount<TableRow<'transaction'>>>(
     [
       'transactionsTable',
       {
@@ -92,4 +92,3 @@ export const useTransactionsTable = ({
     },
     { keepPreviousData: true }
   );
-};
