@@ -92,7 +92,18 @@ export default function Transactions() {
             />
           </div>
 
-          <TransactionTable searchValue={searchValue} dates={selectedDates} />
+          <TransactionTable
+            searchValue={searchValue}
+            dates={selectedDates}
+            selectedDepartmentIds={departmentOptions.reduce(function (
+              result: any[],
+              o: Option
+            ) {
+              if (o.selected) return [...result, o.id];
+              return result;
+            },
+            [])}
+          />
         </div>
       </DatePickerProvider>
     </>

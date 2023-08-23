@@ -37,6 +37,7 @@ export type Payload = {
   sorting?: SortingProps;
   searchValue?: string | string[];
   dateRange?: Date[];
+  departmentFilters?: string[];
   filters?: string[];
 };
 
@@ -59,14 +60,11 @@ export const getTransactionsTable = async ({
       ascending: sorting.options.ascending,
     });
 
-  if (searchValue || filters) {
-    let filterString: string = filters ? filters.join() : '';
+  // Apply additional filters
+  query = filters.length > 0 ? query.or(filters.join()) : query;
 
-    if (searchValue)
-      filterString = `${filterString}, contact_name.ilike.*${searchValue}*, department_name.ilike.*${searchValue}*`;
-
-    if (filterString.length > 0) query = query.or(filterString);
-  }
+  // Apply search
+  query = searchValue ? query.ilike('description', `%${searchValue}%`) : query;
 
   // Set Date Range
   const start: Date | null = dateRange.at(0);

@@ -8,13 +8,19 @@ import { DocumentIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { is } from 'date-fns/locale';
 import { useTransactionsTable } from '@/utils/react_query_hooks/transaction';
+import { Row } from '@/types';
 
 type Props = {
   searchValue: string;
   dates: Date[];
+  selectedDepartmentIds: Row<'department'>['external_identifier'][];
 };
 
-export default function TransactionTable({ searchValue, dates }: Props) {
+export default function TransactionTable({
+  searchValue,
+  dates,
+  selectedDepartmentIds,
+}: Props) {
   const defaultSort = {
     id: 'date',
     desc: true,
@@ -98,6 +104,9 @@ export default function TransactionTable({ searchValue, dates }: Props) {
     sorting,
     searchValue,
     dateRange: dates,
+    filters: selectedDepartmentIds.map(
+      (id: string) => `account_number.eq.${id}`
+    ),
   });
 
   return (
