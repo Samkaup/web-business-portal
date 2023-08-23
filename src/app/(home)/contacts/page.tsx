@@ -11,11 +11,13 @@ export default async function Contacts() {
 
   return (
     <>
-      <Header title="Deildir og úttektaraðilar">
-        <Button size="lg">
-          Stofna deild
-          <PlusIcon className="-mr-0.5 h-5 w-5 text-white"></PlusIcon>
-        </Button>
+      <Header title="Viðskiptareikningar & úttektaraðilar">
+        <div className="flex justify-center mt-4">
+          <Button size="lg">
+            Stofna deild
+            <PlusIcon className="-mr-0.5 h-5 w-5 text-white"></PlusIcon>
+          </Button>
+        </div>
       </Header>
 
       <MemberAccountListWithContacts
