@@ -11,7 +11,7 @@ export default async function Contacts() {
 
   return (
     <>
-      <Header title="Viðskiptareikningar & úttektaraðilar">
+      <Header title="Deildir & úttektaraðilar">
         <div className="flex justify-center mt-4">
           <Button size="lg">
             Stofna deild

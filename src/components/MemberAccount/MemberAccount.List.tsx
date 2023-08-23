@@ -24,7 +24,7 @@ export default function MemberAccountListWithContacts({ departments }: Props) {
 
   const departmentActions = [
     {
-      name: 'Stofna nýjan úttektaraðila',
+      name: 'Stofna úttektaraðila á deild',
       icon: <UserIcon className="w-4 h-4" />,
       onClick: () => console.log('Stofna úttektaraðila'),
     },
@@ -34,6 +34,17 @@ export default function MemberAccountListWithContacts({ departments }: Props) {
       onClick: () => setShowModal(true),
     },
   ];
+  const sort = (obj, key) => {
+    return obj.sort(function (a, b) {
+      if (a[key] < b[key]) {
+        return -1;
+      }
+      if (a[key] > b[key]) {
+        return 1;
+      }
+      return 0;
+    });
+  };
   return (
     <div>
       <ModalSimpleWithDismiss
@@ -49,16 +60,16 @@ export default function MemberAccountListWithContacts({ departments }: Props) {
           <Disclosure
             as="div"
             key={department.external_identifier}
-            className="pt-1"
+            className="pt-1 z-5"
           >
             {({ open }) => (
               <ul
                 role="list"
-                className="divide-y divide-gray-100 overflow-hidden bg-white shadow-sm ring-1 ring-gray-900/5"
+                className="divide-y divide-gray-100 overflow-hidden bg-white shadow-sm ring-1 ring-gray-900/5 z-5"
               >
                 <li
                   key={department.external_identifier}
-                  className="relative flex justify-between gap-x-6 px-4 py-5 bg-gray-50  sm:px-6"
+                  className="relative flex justify-between gap-x-6 px-4 py-5 bg-gray-50  sm:px-6 z-5"
                 >
                   <div className="flex min-w-0 gap-x-4">
                     <div className="min-w-0 flex-auto">
@@ -75,9 +86,7 @@ export default function MemberAccountListWithContacts({ departments }: Props) {
                         'dd. MMM HH:mm'
                       )}`}
                     ></InformationCircleIcon>
-                    <DropdownMinimal
-                      items={departmentActions}
-                    ></DropdownMinimal>
+
                     <Disclosure.Button className="text-gray-900">
                       <span className="ml-6 flex h-7 items-center">
                         {open ? (
@@ -123,14 +132,20 @@ export default function MemberAccountListWithContacts({ departments }: Props) {
                             ) : (
                               <p className="text-lg leading-6 text-gray-900">
                                 <span className="absolute inset-x-0 -top-px bottom-0" />
-                                Úttektaraðilar reiknings:
+                                Úttektaraðilar deildar:
                               </p>
                             )}
                           </div>
                         </div>
+                        <div className="flex shrink-0 items-center gap-x-4">
+                          Aðgerðir:
+                          <DropdownMinimal
+                            items={departmentActions}
+                          ></DropdownMinimal>
+                        </div>
                       </li>
 
-                      {department.contact.map((c) => (
+                      {sort(department.contact, 'full_name').map((c) => (
                         <MemberContact
                           key={c.external_identifier}
                           contact={c}
