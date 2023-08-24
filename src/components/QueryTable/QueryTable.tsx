@@ -104,41 +104,45 @@ export default function QueryTable<T extends object>({
                   </tr>
                 ))}
               </thead>
-              <React.Suspense fallback={<TableBodyLoad />}>
-                <tbody className="divide-y divide-gray-200">
-                  {table.getRowModel().rows.map((row) => (
-                    <tr key={row.id}>
-                      {row.getVisibleCells().map((cell) => (
-                        <td
-                          key={cell.id}
-                          className="whitespace-nowrap px-3 py-4 text-sm text-gray-600"
-                        >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-                <tfoot className="md:hidden">
-                  {table.getFooterGroups().map((footerGroup) => (
-                    <tr key={footerGroup.id}>
-                      {footerGroup.headers.map((header) => (
-                        <th key={header.id}>
-                          {header.isPlaceholder
-                            ? null
-                            : flexRender(
-                                header.column.columnDef.footer,
-                                header.getContext()
-                              )}
-                        </th>
-                      ))}
-                    </tr>
-                  ))}
-                </tfoot>
-              </React.Suspense>
+              <tbody className="divide-y divide-gray-200">
+                {query.isSuccess ? (
+                  <React.Suspense fallback={<TableBodyLoad />}>
+                    {table?.getRowModel().rows.map((row) => (
+                      <tr key={row.id}>
+                        {row?.getVisibleCells().map((cell) => (
+                          <td
+                            key={cell.id}
+                            className="whitespace-nowrap px-3 py-4 text-sm text-gray-600"
+                          >
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </React.Suspense>
+                ) : (
+                  <TableBodyLoad />
+                )}
+              </tbody>
+              <tfoot className="md:hidden">
+                {table?.getFooterGroups().map((footerGroup) => (
+                  <tr key={footerGroup.id}>
+                    {footerGroup.headers.map((header) => (
+                      <th key={header.id}>
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.footer,
+                              header.getContext()
+                            )}
+                      </th>
+                    ))}
+                  </tr>
+                ))}
+              </tfoot>
             </table>
           </div>
         </div>

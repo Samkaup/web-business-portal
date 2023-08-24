@@ -50,26 +50,27 @@ export const useTransactionsTable = ({
       const rangeFrom = pagination.pageIndex * pagination.pageSize;
       const rangeTo = (pagination.pageIndex + 1) * pagination.pageSize - 1;
 
-      // Extract transactions
-      const transactions = await getTransactionsTable({
-        supabaseClient,
-        range: {
-          from: rangeFrom,
-          to: rangeTo,
-        },
-        sorting: {
-          column: sorting[0].id,
-          options: {
-            ascending: !sorting[0].desc,
+      const [transactions, departments] = await Promise.all([
+        // Extract transactions
+        getTransactionsTable({
+          supabaseClient,
+          range: {
+            from: rangeFrom,
+            to: rangeTo,
           },
-        },
-        searchValue,
-        dateRange,
-        filters,
-      });
-
-      // Extract departments
-      const departments = await getDepartments(supabaseClient);
+          sorting: {
+            column: sorting[0].id,
+            options: {
+              ascending: !sorting[0].desc,
+            },
+          },
+          searchValue,
+          dateRange,
+          filters,
+        }),
+        // Extract departments
+        getDepartments(supabaseClient),
+      ]);
 
       // Create a departments hashmap for quicker lookup
       const departmentsMap = departments.reduce(function (
@@ -82,13 +83,15 @@ export const useTransactionsTable = ({
       {});
 
       // Construct response
-      return {
+      const output = {
         rowCount: transactions.rowCount,
         data: transactions.data.map((t: Row<'transaction'>) => ({
           ...t,
           account_number: departmentsMap[t.account_number],
         })),
       };
+
+      return output;
     },
     { keepPreviousData: true }
   );

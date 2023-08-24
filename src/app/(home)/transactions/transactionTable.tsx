@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { format } from 'date-fns';
 import { PaginationState, SortingState } from '@tanstack/react-table';
 import { DocumentIcon } from '@heroicons/react/24/outline';
@@ -44,8 +44,6 @@ export default function TransactionTable({
       (id: string) => `account_number.eq.${id}`
     ),
   });
-
-  useEffect(() => console.log(query), [query]);
 
   const columns = useMemo(
     () => [
@@ -110,6 +108,8 @@ export default function TransactionTable({
     ],
     []
   );
+
+  // return <p>isLoading</p>;
 
   return (
     <QueryTable
