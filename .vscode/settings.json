@@ -1,7 +1,7 @@
 {
   "eslint.workingDirectories": ["./"],
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": true,
+  "editor.formatOnSave": false,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
@@ -24,7 +24,7 @@
   },
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "[typescriptreact]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "cSpell.words": ["Reflio", "signup"]
 }

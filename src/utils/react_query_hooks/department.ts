@@ -1,7 +1,11 @@
 import { TableRow } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import supabaseClient from '@/utils/supabase-browser';
-import { getDepartments } from '../supabase_queries/department';
+import {
+  DepartmentWithContacts,
+  getDepartments,
+  getDepartmentsWithContacts,
+} from '../supabase_queries/department';
 
 export const useDepartments = () => {
   return useQuery<TableRow<'department'>[]>(
@@ -11,4 +15,17 @@ export const useDepartments = () => {
     },
     { keepPreviousData: true }
   );
+};
+
+export const useDepartmentsWithContacts = (company_id: string) => {
+  return useQuery<DepartmentWithContacts[]>({
+    queryKey: ['department_with_contacts', company_id],
+    queryFn: async () => {
+      return await getDepartmentsWithContacts({
+        supabase: supabaseClient,
+        company_id: company_id,
+      });
+    },
+    refetchOnWindowFocus: false,
+  });
 };

@@ -12,7 +12,7 @@ import { format } from 'date-fns';
 import DropdownMinimal from '@/components/ui/Dropdown/DropdownMinimal';
 import ModalSimpleWithDismiss from '@/components/ui/ModalSimpleWithDismiss/ModalSimpleWithDismiss';
 import { useState } from 'react';
-import { DepartmentWithContacts } from '@/utils/supabase_queries/contact';
+import { DepartmentWithContacts } from '@/utils/supabase_queries/department';
 import AlertWithDescription from '@/components/ui/Alert/AlertWithDescription';
 type Props = {
   departments: DepartmentWithContacts[];
