@@ -88,13 +88,13 @@ const MultiSelect = ({ options, onSelect, lable }: Props) => {
                   <div
                     key={o.id}
                     className={classNames(
-                      'cursor-pointer w-full border-gray-100 rounded-t border-b hover:bg-company-100',
+                      'cursor-pointer w-full border-gray-100 rounded-t border-b hover:bg-company-100 text-sm text-gray-70',
                       o.selected && 'font-semibold'
                     )}
                     onClick={() => toggleOption(o.id)}
                   >
                     <div className="flex w-full items-center p-2 pl-2 border-transparent border-l-2 relative hover:border-teal-100">
-                      <div className="w-full items-center flex">
+                      <div className="flex w-full justify-between items-center">
                         <div className="mx-2 leading-6 truncate ...">
                           {o.label}
                         </div>
