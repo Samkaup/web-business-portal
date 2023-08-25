@@ -1,6 +1,6 @@
-import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import Link from 'next/link';
 import { format } from 'date-fns';
+import { TrashIcon } from '@heroicons/react/24/outline';
 
 export default function MemberContact({ contact }) {
   return (
@@ -10,10 +10,10 @@ export default function MemberContact({ contact }) {
     >
       <div className="flex min-w-0 gap-x-4">
         <div className="min-w-0 flex-auto">
-          <p className="text-sm font-semibold leading-6 text-gray-900">
+          <p className="text-sm  leading-6 text-gray-900">
             <Link href={`contacts/${contact.external_identifier}`}>
               <span className="absolute inset-x-0 -top-px bottom-0" />
-              {contact.full_name}
+              {contact.full_name} ({contact.external_identifier})
             </Link>
           </p>
           <p className="mt-1 flex text-xs leading-5 text-gray-500">
@@ -33,11 +33,12 @@ export default function MemberContact({ contact }) {
             {contact.cell_phone?.substring(3)}
           </p>
           <p className="mt-1 text-xs leading-5 text-gray-500">
-            Bætt við: {format(new Date(contact.created_at), 'dd. MMM HH:mm')}
+            Stofnað: {format(new Date(contact.created_at), 'dd. MMM HH:mm')}
           </p>
         </div>
-        <ChevronRightIcon
-          className="h-5 w-5 flex-none text-gray-400"
+        <TrashIcon
+          title="Eyða úttektaraðila"
+          className="h-5 w-5 flex-none text-red-700"
           aria-hidden="true"
         />
       </div>

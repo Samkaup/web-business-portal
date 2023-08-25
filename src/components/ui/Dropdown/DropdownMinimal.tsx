@@ -19,8 +19,8 @@ export default function DropdownMinimal({ items }: Props) {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
-        <Menu.Button className="flex items-center rounded-full bg-gray-100 text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100">
-          <span className="sr-only">Open options</span>
+        <Menu.Button className="flex items-center rounded-full bg-gray-100 text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-company-900 focus:ring-offset-2 focus:ring-offset-gray-100">
+          <span className="sr-only">Open</span>
           <EllipsisVerticalIcon className="h-5 w-5" aria-hidden="true" />
         </Menu.Button>
       </div>
@@ -38,7 +38,7 @@ export default function DropdownMinimal({ items }: Props) {
           <div className="py-1">
             {items.map((item) => {
               return (
-                <Menu.Item>
+                <Menu.Item key={item.name}>
                   {({ active }) => (
                     <a
                       href="#"

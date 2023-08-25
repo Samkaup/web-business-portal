@@ -9,11 +9,10 @@ import {
   getDateNow,
 } from '@/utils/dateUtils';
 import { DatePickerProvider } from '@rehookify/datepicker';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import TransactionTable from './transactionTable';
-import Select from '@/components/ui/Select';
-import { Row } from '@/types';
-import { useGetContacts } from '@/utils/react_query_hooks/contact';
+import { useDepartments } from '@/utils/react_query_hooks/department';
+import MultiSelect, { type Option } from '@/components/ui/MultiSelect';
 
 export default function Transactions() {
   const dateToday = getDateNow();
@@ -23,17 +22,19 @@ export default function Transactions() {
     getDateDaysAgo(14),
     dateToday,
   ]);
-  const [selectedContact, setSelectedContact] = useState<Row<'contact'> | null>(
-    null
-  );
-  const contacts = useGetContacts();
 
-  const updateContact = (id: string) => {
-    const selectedCompany = contacts.data.find(
-      (c) => c.external_identifier.toString() === id
-    );
-    setSelectedContact(selectedCompany);
-  };
+  const departments = useDepartments();
+  const [departmentOptions, setDepartmentOptions] = useState<Option[]>([]);
+  useEffect(() => {
+    if (departments.isSuccess && departmentOptions.length === 0)
+      setDepartmentOptions(
+        departments.data.map((c) => ({
+          id: c.external_identifier,
+          label: c.name,
+          selected: false,
+        }))
+      );
+  }, [departments]);
 
   const dateRangePresets: DateRangePreset[] = [
     {
@@ -57,6 +58,7 @@ export default function Transactions() {
       dates: [getDateMonthsAgo(6), dateToday],
     },
   ];
+
   return (
     <>
       <Header title="Reikningar og hreyfingar" />
@@ -76,21 +78,10 @@ export default function Transactions() {
                 setSelectedDates={onDatesChange}
                 presets={dateRangePresets}
               />
-              <Select
-                options={
-                  contacts.isSuccess
-                    ? [
-                        { id: null, label: 'Allir úttektaraðilar' },
-                        ...contacts.data.map((c) => ({
-                          id: c.external_identifier,
-                          label: c.full_name,
-                          key: c.external_identifier,
-                        })),
-                      ]
-                    : [{ id: '', label: '' }]
-                }
-                onChange={(e) => updateContact(e.target.value)}
-                className="h-full"
+              <MultiSelect
+                options={departmentOptions}
+                onSelect={setDepartmentOptions}
+                lable="Deildir"
               />
             </div>
 
@@ -102,10 +93,18 @@ export default function Transactions() {
               className="w-80"
             />
           </div>
+
           <TransactionTable
             searchValue={searchValue}
             dates={selectedDates}
-            contact={selectedContact}
+            selectedDepartmentIds={departmentOptions.reduce(function (
+              result: any[],
+              o: Option
+            ) {
+              if (o.selected) return [...result, o.id];
+              return result;
+            },
+            [])}
           />
         </div>
       </DatePickerProvider>
