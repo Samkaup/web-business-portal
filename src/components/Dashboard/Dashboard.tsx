@@ -9,40 +9,40 @@ import {
 } from '@heroicons/react/20/solid';
 
 const secondaryNavigation = [
-  { name: 'Last 7 days', href: '#', current: true },
-  { name: 'Last 30 days', href: '#', current: false },
-  { name: 'All-time', href: '#', current: false },
+  { name: 'Síðustu 7 daga', href: '#', current: true },
+  { name: 'Síðustu 30 dagar', href: '#', current: false },
+  { name: 'Þetta ár', href: '#', current: false },
 ];
 const stats = [
   {
-    name: 'Revenue',
-    value: '$405,091.00',
+    name: 'Færslur',
+    value: '223.329 kr',
     change: '+4.75%',
     changeType: 'positive',
   },
   {
-    name: 'Overdue invoices',
-    value: '$12,787.00',
-    change: '+54.02%',
-    changeType: 'negative',
-  },
-  {
-    name: 'Outstanding invoices',
-    value: '$245,988.00',
-    change: '-1.39%',
+    name: 'Staða á heimild',
+    value: '-14.002 kr',
+    change: '',
     changeType: 'positive',
   },
   {
-    name: 'Expenses',
-    value: '$30,156.00',
-    change: '+10.18%',
-    changeType: 'negative',
+    name: 'Heimild á fyrirtæki',
+    value: '500.000 kr',
+    change: '',
+    changeType: 'positive',
+  },
+  {
+    name: 'Fjöldi deilda',
+    value: '24',
+    change: '',
+    changeType: 'positive',
   },
 ];
 const statuses = {
-  Paid: 'text-green-700 bg-green-50 ring-green-600/20',
-  Withdraw: 'text-gray-600 bg-gray-50 ring-gray-500/10',
-  Overdue: 'text-red-700 bg-red-50 ring-red-600/10',
+  Greitt: 'text-green-700 bg-green-50 ring-green-600/20',
+  Úttekið: 'text-gray-600 bg-gray-50 ring-gray-500/10',
+  Eindagi: 'text-red-700 bg-red-50 ring-red-600/10',
 };
 const days = [
   {
@@ -53,50 +53,33 @@ const days = [
         id: 1,
         invoiceNumber: '00012',
         href: '#',
-        amount: '$7,600.00 USD',
-        tax: '$500.00',
-        status: 'Paid',
-        client: 'Reform',
-        description: 'Website redesign',
+        amount: '2.584 kr',
+        tax: '',
+        status: 'Greitt',
+        client: 'Deild_2',
+        description: 'Krambúðin Hringbraut',
         icon: ArrowUpCircleIcon,
       },
       {
         id: 2,
         invoiceNumber: '00011',
         href: '#',
-        amount: '$10,000.00 USD',
-        status: 'Withdraw',
-        client: 'Tom Cook',
-        description: 'Salary',
+        amount: '22.389 kr',
+        status: 'Úttekið',
+        client: 'Deild_3',
+        description: 'Kjörbúðin Dalvík',
         icon: ArrowDownCircleIcon,
       },
       {
         id: 3,
         invoiceNumber: '00009',
         href: '#',
-        amount: '$2,000.00 USD',
-        tax: '$130.00',
-        status: 'Overdue',
-        client: 'Tuple',
-        description: 'Logo design',
+        amount: '7.830 kr',
+        tax: '',
+        status: 'Eindagi',
+        client: 'Deild_1',
+        description: 'Nettó Krossmói',
         icon: ArrowPathIcon,
-      },
-    ],
-  },
-  {
-    date: 'Yesterday',
-    dateTime: '2023-03-21',
-    transactions: [
-      {
-        id: 4,
-        invoiceNumber: '00010',
-        href: '#',
-        amount: '$14,000.00 USD',
-        tax: '$900.00',
-        status: 'Paid',
-        client: 'SavvyCal',
-        description: 'Website redesign',
-        icon: ArrowUpCircleIcon,
       },
     ],
   },
@@ -104,35 +87,35 @@ const days = [
 const clients = [
   {
     id: 1,
-    name: 'Tuple',
+    name: 'Deild_1',
     imageUrl: 'https://tailwindui.com/img/logos/48x48/tuple.svg',
     lastInvoice: {
       date: 'December 13, 2022',
       dateTime: '2022-12-13',
-      amount: '$2,000.00',
-      status: 'Overdue',
+      amount: '129.923 kr',
+      status: 'Eindagi',
     },
   },
   {
     id: 2,
-    name: 'SavvyCal',
-    imageUrl: 'https://tailwindui.com/img/logos/48x48/savvycal.svg',
+    name: 'Deild_2',
+    imageUrl: 'https://tailwindui.com/img/logos/48x48/tuple.svg',
     lastInvoice: {
       date: 'January 22, 2023',
       dateTime: '2023-01-22',
-      amount: '$14,000.00',
-      status: 'Paid',
+      amount: '49.231 kr',
+      status: 'Greitt',
     },
   },
   {
     id: 3,
-    name: 'Reform',
-    imageUrl: 'https://tailwindui.com/img/logos/48x48/reform.svg',
+    name: 'Deild_3',
+    imageUrl: 'https://tailwindui.com/img/logos/48x48/tuple.svg',
     lastInvoice: {
       date: 'January 23, 2023',
       dateTime: '2023-01-23',
-      amount: '$7,600.00',
-      status: 'Paid',
+      amount: '0 kr',
+      status: 'Greitt',
     },
   },
 ];
@@ -149,14 +132,16 @@ export default function Dashboard() {
         <header className="pb-4 pt-6 sm:pb-6">
           <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-6 px-4 sm:flex-nowrap sm:px-6 lg:px-8">
             <h1 className="text-base font-semibold leading-7 text-gray-900">
-              Cashflow
+              Færslur
             </h1>
             <div className="order-last flex w-full gap-x-8 text-sm font-semibold leading-6 sm:order-none sm:w-auto sm:border-l sm:border-gray-200 sm:pl-6 sm:leading-7">
               {secondaryNavigation.map((item) => (
                 <a
                   key={item.name}
                   href={item.href}
-                  className={item.current ? 'text-indigo-600' : 'text-gray-700'}
+                  className={
+                    item.current ? 'text-company-800' : 'text-gray-700'
+                  }
                 >
                   {item.name}
                 </a>
@@ -184,12 +169,7 @@ export default function Dashboard() {
                   {stat.name}
                 </dt>
                 <dd
-                  className={classNames(
-                    stat.changeType === 'negative'
-                      ? 'text-rose-600'
-                      : 'text-gray-700',
-                    'text-xs font-medium'
-                  )}
+                  className={classNames('text-gray-700', 'text-xs font-medium')}
                 >
                   {stat.change}
                 </dd>
@@ -206,7 +186,7 @@ export default function Dashboard() {
           aria-hidden="true"
         >
           <div
-            className="aspect-[1154/678] w-[72.125rem] bg-gradient-to-br from-[#FF80B5] to-[#9089FC]"
+            className="aspect-[1154/678] w-[72.125rem] bg-gradient-to-br from-[#2b324e] to-[#9089FC]"
             style={{
               clipPath:
                 'polygon(100% 38.5%, 82.6% 100%, 60.2% 37.7%, 52.4% 32.1%, 47.5% 41.8%, 45.2% 65.6%, 27.5% 23.4%, 0.1% 35.3%, 17.9% 0%, 27.7% 23.4%, 76.2% 2.5%, 74.2% 56%, 100% 38.5%)',
@@ -220,7 +200,7 @@ export default function Dashboard() {
         <div>
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <h2 className="mx-auto max-w-2xl text-base font-semibold leading-6 text-gray-900 lg:mx-0 lg:max-w-none">
-              Recent activity
+              Síðustu færslur
             </h2>
           </div>
           <div className="mt-6 overflow-hidden border-t border-gray-100">
@@ -229,9 +209,9 @@ export default function Dashboard() {
                 <table className="w-full text-left">
                   <thead className="sr-only">
                     <tr>
-                      <th>Amount</th>
-                      <th className="hidden sm:table-cell">Client</th>
-                      <th>More details</th>
+                      <th>Upphæð</th>
+                      <th className="hidden sm:table-cell">Reikningur</th>
+                      <th>Skoða</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -292,21 +272,21 @@ export default function Dashboard() {
                               <div className="flex justify-end">
                                 <a
                                   href={transaction.href}
-                                  className="text-sm font-medium leading-6 text-indigo-600 hover:text-indigo-500"
+                                  className="text-sm font-medium leading-6 text-company-600 hover:text-company-500"
                                 >
-                                  View
+                                  Skoða
                                   <span className="hidden sm:inline">
                                     {' '}
-                                    transaction
+                                    færslu
                                   </span>
                                   <span className="sr-only">
-                                    , invoice #{transaction.invoiceNumber},{' '}
+                                    , Rekningur #{transaction.invoiceNumber},{' '}
                                     {transaction.client}
                                   </span>
                                 </a>
                               </div>
                               <div className="mt-1 text-xs leading-5 text-gray-500">
-                                Invoice{' '}
+                                Reikningur{' '}
                                 <span className="text-gray-900">
                                   #{transaction.invoiceNumber}
                                 </span>
@@ -328,13 +308,13 @@ export default function Dashboard() {
           <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-none">
             <div className="flex items-center justify-between">
               <h2 className="text-base font-semibold leading-7 text-gray-900">
-                Recent clients
+                Staða deilda
               </h2>
               <a
                 href="#"
-                className="text-sm font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+                className="text-sm font-semibold leading-6 text-company-600 hover:text-company-500"
               >
-                View all<span className="sr-only">, clients</span>
+                Skoða allar<span className="sr-only">, deildir</span>
               </a>
             </div>
             <ul
@@ -382,7 +362,7 @@ export default function Dashboard() {
                                   'block px-3 py-1 text-sm leading-6 text-gray-900'
                                 )}
                               >
-                                View
+                                Opna deild
                                 <span className="sr-only">, {client.name}</span>
                               </a>
                             )}
@@ -396,7 +376,7 @@ export default function Dashboard() {
                                   'block px-3 py-1 text-sm leading-6 text-gray-900'
                                 )}
                               >
-                                Edit
+                                Breyta deild
                                 <span className="sr-only">, {client.name}</span>
                               </a>
                             )}
@@ -407,7 +387,7 @@ export default function Dashboard() {
                   </div>
                   <dl className="-my-3 divide-y divide-gray-100 px-6 py-4 text-sm leading-6">
                     <div className="flex justify-between gap-x-4 py-3">
-                      <dt className="text-gray-500">Last invoice</dt>
+                      <dt className="text-gray-500">Síðasta færsla</dt>
                       <dd className="text-gray-700">
                         <time dateTime={client.lastInvoice.dateTime}>
                           {client.lastInvoice.date}
@@ -415,7 +395,7 @@ export default function Dashboard() {
                       </dd>
                     </div>
                     <div className="flex justify-between gap-x-4 py-3">
-                      <dt className="text-gray-500">Amount</dt>
+                      <dt className="text-gray-500">Staða á tímabili</dt>
                       <dd className="flex items-start gap-x-2">
                         <div className="font-medium text-gray-900">
                           {client.lastInvoice.amount}
