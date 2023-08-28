@@ -1,21 +1,10 @@
 'use client';
 import { Context } from '@/utils/context-store';
-import { useState, useEffect, useContext } from 'react';
+import { useContext } from 'react';
 import Select from '@/components/ui/Select';
-import supabase from '@/utils/supabase-browser';
-import { getCompany } from '@/utils/supabase_queries/company';
 
 export default function CompanySwitcher() {
-  const { company, setCompany } = useContext(Context);
-  const [companies, setCompanies] = useState([]);
-
-  useEffect(() => {
-    async function fetchCompanies() {
-      const fetchedCompanies = await getCompany(supabase);
-      setCompanies(fetchedCompanies);
-    }
-    fetchCompanies();
-  }, []);
+  const { company, setCompany, companies } = useContext(Context);
 
   const updateCompany = (id: string) => {
     const selectedCompany = companies.find(

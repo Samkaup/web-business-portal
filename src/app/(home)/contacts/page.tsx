@@ -10,12 +10,12 @@ import { useDepartmentsWithContacts } from '@/utils/react_query_hooks/department
 export default async function Contacts() {
   const { company } = useContext(Context);
   const { data: departments, isSuccess } = useDepartmentsWithContacts(
-    company.external_identifier
+    company?.external_identifier
   );
 
   return (
     <>
-      <Header title={`Deildir & úttektaraðilar: ${company.name}`}>
+      <Header title={`Deildir & úttektaraðilar: ${company?.name}`}>
         <div className="flex justify-center mt-4">
           <Button size="lg">
             Stofna deild
