@@ -39,6 +39,7 @@ export type Payload = {
   dateRange?: Date[];
   departmentFilters?: string[];
   filters?: string[];
+  companyId?: string;
 };
 
 export const getTransactionsTable = async ({
@@ -48,10 +49,11 @@ export const getTransactionsTable = async ({
   searchValue,
   dateRange,
   filters,
+  companyId,
 }: Payload) => {
   let query = supabaseClient
     .from('transaction')
-    .select('*', { count: 'exact' });
+    .select('*, department!inner ( company_id )', { count: 'exact' });
 
   if (range) query = query.range(range.from, range.to);
 
@@ -71,6 +73,11 @@ export const getTransactionsTable = async ({
   const end: Date | null = dateRange.at(1);
   query = start ? query.filter('date', 'gte', formatDate(start)) : query;
   query = end ? query.filter('date', 'lte', formatDate(end)) : query;
+
+  // Set company_id
+  query = companyId
+    ? query.filter('department.company_id', 'eq', companyId)
+    : query;
 
   const { data, count, error } = await query;
 
