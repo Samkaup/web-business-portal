@@ -84,7 +84,7 @@ export default function Transactions() {
                 options={departmentsToOptions(departments.data)}
                 selectedOptions={selectedDepartments}
                 onSelect={setSelectedDepartments}
-                label="Allar Deildir"
+                label="Allar deildir"
               />
             </div>
 
@@ -92,7 +92,7 @@ export default function Transactions() {
               value={searchValue}
               onChange={(value) => setSearchValue(String(value))}
               name="search"
-              placeholder="Leita í Lista"
+              placeholder="Leita í lista"
               className="w-80"
             />
           </div>
