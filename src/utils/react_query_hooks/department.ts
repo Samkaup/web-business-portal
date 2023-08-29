@@ -3,15 +3,23 @@ import { useQuery } from '@tanstack/react-query';
 import supabaseClient from '@/utils/supabase-browser';
 import {
   DepartmentWithContacts,
-  getDepartments,
+  getDepartmentsByCompany,
   getDepartmentsWithContacts,
 } from '../supabase_queries/department';
 
+import { useContext } from 'react';
+import { Context } from '@/utils/context-store';
+
 export const useDepartments = () => {
+  const { company } = useContext(Context);
+
   return useQuery<TableRow<'department'>[]>(
-    ['department'],
+    ['department', company],
     async () => {
-      return getDepartments(supabaseClient);
+      return getDepartmentsByCompany(
+        supabaseClient,
+        company.external_identifier
+      );
     },
     { keepPreviousData: true }
   );

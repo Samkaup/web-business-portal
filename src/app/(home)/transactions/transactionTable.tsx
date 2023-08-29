@@ -8,18 +8,17 @@ import Link from 'next/link';
 import { is } from 'date-fns/locale';
 import { useTransactionsTable } from '@/utils/react_query_hooks/transaction';
 import QueryTable from '@/components/QueryTable/QueryTable';
-import { Option } from '@/components/ui/MultiSelect';
 
 type Props = {
   searchValue: string;
   dates: Date[];
-  departmentOptions: Option[];
+  departmentIds: string[];
 };
 
 export default function TransactionTable({
   searchValue,
   dates,
-  departmentOptions,
+  departmentIds,
 }: Props) {
   const defaultSort = {
     id: 'date',
@@ -35,22 +34,12 @@ export default function TransactionTable({
     pageSize: basePageSize,
   });
 
-  const getFilteredDepartments = () => {
-    if (departmentOptions.some((o: Option) => o.selected))
-      return departmentOptions.reduce(function (result: string[], o: Option) {
-        if (o.selected) return [...result, `account_number.eq.${o.id}`];
-        return result;
-      }, []);
-
-    return departmentOptions.map((o: Option) => `account_number.eq.${o.id}`);
-  };
-
   const query = useTransactionsTable({
     pagination,
     sorting,
     searchValue,
     dateRange: dates,
-    filters: getFilteredDepartments(),
+    filters: departmentIds.map((id: string) => `account_number.eq.${id}`),
   });
 
   const columns = useMemo(

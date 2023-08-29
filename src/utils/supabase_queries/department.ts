@@ -58,3 +58,21 @@ export const getDepartmentsWithContacts = async ({
 
   return departments;
 };
+
+export const getDepartmentsByCompany = async (
+  supabase: AppSupabaseClient,
+  company_id: string
+): Promise<TableRow<'department'>[]> => {
+  // RLS is enabled
+  const { data, error } = await supabase
+    .from('department')
+    .select('*')
+    .eq('company_id', company_id);
+
+  if (error) {
+    console.log(error);
+    throw error;
+  }
+
+  return data;
+};

@@ -9,10 +9,11 @@ import {
   getDateNow,
 } from '@/utils/dateUtils';
 import { DatePickerProvider } from '@rehookify/datepicker';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import TransactionTable from './transactionTable';
 import { useDepartments } from '@/utils/react_query_hooks/department';
 import MultiSelect, { type Option } from '@/components/ui/MultiSelect';
+import { Row } from '@/types';
 
 export default function Transactions() {
   const dateToday = getDateNow();
@@ -24,17 +25,18 @@ export default function Transactions() {
   ]);
 
   const departments = useDepartments();
-  const [departmentOptions, setDepartmentOptions] = useState<Option[]>([]);
-  useEffect(() => {
-    if (departments.isSuccess && departmentOptions.length === 0)
-      setDepartmentOptions(
-        departments.data.map((c) => ({
-          id: c.external_identifier,
-          label: c.name,
-          selected: false,
-        }))
-      );
-  }, [departments]);
+  const [selectedDepartments, setSelectedDepartments] = useState<Option[]>([]);
+
+  const departmentsToOptions = (
+    departments: Row<'department'>[] | undefined
+  ): Option[] => {
+    if (departments)
+      return departments.map((d: Row<'department'>) => ({
+        id: d.external_identifier,
+        label: d.name,
+      }));
+    return [];
+  };
 
   const dateRangePresets: DateRangePreset[] = [
     {
@@ -79,9 +81,10 @@ export default function Transactions() {
                 presets={dateRangePresets}
               />
               <MultiSelect
-                options={departmentOptions}
-                onSelect={setDepartmentOptions}
-                lable="Deildir"
+                options={departmentsToOptions(departments.data)}
+                selectedOptions={selectedDepartments}
+                onSelect={setSelectedDepartments}
+                label="Allar Deildir"
               />
             </div>
 
@@ -97,7 +100,7 @@ export default function Transactions() {
           <TransactionTable
             searchValue={searchValue}
             dates={selectedDates}
-            departmentOptions={departmentOptions}
+            departmentIds={selectedDepartments.map((o: Option) => o.id)}
           />
         </div>
       </DatePickerProvider>
