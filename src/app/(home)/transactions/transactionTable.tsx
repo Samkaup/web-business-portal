@@ -106,8 +106,6 @@ export default function TransactionTable({
     []
   );
 
-  // return <p>isLoading</p>;
-
   return (
     <QueryTable
       query={query}
