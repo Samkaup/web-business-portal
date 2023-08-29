@@ -14,6 +14,7 @@ import {
   ArrowUpIcon as ChevronUpIcon,
 } from '@heroicons/react/24/outline';
 import { NewTableProps } from './QueryTable.types';
+import PageNavigator from '../PageNavigation';
 
 export default function QueryTable<T extends object>({
   query,
@@ -44,13 +45,13 @@ export default function QueryTable<T extends object>({
   });
 
   const Skeleton = () => (
-    <div className="max-w-sm h-2.5 bg-gray-100 rounded-full dark:bg-gray-500 w-full mb-4" />
+    <div className="max-w-sm h-2.5 bg-gray-100 rounded-full dark:bg-gray-500 w-full" />
   );
 
   const TableBodyLoad = () => (
     <>
       {Array.from({ length: basePageSize }).map((_, idx) => (
-        <tr key={idx}>
+        <tr key={idx} className="h-14">
           {columns.map((_: any, idx: number) => (
             <td key={idx} className="px-3 py-4 text-sm text-gray-600 z-0">
               <Skeleton />
@@ -108,7 +109,7 @@ export default function QueryTable<T extends object>({
                 {query.isSuccess ? (
                   <React.Suspense fallback={<TableBodyLoad />}>
                     {table?.getRowModel().rows.map((row) => (
-                      <tr key={row.id}>
+                      <tr key={row.id} className="h-14">
                         {row?.getVisibleCells().map((cell) => (
                           <td
                             key={cell.id}
@@ -147,8 +148,11 @@ export default function QueryTable<T extends object>({
           </div>
         </div>
       </div>
+
+      {/* Pagination */}
       <div className="px-4 py-3 flex items-center justify-center border-t border-gray-200/50 sm:px-6">
         <div className="sm:flex-1 sm:flex sm:items-center sm:justify-between mt-4">
+          {/* Row Count */}
           <div>
             <p className="text-sm mt font-medium ml-4 text-gray-600">
               <select
@@ -166,39 +170,13 @@ export default function QueryTable<T extends object>({
               <span className="font-medium ml-4">{`af ${query.data?.rowCount} niðurstöðum`}</span>
             </p>
           </div>
-          <div className="flex-1 flex justify-between sm:justify-end text-gray-600">
-            {paginationState.pageIndex > 5 && (
-              <button
-                className="hover:cursor-pointer relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md hover:bg-white/10"
-                onClick={() => table.setPageIndex(0)}
-                disabled={!table.getCanPreviousPage()}
-              >
-                Fyrsta síða
-              </button>
-            )}
-            {table.getCanPreviousPage() && (
-              <button
-                className="ml-5 hover:cursor-pointer relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md hover:bg-white/10"
-                onClick={() => table.previousPage()}
-              >
-                Fyrri síða
-              </button>
-            )}
-            <button
-              className="ml-5 hover:cursor-pointer relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md hover:bg-white/10"
-              disabled={true}
-            >
-              <span>Síða: {paginationState.pageIndex + 1}</span>
-            </button>
-            {table.getCanNextPage() && (
-              <button
-                className="ml-5 hover:cursor-pointer relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md hover:bg-white/10"
-                onClick={() => table.nextPage()}
-              >
-                Næsta síða
-              </button>
-            )}
-          </div>
+
+          {/* Page navigation */}
+          <PageNavigator
+            currentPageIdx={paginationState.pageIndex}
+            pageCount={table.getPageCount()}
+            setPage={table.setPageIndex}
+          />
         </div>
       </div>
     </div>
