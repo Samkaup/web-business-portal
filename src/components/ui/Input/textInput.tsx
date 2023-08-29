@@ -3,8 +3,8 @@ import { ExclamationCircleIcon } from '@heroicons/react/20/solid';
 
 type Props = {
   name: string;
-  value: string;
-  onChange: (value: string) => void;
+  value: string | number;
+  onChange: (value: string | number) => void;
   autoComplete?: string | null;
   label?: string | null;
   type?: string | null;
@@ -14,6 +14,7 @@ type Props = {
   isError?: boolean;
   errorText?: string | null;
   className?: string | null;
+  debounce?: number | null;
 };
 
 export default function TextInput({
@@ -28,6 +29,8 @@ export default function TextInput({
   value,
   onChange,
   className,
+  debounce,
+  ...props
 }: Props) {
   const baseStyle = 'block w-full rounded-md border-0 py-1.5 pl-2 sm:leading-6';
 
