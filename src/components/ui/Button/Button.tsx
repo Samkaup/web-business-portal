@@ -7,6 +7,7 @@ type Props = {
   primary?: boolean;
   secondary?: boolean;
   size?: ButtonSize;
+  type?: 'submit' | 'button' | 'reset';
   className?: string;
   children: ReactNode;
 };
@@ -16,6 +17,7 @@ export default function Button({
   primary = true,
   secondary = false,
   size,
+  type = 'button',
   className,
   children,
 }: Props) {
@@ -52,7 +54,7 @@ export default function Button({
   if (className) baseClassName = baseClassName + ' ' + className;
 
   return (
-    <button type="submit" className={baseClassName} onClick={onClick}>
+    <button type={type} className={baseClassName} onClick={onClick}>
       {children}
     </button>
   );

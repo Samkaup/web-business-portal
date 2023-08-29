@@ -1,6 +1,9 @@
 import { Spinner } from '@/components/ui/Spinner/Spinner';
 import { Props } from './LoadingBlock.types';
-export const LoadingBlock = ({ title, className }: Props) => {
+export const LoadingBlock = ({
+  title = 'Sæki gögn..',
+  className = '',
+}: Props) => {
   return (
     <>
       <div className={className}>
@@ -15,9 +18,4 @@ export const LoadingBlock = ({ title, className }: Props) => {
       </div>
     </>
   );
-};
-
-LoadingBlock.defaultProps = {
-  title: 'Sæki gögn...',
-  className: '',
 };
