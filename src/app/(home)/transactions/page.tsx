@@ -1,6 +1,5 @@
 'use client';
 import Header from '@/components/Header/Header';
-import TextInput from '@/components/ui/Input/textInput';
 import DateRangePicker from '@/components/ui/DateRangePicker';
 import { DateRangePreset } from '@/components/ui/DateRangePicker/index.types';
 import {
@@ -9,32 +8,35 @@ import {
   getDateNow,
 } from '@/utils/dateUtils';
 import { DatePickerProvider } from '@rehookify/datepicker';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import TransactionTable from './transactionTable';
 import { useDepartments } from '@/utils/react_query_hooks/department';
 import MultiSelect, { type Option } from '@/components/ui/MultiSelect';
+import { Row } from '@/types';
+import { DebouncedInput } from '@/components/ui/Input/debouncedInput';
 
 export default function Transactions() {
   const dateToday = getDateNow();
 
-  const [searchValue, setSearchValue] = useState('');
+  const [searchValue, setSearchValue] = useState<string>('');
   const [selectedDates, onDatesChange] = useState<Date[]>([
-    getDateDaysAgo(14),
+    getDateDaysAgo(37),
     dateToday,
   ]);
 
   const departments = useDepartments();
-  const [departmentOptions, setDepartmentOptions] = useState<Option[]>([]);
-  useEffect(() => {
-    if (departments.isSuccess && departmentOptions.length === 0)
-      setDepartmentOptions(
-        departments.data.map((c) => ({
-          id: c.external_identifier,
-          label: c.name,
-          selected: false,
-        }))
-      );
-  }, [departments]);
+  const [selectedDepartments, setSelectedDepartments] = useState<Option[]>([]);
+
+  const departmentsToOptions = (
+    departments: Row<'department'>[] | undefined
+  ): Option[] => {
+    if (departments)
+      return departments.map((d: Row<'department'>) => ({
+        id: d.external_identifier,
+        label: d.name,
+      }));
+    return [];
+  };
 
   const dateRangePresets: DateRangePreset[] = [
     {
@@ -79,17 +81,18 @@ export default function Transactions() {
                 presets={dateRangePresets}
               />
               <MultiSelect
-                options={departmentOptions}
-                onSelect={setDepartmentOptions}
-                lable="Deildir"
+                options={departmentsToOptions(departments.data)}
+                selectedOptions={selectedDepartments}
+                onSelect={setSelectedDepartments}
+                label="Allar deildir"
               />
             </div>
 
-            <TextInput
+            <DebouncedInput
               value={searchValue}
-              onChange={setSearchValue}
+              onChange={(value) => setSearchValue(String(value))}
               name="search"
-              placeholder="Leita í Lista"
+              placeholder="Leita í lista"
               className="w-80"
             />
           </div>
@@ -97,14 +100,7 @@ export default function Transactions() {
           <TransactionTable
             searchValue={searchValue}
             dates={selectedDates}
-            selectedDepartmentIds={departmentOptions.reduce(function (
-              result: any[],
-              o: Option
-            ) {
-              if (o.selected) return [...result, o.id];
-              return result;
-            },
-            [])}
+            departmentIds={selectedDepartments.map((o: Option) => o.id)}
           />
         </div>
       </DatePickerProvider>

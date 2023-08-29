@@ -7,67 +7,58 @@ import { XMarkIcon } from '@heroicons/react/24/outline';
 export type Option = {
   id: any;
   label: string;
-  selected: boolean;
 };
 
 type Props = {
   options: Option[];
+  selectedOptions: Option[];
   onSelect: (options: Option[]) => void;
-  lable: string;
+  label: string;
 };
 
-const MultiSelect = ({ options, onSelect, lable }: Props) => {
-  const toggleOption = (id: any) =>
-    onSelect(
-      options.map((o: Option) => {
-        if (o.id === id) return { ...o, selected: !o.selected };
-        return o;
-      })
+const MultiSelect = ({ options, selectedOptions, onSelect, label }: Props) => {
+  const isSelected = (option: Option) => {
+    return selectedOptions.some(
+      (selected: Option) => selected.id === option.id
     );
-
-  const deselectAll = () =>
-    onSelect(options.map((o: Option) => ({ ...o, selected: false })));
-
-  const DisplayState = () => {
-    // const selected = options.filter((o: Option) => o.selected);
-
-    const className = 'w-fit truncate ...';
-
-    // if (selected.length === 1)
-    //   return <div className={className}>{selected.at(0).label}</div>;
-    // else if (selected.length === 1)
-    //   return <div className={className}>{selected.at(0).label}</div>;
-    // else if (selected.length > 1)
-    //   return (
-    //     <>
-    //       <div className={className}>{selected.at(0).label}</div>
-    //       <div>{selected.length - 1}</div>
-    //     </>
-    //   );
-
-    return <div className={className}>{lable}</div>;
   };
+
+  const toggleOption = (toggledOption: Option) => {
+    const updatedSelection = isSelected(toggledOption)
+      ? selectedOptions.filter((o: Option) => o.id !== toggledOption.id) // Remove Option
+      : [...selectedOptions, toggledOption]; // Add Option
+
+    onSelect(updatedSelection);
+  };
+
+  const disabled = () => options.length === 0;
 
   return (
     <Popover className="relative flex flex-col w-full">
       {({ open }) => (
         <>
-          <div className="w-48 flex flex-col mx-auto h-full justify-center ">
+          <div className="w-48 flex flex-col mx-auto h-full justify-center">
             <div className="flex flex-col relative w-full h-full">
-              <Popover.Button className="h-full flex justify-start items-center rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-company-600 sm:text-sm sm:leading-6 hover:ring-company-600">
-                <div className="flex-1 flex justify-start px-2">
-                  <DisplayState />
-                </div>
+              <Popover.Button
+                className={classNames(
+                  'h-full flex justify-start items-center rounded-md border-0 sm:text-sm sm:leading-6 ring-1 ring-inset ring-gray-300',
+                  disabled()
+                    ? 'text-gray-300 cursor-auto'
+                    : 'text-gray-900 shadow-sm focus:ring-2 focus:ring-inset focus:ring-company-600 hover:ring-company-600'
+                )}
+                disabled={disabled()}
+              >
+                <div className="flex-1 flex justify-start px-2">{label}</div>
 
-                {options.filter((o: Option) => o.selected).length > 0 && (
+                {selectedOptions.length !== 0 && (
                   <div
-                    onClick={deselectAll}
+                    onClick={() => onSelect([])}
                     className="text-gray-500 hover:text-gray-800 mr-1 cursor-pointer"
                   >
                     <XMarkIcon className="h-5 w-5" aria-hidden="true" />
                   </div>
                 )}
-                <div className="text-gray-800 w-8 justify-center border-l flex items-center border-gray-300">
+                <div className="w-8 justify-center border-l flex items-center border-gray-300">
                   <ChevronDownIcon className="h-5 w-5" aria-hidden="true" />
                 </div>
               </Popover.Button>
@@ -88,18 +79,18 @@ const MultiSelect = ({ options, onSelect, lable }: Props) => {
                   <div
                     key={o.id}
                     className={classNames(
-                      'cursor-pointer w-full border-gray-100 rounded-t border-b hover:bg-company-100',
-                      o.selected && 'font-semibold'
+                      'cursor-pointer w-full border-gray-100 rounded-t border-b hover:bg-gray-100 text-sm text-gray-70',
+                      isSelected(o) && 'font-semibold'
                     )}
-                    onClick={() => toggleOption(o.id)}
+                    onClick={() => toggleOption(o)}
                   >
-                    <div className="flex w-full items-center p-2 pl-2 border-transparent border-l-2 relative hover:border-teal-100">
-                      <div className="w-full items-center flex">
+                    <div className="flex w-full items-center p-2 pl-2 border-transparent border-l-2 relative">
+                      <div className="flex w-full justify-between items-center">
                         <div className="mx-2 leading-6 truncate ...">
                           {o.label}
                         </div>
                         <span>
-                          {o.selected && (
+                          {isSelected(o) && (
                             <CheckIcon
                               className="h-5 w-5 text-company-green-500"
                               aria-hidden="true"

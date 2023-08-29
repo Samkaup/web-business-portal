@@ -7,19 +7,18 @@ import { DocumentIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { is } from 'date-fns/locale';
 import { useTransactionsTable } from '@/utils/react_query_hooks/transaction';
-import { Row } from '@/types';
 import QueryTable from '@/components/QueryTable/QueryTable';
 
 type Props = {
   searchValue: string;
   dates: Date[];
-  selectedDepartmentIds: Row<'department'>['external_identifier'][];
+  departmentIds: string[];
 };
 
 export default function TransactionTable({
   searchValue,
   dates,
-  selectedDepartmentIds,
+  departmentIds,
 }: Props) {
   const defaultSort = {
     id: 'date',
@@ -40,9 +39,7 @@ export default function TransactionTable({
     sorting,
     searchValue,
     dateRange: dates,
-    filters: selectedDepartmentIds.map(
-      (id: string) => `account_number.eq.${id}`
-    ),
+    filters: departmentIds.map((id: string) => `account_number.eq.${id}`),
   });
 
   const columns = useMemo(
@@ -108,8 +105,6 @@ export default function TransactionTable({
     ],
     []
   );
-
-  // return <p>isLoading</p>;
 
   return (
     <QueryTable

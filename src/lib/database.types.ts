@@ -113,12 +113,6 @@ export interface Database {
             columns: ["department_id"]
             referencedRelation: "department"
             referencedColumns: ["external_identifier"]
-          },
-          {
-            foreignKeyName: "contact_department_id_fkey"
-            columns: ["department_id"]
-            referencedRelation: "detailed_transaction"
-            referencedColumns: ["department_external_id"]
           }
         ]
       }
@@ -277,19 +271,6 @@ export interface Database {
       }
     }
     Views: {
-      detailed_transaction: {
-        Row: {
-          amount_credit: number | null
-          amount_debit: number | null
-          date: string | null
-          department_external_id: string | null
-          department_name: string | null
-          description: string | null
-          store_number: number | null
-          transaction_type: number | null
-        }
-        Relationships: []
-      }
       max_rowcounter_transaction: {
         Row: {
           max: number | null
