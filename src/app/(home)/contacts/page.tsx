@@ -1,5 +1,5 @@
 'use client';
-import { useContext } from 'react';
+import { Suspense, useContext } from 'react';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import Header from '@/components/Header/Header';
 import Button from '@/components/ui/Button/Button';
@@ -7,9 +7,12 @@ import { SlideOver } from '@/components/ui/SlideOver/SlideOver';
 import MemberAccountListWithContacts from '@/components/MemberAccount/MemberAccount.List';
 import { Context } from '@/utils/context-store';
 import { useDepartmentsWithContacts } from '@/utils/react_query_hooks/department';
+import EmptyStateSimple from '@/components/ui/EmptyState/EmptyStateSimple';
+import LoadingSkeleton from '@/components/LoadingSkeleton/LoadingSkeleton';
 
 export default function Contacts() {
   const { company, slideOver } = useContext(Context);
+
   const { data: departments, isSuccess } = useDepartmentsWithContacts(
     company?.external_identifier
   );
@@ -24,21 +27,37 @@ export default function Contacts() {
           </Button>
         </div>
       </Header>
-      <SlideOver
-        isOpen={slideOver.isOpen}
-        title="Ný deild"
-        description="Deildir aðgreina úttektaraðila og veita aukið upplýsingaflæði um úttekt."
-        toggleOpen={slideOver.toggle}
-        onCancel={() => slideOver.toggle(false)}
-      >
-        FORM
-      </SlideOver>
-
-      {isSuccess && (
-        <MemberAccountListWithContacts
-          departments={departments}
-        ></MemberAccountListWithContacts>
-      )}
+      <Suspense fallback={<LoadingSkeleton />}>
+        <SlideOver
+          isOpen={slideOver.isOpen}
+          title="Ný deild"
+          description="Deildir aðgreina úttektaraðila og veita aukið upplýsingaflæði um úttekt."
+          toggleOpen={slideOver.toggle}
+          onCancel={() => slideOver.toggle(false)}
+        >
+          Here be form, beware
+        </SlideOver>
+        {isSuccess && (
+          <div>
+            {departments.length > 0 ? (
+              <MemberAccountListWithContacts
+                departments={departments}
+              ></MemberAccountListWithContacts>
+            ) : (
+              <span className="mt-6">
+                <EmptyStateSimple
+                  title="Engar deildir"
+                  subtitle="Deildir eru notaða til að aðgreina úttektaraðila, þú færð einnig þær upplýsingar á rafrænum reikningi."
+                  actionBtnClick={() => {
+                    false;
+                  }}
+                  actionBtnText="Stofna deild"
+                />
+              </span>
+            )}
+          </div>
+        )}
+      </Suspense>
     </>
   );
 }

@@ -1,4 +1,3 @@
-'use client';
 import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
@@ -13,11 +12,11 @@ export type Props = {
   title?: title;
   description?: description;
   children?: children;
-  toggleOpen: (arg0: isOpen) => void;
+  toggleOpen: (boolean: isOpen) => void;
   onCancel: onCancel;
 };
 export const SlideOver = ({
-  isOpen,
+  isOpen = false,
   title = 'Title',
   description = 'Description',
   children,

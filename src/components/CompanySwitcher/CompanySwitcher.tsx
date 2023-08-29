@@ -2,9 +2,11 @@
 import { Context } from '@/utils/context-store';
 import { useContext } from 'react';
 import Select from '@/components/ui/Select';
+import { useGetCompany } from '@/utils/react_query_hooks/company';
 
 export default function CompanySwitcher() {
-  const { company, setCompany, companies } = useContext(Context);
+  const { company, setCompany } = useContext(Context);
+  const { data: companies } = useGetCompany();
 
   const updateCompany = (id: string) => {
     const selectedCompany = companies.find(
@@ -20,7 +22,7 @@ export default function CompanySwitcher() {
           <h3 className="text-base font-semibold leading-6 text-gray-900">
             <div>
               <Select
-                options={companies.map((c) => ({
+                options={companies?.map((c) => ({
                   id: c.external_identifier,
                   label: c.name,
                   key: c.external_identifier,
