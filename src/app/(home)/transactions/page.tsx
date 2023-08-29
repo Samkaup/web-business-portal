@@ -1,6 +1,5 @@
 'use client';
 import Header from '@/components/Header/Header';
-import TextInput from '@/components/ui/Input/textInput';
 import DateRangePicker from '@/components/ui/DateRangePicker';
 import { DateRangePreset } from '@/components/ui/DateRangePicker/index.types';
 import {
@@ -14,13 +13,14 @@ import TransactionTable from './transactionTable';
 import { useDepartments } from '@/utils/react_query_hooks/department';
 import MultiSelect, { type Option } from '@/components/ui/MultiSelect';
 import { Row } from '@/types';
+import { DebouncedInput } from '@/components/ui/Input/debouncedInput';
 
 export default function Transactions() {
   const dateToday = getDateNow();
 
-  const [searchValue, setSearchValue] = useState('');
+  const [searchValue, setSearchValue] = useState<string>('');
   const [selectedDates, onDatesChange] = useState<Date[]>([
-    getDateDaysAgo(14),
+    getDateDaysAgo(37),
     dateToday,
   ]);
 
@@ -88,9 +88,9 @@ export default function Transactions() {
               />
             </div>
 
-            <TextInput
+            <DebouncedInput
               value={searchValue}
-              onChange={setSearchValue}
+              onChange={(value) => setSearchValue(String(value))}
               name="search"
               placeholder="Leita í Lista"
               className="w-80"
