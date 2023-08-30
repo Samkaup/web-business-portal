@@ -99,7 +99,7 @@ export default function Login() {
             <form className="space-y-6">
               <TextInput
                 value={fullName}
-                onChange={setFullName}
+                onChange={(value) => setFullName(value as string)}
                 name="fullName"
                 type="name"
                 label="Fullt Nafn"
@@ -110,7 +110,7 @@ export default function Login() {
               />
               <TextInput
                 value={phoneNr}
-                onChange={setPhoneNr}
+                onChange={(value) => setPhoneNr(value as string)}
                 name="phoneNr"
                 type="tel"
                 autoComplete="tel"
@@ -121,7 +121,7 @@ export default function Login() {
               />
               <TextInput
                 value={email}
-                onChange={setEmail}
+                onChange={(value) => setEmail(value as string)}
                 name="email"
                 type="email"
                 autoComplete="email"
@@ -132,7 +132,7 @@ export default function Login() {
               />
               <TextInput
                 value={password}
-                onChange={setPassword}
+                onChange={(value) => setPassword(value as string)}
                 name="password"
                 type="password"
                 autoComplete="current-password"
@@ -143,7 +143,7 @@ export default function Login() {
               />
               <TextInput
                 value={rePassword}
-                onChange={setRePassword}
+                onChange={(value) => setRePassword(value as string)}
                 name="password"
                 type="password"
                 autoComplete="current-password"
