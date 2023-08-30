@@ -93,7 +93,7 @@ export default function TransactionTable({
       {
         accessorKey: 'actions',
         id: 'actions',
-        header: () => <span></span>,
+        header: null,
         cell: (_: any) => {
           return (
             <Link href="#" className="hover:text-company-700 inline-flex">

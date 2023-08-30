@@ -29,6 +29,14 @@ type Payload = {
   filters?: string[];
 };
 
+type FilteredTransaction = {
+  date: Row<'transaction'>['date'];
+  store_number: Row<'transaction'>['store_number'];
+  account_number: Row<'transaction'>['account_number'];
+  description: Row<'transaction'>['description'];
+  amount_debit: Row<'transaction'>['amount_debit'];
+};
+
 export const useTransactionsTable = ({
   pagination,
   sorting,
@@ -38,7 +46,7 @@ export const useTransactionsTable = ({
 }: Payload) => {
   const { company } = useContext(Context);
 
-  return useQuery<QueryDataAndCount<TableRow<'transaction'>>>(
+  return useQuery<QueryDataAndCount<FilteredTransaction>>(
     [
       'transactionsTable',
       {
@@ -93,9 +101,12 @@ export const useTransactionsTable = ({
       // Construct response
       return {
         rowCount: transactions.rowCount,
-        data: transactions.data.map((t: Row<'transaction'>) => ({
-          ...t,
+        data: transactions.data.map((t) => ({
+          date: t.date,
+          store_number: t.store_number,
           account_number: departmentsMap[t.account_number],
+          description: t.description,
+          amount_debit: t.amount_debit,
         })),
       };
     },
