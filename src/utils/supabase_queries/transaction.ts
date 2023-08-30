@@ -51,9 +51,17 @@ export const getTransactionsTable = async ({
   filters,
   companyId,
 }: Payload) => {
-  let query = supabaseClient
-    .from('transaction')
-    .select('*, department!inner ( company_id )', { count: 'exact' });
+  let query = supabaseClient.from('transaction').select(
+    ` date,
+      store_number,
+      account_number,
+      description,
+      amount_debit,
+      department!inner ( 
+        company_id 
+      )`,
+    { count: 'exact' }
+  );
 
   if (range) query = query.range(range.from, range.to);
 

@@ -27,7 +27,7 @@ export default function PageNavigator({
       disabled={currentPageIdx === pageIdx}
       onClick={() => setPage(pageIdx)}
     >
-      {pageIdx + 1}
+      {`${pageIdx + 1}`}
     </button>
   );
 
@@ -50,7 +50,7 @@ export default function PageNavigator({
       {pageCount < 8 ? (
         <>
           {Array.from({ length: pageCount }).map((_, idx) => (
-            <PageButton pageIdx={idx} />
+            <PageButton pageIdx={idx} key={idx} />
           ))}
         </>
       ) : (
@@ -58,7 +58,7 @@ export default function PageNavigator({
           {Array.from({
             length: currentPageIdx < 2 ? 3 : currentPageIdx < 3 ? 4 : 1,
           }).map((_, idx) => (
-            <PageButton pageIdx={idx} />
+            <PageButton pageIdx={idx} key={idx} />
           ))}
           <span className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">
             ...
@@ -69,9 +69,9 @@ export default function PageNavigator({
                 currentPageIdx - 1,
                 currentPageIdx,
                 currentPageIdx + 1,
-              ]).map((num) => {
-                return <PageButton pageIdx={num} />;
-              })}
+              ]).map((num) => (
+                <PageButton pageIdx={num} key={num} />
+              ))}
 
               <span className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">
                 ...
@@ -92,7 +92,7 @@ export default function PageNavigator({
           )
             .reverse()
             .map((num) => (
-              <PageButton pageIdx={pageCount - num - 1} />
+              <PageButton pageIdx={pageCount - num - 1} key={num} />
             ))}
         </>
       )}

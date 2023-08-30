@@ -15,6 +15,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { NewTableProps } from './QueryTable.types';
 import PageNavigator from '../PageNavigation';
+import CSVDownloadBtn from '../CSVDownloadBtn';
 
 export default function QueryTable<T extends object>({
   query,
@@ -171,6 +172,7 @@ export default function QueryTable<T extends object>({
             </p>
           </div>
 
+          <CSVDownloadBtn data={query.data?.data} filename="hreyfingar" />
           {/* Page navigation */}
           <PageNavigator
             currentPageIdx={paginationState.pageIndex}
