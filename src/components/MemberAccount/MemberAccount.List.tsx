@@ -126,6 +126,7 @@ export default function MemberAccountListWithContacts({ departments }: Props) {
                           <div className="min-w-0 flex-auto">
                             {department.contact.length == 0 ? (
                               <AlertWithDescription
+                                type="info"
                                 title="Engin skráður úttektaraðili"
                                 description="Ekki er hægt að nota þennan reikning ef enginn úttektaraðili er skráður"
                               />

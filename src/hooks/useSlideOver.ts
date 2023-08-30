@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction } from 'react';
 
 export type useSlideOverType = {
   isOpen: boolean;
-  toggle: Dispatch<SetStateAction<boolean>>;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
 };
 
 export type useSideBarProps = {
@@ -16,12 +16,9 @@ export type useSideBarProps = {
 const useSlideOver = () => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const toggle = () => {
-    setIsOpen(!isOpen);
-  };
   return {
     isOpen,
-    toggle,
+    setIsOpen,
   };
 };
 

@@ -9,10 +9,10 @@ import { Context } from '@/utils/context-store';
 import { useDepartmentsWithContacts } from '@/utils/react_query_hooks/department';
 import EmptyStateSimple from '@/components/ui/EmptyState/EmptyStateSimple';
 import LoadingSkeleton from '@/components/LoadingSkeleton/LoadingSkeleton';
+import DepartmentCreate from '@/components/DepartmentForm/Create';
 
 export default function Contacts() {
   const { company, slideOver } = useContext(Context);
-
   const { data: departments, isSuccess } = useDepartmentsWithContacts(
     company?.external_identifier
   );
@@ -21,7 +21,7 @@ export default function Contacts() {
     <>
       <Header title={`Deildir & úttektaraðilar: ${company?.name ?? ''}`}>
         <div className="flex justify-center mt-4">
-          <Button size="lg" onClick={() => slideOver.toggle(true)}>
+          <Button size="lg" onClick={() => slideOver.setIsOpen(true)}>
             Stofna deild
             <PlusIcon className="-mr-0.5 h-5 w-5 text-white"></PlusIcon>
           </Button>
@@ -32,10 +32,15 @@ export default function Contacts() {
           isOpen={slideOver.isOpen}
           title="Ný deild"
           description="Deildir aðgreina úttektaraðila og veita aukið upplýsingaflæði um úttekt."
-          toggleOpen={slideOver.toggle}
-          onCancel={() => slideOver.toggle(false)}
+          toggleOpen={() => slideOver.setIsOpen(true)}
+          onCancel={() => slideOver.setIsOpen(false)}
         >
-          Here be form, beware
+          <DepartmentCreate
+            onSave={() => {
+              true;
+            }}
+            onCancel={() => slideOver.setIsOpen(false)}
+          />
         </SlideOver>
         {isSuccess && (
           <div>
@@ -44,16 +49,14 @@ export default function Contacts() {
                 departments={departments}
               ></MemberAccountListWithContacts>
             ) : (
-              <span className="mt-6">
+              <div className="pt-10">
                 <EmptyStateSimple
-                  title="Engar deildir"
-                  subtitle="Deildir eru notaða til að aðgreina úttektaraðila, þú færð einnig þær upplýsingar á rafrænum reikningi."
-                  actionBtnClick={() => {
-                    false;
-                  }}
+                  title={`Engar deildir skráðar fyrir ${company?.name}`}
+                  subtitle="Deildir eru til að aðgreina úttektaraðila milli viðskiptaeininga, þær upplýsingar berast svo með rafrænum reikningi."
+                  actionBtnClick={() => slideOver.setIsOpen(true)}
                   actionBtnText="Stofna deild"
                 />
-              </span>
+              </div>
             )}
           </div>
         )}
