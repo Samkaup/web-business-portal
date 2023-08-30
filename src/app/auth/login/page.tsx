@@ -54,7 +54,7 @@ export default function Login() {
             <form action="#" method="POST" className="space-y-6">
               <TextInput
                 value={email}
-                onChange={setEmail}
+                onChange={(value) => setEmail(value as string)}
                 name="email"
                 type="email"
                 autoComplete="email"
@@ -64,7 +64,7 @@ export default function Login() {
               />
               <TextInput
                 value={password}
-                onChange={setPassword}
+                onChange={(value) => setPassword(value as string)}
                 name="password"
                 type="password"
                 autoComplete="current-password"

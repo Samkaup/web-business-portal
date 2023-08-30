@@ -47,7 +47,7 @@ export default function Login() {
             <form action="#" method="POST" className="space-y-6">
               <TextInput
                 value={email}
-                onChange={setEmail}
+                onChange={(value) => setEmail(value as string)}
                 name="email"
                 type="email"
                 autoComplete="email"
