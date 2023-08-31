@@ -7,7 +7,12 @@ import TextInput from '@/components/ui/Input/textInput';
 import { toast } from 'react-hot-toast';
 import Logo from '@/components/Logo/Logo';
 import Link from 'next/link';
-import { ArrowLeftIcon, EnvelopeIcon } from '@heroicons/react/24/outline';
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  EnvelopeIcon,
+} from '@heroicons/react/24/outline';
+import Button from '@/components/ui/Button/Button';
 
 export default function Login() {
   const [email, setEmail] = useState<string>('');
@@ -89,21 +94,22 @@ export default function Login() {
                   />
 
                   <div>
-                    <button
-                      type="submit"
-                      className="mt-8 flex w-full justify-center rounded-md bg-company px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-company"
+                    <Button
+                      size="lg"
+                      className="w-full flex justify-center gap-1"
                       onClick={handleResetPassword}
                     >
                       Áfram
-                    </button>
+                      <ArrowRightIcon className="w-4 h-4" />
+                    </Button>
                   </div>
 
                   <div className="text-sm leading-6 flex justify-center">
                     <Link
                       href="/auth/login"
-                      className="font-semibold text-company hover:text-company-800 inline-flex items-center"
+                      className="font-semibold text-company hover:text-company-800 inline-flex items-center gap-1"
                     >
-                      <ArrowLeftIcon className="w-4 h-4 ml-4" />
+                      <ArrowLeftIcon className="w-4 h-4" />
                       Til baka
                     </Link>
                   </div>
