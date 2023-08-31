@@ -1,23 +1,18 @@
-import { ReactNode } from 'react';
-
 type ButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
-type Props = {
-  onClick?: (e: React.FormEvent<HTMLButtonElement>) => void;
+interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   primary?: boolean;
   secondary?: boolean;
   size?: ButtonSize;
-  className?: string;
-  children: ReactNode;
-};
+}
 
 export default function Button({
-  onClick,
   primary = true,
   secondary = false,
   size,
   className,
   children,
+  ...props
 }: Props) {
   let baseClassName =
     'inline-flex items-center font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2';
@@ -52,7 +47,7 @@ export default function Button({
   if (className) baseClassName = baseClassName + ' ' + className;
 
   return (
-    <button type="submit" className={baseClassName} onClick={onClick}>
+    <button className={baseClassName} {...props}>
       {children}
     </button>
   );
