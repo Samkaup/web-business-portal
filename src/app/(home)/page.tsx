@@ -8,9 +8,9 @@ export default async function HomePage() {
   const { company } = useContext(Context);
   return (
     <>
-      <Header title={company.name}></Header>
+      <Header title={company.name} />
       <div className="pt-10">
-        <Dashboard></Dashboard>
+        <Dashboard />
       </div>
     </>
   );

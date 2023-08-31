@@ -71,7 +71,7 @@ export default function Login() {
                   href="/auth/login"
                   className="font-semibold text-company hover:text-company-800 inline-flex items-center"
                 >
-                  <ArrowLeftIcon className="w-4 h-4 ml-4"></ArrowLeftIcon>
+                  <ArrowLeftIcon className="w-4 h-4 ml-4" />
                   Til baka
                 </Link>
               </div>
