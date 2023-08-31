@@ -23,7 +23,7 @@ export default function Contacts() {
         <div className="flex justify-center mt-4">
           <Button size="lg" onClick={() => slideOver.setIsOpen(true)}>
             Stofna deild
-            <PlusIcon className="-mr-0.5 h-5 w-5 text-white"></PlusIcon>
+            <PlusIcon className="-mr-0.5 h-5 w-5 text-white" />
           </Button>
         </div>
       </Header>

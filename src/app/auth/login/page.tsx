@@ -83,7 +83,10 @@ export default function Login() {
               </div>
 
               <div>
-                <Button className="w-full" onClick={handleSignIn}>
+                <Button
+                  className="w-full flex justify-center"
+                  onClick={handleSignIn}
+                >
                   Skrá inn
                 </Button>
               </div>
