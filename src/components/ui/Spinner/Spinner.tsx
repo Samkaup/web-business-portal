@@ -1,6 +1,6 @@
 import { Props } from './Spinner.types';
 
-export const Spinner = ({ color }: Props) => {
+export const Spinner = ({ color = '#1C64F2' }: Props) => {
   return (
     <svg
       role="status"
@@ -19,8 +19,4 @@ export const Spinner = ({ color }: Props) => {
       />
     </svg>
   );
-};
-
-Spinner.defaultProps = {
-  color: '#1C64F2',
 };

@@ -1,28 +1,42 @@
-import { TableRow } from '@/types';
+'use client';
+import { createContext, useEffect, useState } from 'react';
 import React from 'react';
-import { createContext } from 'react';
 import { useSessionStorage } from 'usehooks-ts';
+import useSlideOver, { useSlideOverType } from '@/hooks/useSlideOver';
+import { TableRow } from '@/types';
 
 type CompanyType = TableRow<'company'>;
 
 export const Context = createContext<{
   company: CompanyType | null;
   setCompany: React.Dispatch<React.SetStateAction<CompanyType>>;
-}>(undefined);
+  slideOver: useSlideOverType;
+}>({
+  company: null,
+  setCompany: () => {
+    return true;
+  },
+  slideOver: {} as useSlideOverType,
+});
 
 export const ContextProvider = ({ children }) => {
+  const [isClient, setIsClient] = useState(false);
   const [company, setCompany] = useSessionStorage<CompanyType | null>(
     'selected-company',
-    undefined
+    null
   );
-  if (typeof window !== 'undefined') {
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  const slideOver: useSlideOverType = useSlideOver();
+  if (isClient) {
     return (
-      <Context.Provider value={{ company, setCompany }}>
+      <Context.Provider value={{ company, setCompany, slideOver }}>
         {children}
       </Context.Provider>
     );
-    // Client-side rendering code
   } else {
-    return children;
+    return <></>;
   }
 };

@@ -4,7 +4,7 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   primary?: boolean;
   secondary?: boolean;
   size?: ButtonSize;
-}
+};
 
 export default function Button({
   primary = true,

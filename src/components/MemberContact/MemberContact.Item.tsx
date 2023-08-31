@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { format } from 'date-fns';
 import { TrashIcon } from '@heroicons/react/24/outline';
 
@@ -11,10 +10,8 @@ export default function MemberContact({ contact }) {
       <div className="flex min-w-0 gap-x-4">
         <div className="min-w-0 flex-auto">
           <p className="text-sm  leading-6 text-gray-900">
-            <Link href={`contacts/${contact.external_identifier}`}>
-              <span className="absolute inset-x-0 -top-px bottom-0" />
-              {contact.full_name} ({contact.external_identifier})
-            </Link>
+            <span className="absolute inset-x-0 -top-px bottom-0" />
+            {contact.full_name} ({contact.external_identifier})
           </p>
           <p className="mt-1 flex text-xs leading-5 text-gray-500">
             <a
