@@ -6,7 +6,8 @@ export const getCompany = async (
   // RLS is enabled
   const { data: companyData, error } = await supabase
     .from('company')
-    .select('*');
+    .select('*')
+    .order('name');
 
   if (error) {
     console.log(error);
