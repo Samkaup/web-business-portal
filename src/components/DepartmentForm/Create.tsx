@@ -9,7 +9,7 @@ type Props = {
 };
 
 export default function DepartmentCreate({ onCancel, onSave }: Props) {
-  const [name, setName] = useState<string|number>('');
+  const [name, setName] = useState<string | number>('');
   const [nameError, setNameError] = useState('');
 
   const [submitError, setSubmitError] = useState('');
