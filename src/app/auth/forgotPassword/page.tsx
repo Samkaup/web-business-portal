@@ -34,7 +34,7 @@ export default function Login() {
 
     if (error) {
       console.log(error);
-      toast.error('Unable to send email');
+      toast.error(error.message);
       setEmailError(true);
     } else setRequestSent(true);
   };
@@ -52,11 +52,11 @@ export default function Login() {
                 <div className="flex items-center justify-evenly">
                   <EnvelopeIcon className="h-10 w-10" />
                   <h2 className="text-2xl font-bold leading-9 tracking-tight text-gray-600">
-                    Opnaðu Tölvupóstinn Þinn
+                    Opnaðu tölvupóstinn þinn
                   </h2>
                 </div>
                 <p className="text-lg tracking-tight text-gray-600 text-center">
-                  Við höfum sent þér leyðbeingar til að breyta lykilorðinu þínu
+                  Við höfum sent þér leiðbeingar til að breyta lykilorðinu þínu
                   á tölvupóstinn <b>{email}</b>
                 </p>
               </div>
