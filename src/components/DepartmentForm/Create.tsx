@@ -9,7 +9,7 @@ type Props = {
 };
 
 export default function DepartmentCreate({ onCancel, onSave }: Props) {
-  const [name, setName] = useState('');
+  const [name, setName] = useState<string|number>('');
   const [nameError, setNameError] = useState('');
 
   const [submitError, setSubmitError] = useState('');
@@ -17,7 +17,7 @@ export default function DepartmentCreate({ onCancel, onSave }: Props) {
 
   useEffect(() => {
     // Name validation
-    if (name.length <= 2) {
+    if (typeof name === 'string' && name.length <= 2) {
       setNameError;
     }
   }, [name]);
