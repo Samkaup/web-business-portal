@@ -15,6 +15,7 @@ type Props = {
   errorText?: string | null;
   className?: string | null;
   debounce?: number | null;
+  [key: string]: any;
 };
 
 export default function TextInput({
@@ -30,6 +31,7 @@ export default function TextInput({
   onChange,
   className,
   debounce,
+  ref,
   ...props
 }: Props) {
   const baseStyle = 'block w-full rounded-md border-0 py-1.5 pl-2 sm:leading-6';
@@ -52,6 +54,7 @@ export default function TextInput({
           required={required}
           onChange={(e) => onChange(e.target.value)}
           value={value}
+          {...props}
         />
 
         {isError ? <ErrorIcon /> : <></>}
