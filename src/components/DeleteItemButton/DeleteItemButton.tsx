@@ -53,8 +53,8 @@ export const DeleteItemButton = ({ table, id, verify, children }: Props) => {
   };
   return (
     <span>
-      <Button onClick={verifyAction}>
-        <TrashIcon className="w-4 h-4"></TrashIcon>
+      <Button secondary onClick={verifyAction}>
+        <TrashIcon className="w-4 h-4 text-red-700"></TrashIcon>
       </Button>
       <ModalSimpleWithDismiss
         open={showModal}
