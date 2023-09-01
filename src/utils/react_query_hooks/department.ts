@@ -5,6 +5,7 @@ import {
   DepartmentWithContacts,
   getDepartmentsByCompany,
   getDepartmentsWithContacts,
+  getRecentDepartmentsByCompany,
 } from '../supabase_queries/department';
 
 import { useContext } from 'react';
@@ -17,6 +18,21 @@ export const useDepartments = () => {
     ['department', company],
     async () => {
       return getDepartmentsByCompany(
+        supabaseClient,
+        company.external_identifier
+      );
+    },
+    { keepPreviousData: true }
+  );
+};
+
+export const useRecentDepartments = () => {
+  const { company } = useContext(Context);
+
+  return useQuery<TableRow<'department'>[]>(
+    ['recentDepartment', company],
+    async () => {
+      return getRecentDepartmentsByCompany(
         supabaseClient,
         company.external_identifier
       );

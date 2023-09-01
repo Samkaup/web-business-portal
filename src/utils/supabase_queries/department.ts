@@ -77,6 +77,26 @@ export const getDepartmentsByCompany = async (
   return data;
 };
 
+export const getRecentDepartmentsByCompany = async (
+  supabase: AppSupabaseClient,
+  company_id: string
+): Promise<TableRow<'department'>[]> => {
+  // RLS is enabled
+  const { data, error } = await supabase
+    .from('department')
+    .select('*')
+    .eq('company_id', company_id)
+    .order('created_at', { ascending: false })
+    .limit(3);
+
+  if (error) {
+    console.log(error);
+    throw error;
+  }
+
+  return data;
+};
+
 type createDepartmentProps = {
   supabase: AppSupabaseClient;
   department: {
