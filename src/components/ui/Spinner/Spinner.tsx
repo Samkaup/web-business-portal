@@ -1,4 +1,6 @@
-import { Props } from './Spinner.types';
+type Props = {
+  color?: string;
+};
 
 export const Spinner = ({ color = '#1C64F2' }: Props) => {
   return (

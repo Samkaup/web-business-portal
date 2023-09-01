@@ -24,7 +24,10 @@
   },
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "[typescriptreact]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "cSpell.words": ["Reflio", "signup"]
+  "cSpell.words": ["Reflio", "signup"],
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }

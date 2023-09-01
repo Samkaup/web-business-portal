@@ -36,9 +36,7 @@ export default function Contacts() {
           onCancel={() => slideOver.setIsOpen(false)}
         >
           <DepartmentCreate
-            onSave={() => {
-              true;
-            }}
+            onSave={() => slideOver.setIsOpen(false)}
             onCancel={() => slideOver.setIsOpen(false)}
           />
         </SlideOver>
