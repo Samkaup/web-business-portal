@@ -29,8 +29,11 @@ export default function DepartmentCreate({ onCancel, onSave }: Props) {
     setNameError('');
     setExternalIdentifierError('');
 
-    if (typeof name === 'string' && name.length < 3 && name.length > 0) {
+    if (name.length < 3 && name.length > 0) {
       setNameError('Nafn deildar verður að vera lengra en 2 stafir');
+    }
+    if (externalIdentifier.length < 3 && externalIdentifier.length > 0) {
+      setNameError('Númer deildar verður að vera lengra en 2 stafir');
     }
   }, [name, externalIdentifier]);
 
