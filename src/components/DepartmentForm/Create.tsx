@@ -21,7 +21,7 @@ export default function DepartmentCreate({ onCancel, onSave }: Props) {
   const [nameError, setNameError] = useState('');
   const [externalIdentifierError, setExternalIdentifierError] = useState('');
 
-  const [submitError, setSubmitError] = useState('asadadad');
+  const [submitError, setSubmitError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {

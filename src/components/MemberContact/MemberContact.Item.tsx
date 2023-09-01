@@ -28,10 +28,10 @@ export default function MemberContact({ contact }) {
           {contact.cell_phone && (
             <a
               href={`tel:${contact.cell_phone}`}
-              className="inline-flex hover:underline items-center"
+              className="inline-flex hover:underline items-center ml-4"
             >
-              {contact.cell_phone}
               <PhoneArrowUpRightIcon className="w-4 h-4 mr-1"></PhoneArrowUpRightIcon>
+              {contact.cell_phone}
             </a>
           )}
         </p>

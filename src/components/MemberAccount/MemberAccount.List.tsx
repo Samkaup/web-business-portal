@@ -14,6 +14,7 @@ import { useState } from 'react';
 import { DepartmentWithContacts } from '@/utils/supabase_queries/department';
 import AlertWithDescription from '@/components/ui/Alert/AlertWithDescription';
 import Button from '../ui/Button/Button';
+import MemberContactNew from '../MemberContact/MemberContact.New';
 type Props = {
   departments: DepartmentWithContacts[];
 };
@@ -21,12 +22,12 @@ export default function MemberAccountListWithContacts({ departments }: Props) {
   const [showModal, setShowModal] = useState(false);
   const [isLoading] = useState(false);
   const [errorDeletingText] = useState('');
-
+  const [showContactCreate, setShowContact] = useState(false);
   const departmentActions = [
     {
       name: 'Stofna úttektaraðila',
       icon: <UserIcon className="w-4 h-4" />,
-      onClick: () => console.log('Stofna úttektaraðila'),
+      onClick: () => setShowContact(true),
     },
     {
       name: 'Eyða deild',
@@ -68,7 +69,7 @@ export default function MemberAccountListWithContacts({ departments }: Props) {
                 className="divide-y divide-gray-100 overflow-hidden bg-white shadow-sm ring-1 ring-gray-900/5 z-5"
               >
                 <li
-                  key={department.external_identifier}
+                  key={`dep-${department.external_identifier}`}
                   className="relative flex justify-between gap-x-6 px-4 py-5 bg-gray-50  sm:px-6 z-5"
                 >
                   <div className="flex min-w-0 gap-x-4">
@@ -112,12 +113,13 @@ export default function MemberAccountListWithContacts({ departments }: Props) {
                   leaveFrom="transform scale-100 opacity-100"
                   leaveTo="transform scale-95 opacity-0"
                 >
-                  <Disclosure.Panel as="dd" className="">
+                  <Disclosure.Panel as="dd">
                     <ul
                       role="list"
                       className="divide-y divide-gray-100 overflow-hidden bg-white shadow-sm ring-1 ring-gray-900/5"
                     >
                       <li
+                        key={`dep-actions-${department.external_identifier}`}
                         className={`sm:flex sm:justify-between gap-x-6 px-4 py-5 sm:px-6 ${
                           department.contact.length > 0 ? 'bg-gray-50' : ''
                         }`}
@@ -140,8 +142,19 @@ export default function MemberAccountListWithContacts({ departments }: Props) {
                           ))}
                         </div>
                       </li>
+                      {showContactCreate && (
+                        <li
+                          key={`create-new-contact-${department.external_identifier}`}
+                          className="flex justify-between gap-x-6 px-4 py-5 sm:px-6"
+                        >
+                          <MemberContactNew
+                            departmentId={department.external_identifier}
+                          ></MemberContactNew>
+                        </li>
+                      )}
                       {department.contact.length == 0 && (
                         <li
+                          key={`issues-new-contact-${department.external_identifier}`}
                           className={` w-100${
                             department.contact.length > 0 ? 'bg-gray-50' : ''
                           }`}
