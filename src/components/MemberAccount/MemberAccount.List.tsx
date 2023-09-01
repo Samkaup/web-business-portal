@@ -9,22 +9,22 @@ import {
 } from '@heroicons/react/24/outline';
 import { Disclosure, Transition } from '@headlessui/react';
 import { format } from 'date-fns';
-import DropdownMinimal from '@/components/ui/Dropdown/DropdownMinimal';
 import ModalSimpleWithDismiss from '@/components/ui/ModalSimpleWithDismiss/ModalSimpleWithDismiss';
 import { useState } from 'react';
 import { DepartmentWithContacts } from '@/utils/supabase_queries/department';
 import AlertWithDescription from '@/components/ui/Alert/AlertWithDescription';
+import Button from '../ui/Button/Button';
 type Props = {
   departments: DepartmentWithContacts[];
 };
 export default function MemberAccountListWithContacts({ departments }: Props) {
   const [showModal, setShowModal] = useState(false);
-  const [loading] = useState(false);
+  const [isLoading] = useState(false);
   const [errorDeletingText] = useState('');
 
   const departmentActions = [
     {
-      name: 'Stofna úttektaraðila á deild',
+      name: 'Stofna úttektaraðila',
       icon: <UserIcon className="w-4 h-4" />,
       onClick: () => console.log('Stofna úttektaraðila'),
     },
@@ -51,7 +51,7 @@ export default function MemberAccountListWithContacts({ departments }: Props) {
         open={showModal}
         onAction={() => setShowModal(false)}
         onCancel={() => setShowModal(false)}
-        isLoading={loading}
+        isLoading={isLoading}
         description={'Ertu viss um að þú viljir eyða þessari deild?'}
         errorText={errorDeletingText}
       ></ModalSimpleWithDismiss>
@@ -118,33 +118,41 @@ export default function MemberAccountListWithContacts({ departments }: Props) {
                       className="divide-y divide-gray-100 overflow-hidden bg-white shadow-sm ring-1 ring-gray-900/5"
                     >
                       <li
-                        className={`relative flex justify-between gap-x-6 px-4 py-5 sm:px-6 ${
+                        className={`sm:flex sm:justify-between gap-x-6 px-4 py-5 sm:px-6 ${
                           department.contact.length > 0 ? 'bg-gray-50' : ''
                         }`}
                       >
-                        <div className="flex min-w-0 gap-x-4">
+                        <div className="flex min-w-0 gap-x-4 items-center">
                           <div className="min-w-0 flex-auto">
-                            {department.contact.length == 0 ? (
-                              <AlertWithDescription
-                                type="info"
-                                title="Engin skráður úttektaraðili"
-                                description="Ekki er hægt að nota þennan reikning ef enginn úttektaraðili er skráður"
-                              />
-                            ) : (
-                              <p className="text-lg leading-6 text-gray-900">
-                                <span className="absolute inset-x-0 -top-px bottom-0" />
-                                Úttektaraðilar deildar:
-                              </p>
-                            )}
+                            <p className="text-lg leading-6 text-gray-900 ">
+                              Úttektaraðilar deildar
+                            </p>
                           </div>
                         </div>
                         <div className="flex shrink-0 items-center gap-x-4">
-                          Aðgerðir:
-                          <DropdownMinimal
-                            items={departmentActions}
-                          ></DropdownMinimal>
+                          {departmentActions.map((action) => (
+                            <>
+                              <Button secondary onClick={action.onClick}>
+                                <span className="mr-2">{action.name}</span>
+                                {action.icon}
+                              </Button>
+                            </>
+                          ))}
                         </div>
                       </li>
+                      {department.contact.length == 0 && (
+                        <li
+                          className={` w-100${
+                            department.contact.length > 0 ? 'bg-gray-50' : ''
+                          }`}
+                        >
+                          <AlertWithDescription
+                            type="info"
+                            title="Engin skráður úttektaraðili"
+                            description="Ekki er hægt að nota þennan reikning ef enginn úttektaraðili er skráður"
+                          />
+                        </li>
+                      )}
 
                       {sort(department.contact, 'full_name').map((c) => (
                         <MemberContact
