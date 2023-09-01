@@ -76,3 +76,28 @@ export const getDepartmentsByCompany = async (
 
   return data;
 };
+
+type createDepartmentProps = {
+  supabase: AppSupabaseClient;
+  department: {
+    name: string;
+    external_identifier: string;
+    company_id: string;
+  };
+};
+export const createDepartment = async ({
+  supabase,
+  department,
+}: createDepartmentProps): Promise<TableRow<'department'>> => {
+  if (!department) {
+    throw Error('department parameter is missing');
+  }
+  const { data, error } = await supabase.from('department').insert(department);
+
+  if (error) {
+    console.log(error);
+    throw error;
+  }
+
+  return data;
+};

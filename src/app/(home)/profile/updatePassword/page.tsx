@@ -71,7 +71,7 @@ export default function Login() {
             <form className="space-y-6">
               <TextInput
                 value={password}
-                onChange={setPassword}
+                onChange={(value) => setPassword(value as string)}
                 name="password"
                 type="password"
                 autoComplete="current-password"
@@ -81,7 +81,7 @@ export default function Login() {
               />
               <TextInput
                 value={rePassword}
-                onChange={setRePassword}
+                onChange={(value) => setRePassword(value as string)}
                 name="password"
                 type="password"
                 autoComplete="current-password"

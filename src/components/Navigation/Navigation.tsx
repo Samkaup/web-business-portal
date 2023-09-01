@@ -43,7 +43,7 @@ export default function Navigation() {
 
   return (
     <>
-      <div className="">
+      <div>
         <Disclosure as="nav" className="bg-company">
           {({ open }) => (
             <>

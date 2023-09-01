@@ -267,7 +267,14 @@ export interface Database {
           transaction_type?: number | null
           voucher_number?: number | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "transaction_account_number_fkey"
+            columns: ["account_number"]
+            referencedRelation: "department"
+            referencedColumns: ["external_identifier"]
+          }
+        ]
       }
     }
     Views: {
@@ -279,9 +286,51 @@ export interface Database {
       }
     }
     Functions: {
+      delete_claim: {
+        Args: {
+          uid: string
+          claim: string
+        }
+        Returns: string
+      }
       full_text_search: {
         Args: {
           "": unknown
+        }
+        Returns: string
+      }
+      get_claim: {
+        Args: {
+          uid: string
+          claim: string
+        }
+        Returns: Json
+      }
+      get_claims: {
+        Args: {
+          uid: string
+        }
+        Returns: Json
+      }
+      get_my_claim: {
+        Args: {
+          claim: string
+        }
+        Returns: Json
+      }
+      get_my_claims: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
+      }
+      is_claims_admin: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
+      set_claim: {
+        Args: {
+          uid: string
+          claim: string
+          value: Json
         }
         Returns: string
       }

@@ -1,6 +1,6 @@
 import Image from 'next/image';
 
-export default async function AuthLayout({
+export default function AuthLayout({
   children,
 }: {
   children: React.ReactNode;

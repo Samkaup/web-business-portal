@@ -14,7 +14,7 @@ type Props = {
   isError?: boolean;
   errorText?: string | null;
   className?: string | null;
-  debounce?: number | null;
+  [key: string]: any;
 };
 
 export default function TextInput({
@@ -29,7 +29,6 @@ export default function TextInput({
   value,
   onChange,
   className,
-  debounce,
   ...props
 }: Props) {
   const baseStyle = 'block w-full rounded-md border-0 py-1.5 pl-2 sm:leading-6';
@@ -42,7 +41,7 @@ export default function TextInput({
   return (
     <div className={className}>
       {label ? <Label label={label} name={name} /> : <></>}
-      <div className="relative rounded-md shadow-sm">
+      <div className="relative rounded-md shadow-sm mt-2">
         <input
           type={type ? type : ''}
           name={name ? name : ''}
@@ -52,6 +51,7 @@ export default function TextInput({
           required={required}
           onChange={(e) => onChange(e.target.value)}
           value={value}
+          {...props}
         />
 
         {isError ? <ErrorIcon /> : <></>}
