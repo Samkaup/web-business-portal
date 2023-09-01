@@ -2,6 +2,7 @@ import { Row, TableRow } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import supabaseClient from '@/utils/supabase-browser';
 import {
+  getRecentCompanyTransactions,
   getTransactions,
   getTransactionsTable,
 } from '../supabase_queries/transaction';
@@ -15,6 +16,21 @@ export const useTransactions = () => {
   return useQuery<TableRow<'transaction'>[]>(['transactions'], async () => {
     return getTransactions(supabaseClient);
   });
+};
+
+export const useRecentTransactions = () => {
+  const { company } = useContext(Context);
+
+  return useQuery<TableRow<'transaction'>[]>(
+    ['recentTransaction', { company }],
+    async () => {
+      // Extract transactions
+      return await getRecentCompanyTransactions(
+        supabaseClient,
+        company.external_identifier
+      );
+    }
+  );
 };
 
 export type DepartmentsMap = {

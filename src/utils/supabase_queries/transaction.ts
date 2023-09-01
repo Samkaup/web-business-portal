@@ -17,6 +17,25 @@ export const getTransactions = async (
   return transactionData;
 };
 
+export const getRecentCompanyTransactions = async (
+  supabase: AppSupabaseClient,
+  companyId: string
+): Promise<TableRow<'transaction'>[]> => {
+  const { data, error } = await supabase
+    .from('transaction')
+    .select('*, department!inner (*)')
+    .filter('department.company_id', 'eq', companyId)
+    .order('date', { ascending: false })
+    .limit(3);
+
+  if (error) {
+    console.log(error);
+    throw error;
+  }
+
+  return data;
+};
+
 export const getTransactionCount = async (
   supabase: AppSupabaseClient
 ): Promise<number> => {
