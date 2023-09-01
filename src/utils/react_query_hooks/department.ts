@@ -26,6 +26,6 @@ export const useDepartmentsWithContacts = (company_id: string) => {
         company_id: company_id,
       });
     },
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: true,
   });
 };

@@ -40,7 +40,7 @@ export default function TextInput({
   return (
     <div className={className}>
       {label ? <Label label={label} name={name} /> : <></>}
-      <div className="relative rounded-md shadow-sm">
+      <div className="relative rounded-md shadow-sm mt-2">
         <input
           type={type ? type : ''}
           name={name ? name : ''}
