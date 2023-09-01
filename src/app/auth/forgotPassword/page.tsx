@@ -57,7 +57,7 @@ export default function Login() {
                 </div>
                 <p className="text-lg tracking-tight text-gray-600 text-center">
                   Við höfum sent þér leiðbeingar til að breyta lykilorðinu þínu
-                  á tölvupóstinn <b>{email}</b>
+                  á netfangið <b>{email}</b>
                 </p>
               </div>
 

@@ -6,38 +6,53 @@ import { useState } from 'react';
 
 import TextInput from '@/components/ui/Input/textInput';
 import Link from 'next/link';
-import { toast } from 'react-hot-toast';
 import Logo from '@/components/Logo/Logo';
 import Button from '@/components/ui/Button/Button';
+import AlertWithDescription from '@/components/ui/Alert/AlertWithDescription';
+import { Spinner } from '@/components/ui/Spinner/Spinner';
 
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState(false);
-  const [password, setPassword] = useState('');
-  const [passwordError, setPasswordError] = useState(false);
+  const [email, setEmail] = useState<string>('');
+  const [emailError, setEmailError] = useState<boolean>(false);
+  const [password, setPassword] = useState<string>('');
+  const [passwordError, setPasswordError] = useState<boolean>(false);
+  const [errorDescription, setErrorDescription] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
 
   const handleSignIn = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    setEmailError(false);
+    setPasswordError(false);
+    setLoading(true);
+    let description = '';
 
-    let emailHasError = email.length === 0;
-    let passwordHasError = password.length === 0;
+    if (email.length === 0 || password.length === 0) {
+      if (email.length === 0) {
+        setEmailError(true);
+        description = 'Vantar netfang';
+      }
+      if (password.length === 0) {
+        setPasswordError(true);
 
-    if (!emailHasError && !passwordHasError) {
+        if (description.length) description = description + ' og lykilorð';
+        else description = 'Vantar lykilorð';
+      }
+      setLoading(false);
+    } else {
       const { error } = await supabaseClient.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) {
-        toast.error(error.message);
-        emailHasError = true;
-        passwordHasError = true;
+        setEmailError(true);
+        setPasswordError(true);
+        setLoading(false);
+        description = 'Rangt netfang eða lykilorð';
       } else router.refresh();
     }
-
-    setEmailError(emailHasError);
-    setPasswordError(passwordHasError);
+    setErrorDescription(description);
   };
 
   return (
@@ -72,6 +87,13 @@ export default function Login() {
                 placeholder="**************"
                 isError={passwordError}
               />
+              {(emailError || passwordError) && (
+                <AlertWithDescription
+                  title="Villa"
+                  type="error"
+                  description={errorDescription}
+                />
+              )}
 
               <div className="text-sm leading-6">
                 <Link
@@ -87,7 +109,9 @@ export default function Login() {
                   className="w-full flex justify-center"
                   onClick={handleSignIn}
                 >
-                  Skrá inn
+                  <div className="flex gap-2 justify-center">
+                    Skrá inn {loading && <Spinner />}
+                  </div>
                 </Button>
               </div>
             </form>
