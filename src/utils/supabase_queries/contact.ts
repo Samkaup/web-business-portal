@@ -44,3 +44,20 @@ export const getContactCount = async (
   }
   return count;
 };
+
+export const createContact = async ({
+  supabase,
+  contact,
+}): Promise<TableRow<'contact'>> => {
+  if (!contact) {
+    throw Error('department parameter is missing');
+  }
+  const { data, error } = await supabase.from('contact').insert(contact);
+
+  if (error) {
+    console.log(error);
+    throw error;
+  }
+
+  return data;
+};
