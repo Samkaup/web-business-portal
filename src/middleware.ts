@@ -15,16 +15,16 @@ export async function middleware(req: NextRequest) {
   const supabase = createMiddlewareClient<Database>({ req, res });
 
   const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    data: { session },
+  } = await supabase.auth.getSession();
 
   // if user is signed in and the current path is / redirect the user to /account
-  if (user && UNAUTHORIZED_ROUTES.includes(req.nextUrl.pathname)) {
+  if (session && UNAUTHORIZED_ROUTES.includes(req.nextUrl.pathname)) {
     return NextResponse.redirect(new URL('/', req.url));
   }
 
   // if user is not signed in and the current path is not / redirect the user to /
-  if (!user && !UNAUTHORIZED_ROUTES.includes(req.nextUrl.pathname)) {
+  if (!session && !UNAUTHORIZED_ROUTES.includes(req.nextUrl.pathname)) {
     return NextResponse.redirect(new URL('/auth/login', req.url));
   }
 
@@ -42,5 +42,6 @@ export const config = {
     '/auth/signup',
     '/auth/login',
     '/auth/signout',
+    '/auth/forgotPassword/resetPass',
   ],
 };
