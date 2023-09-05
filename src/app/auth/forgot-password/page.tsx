@@ -29,7 +29,7 @@ export default function Login() {
     }
 
     const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
-      redirectTo: `${location.origin}/auth/callback?next=/auth/forgotPassword/resetPass`,
+      redirectTo: `${location.origin}/auth/callback?next=/auth/forgot-password/reset-pass`,
     });
 
     if (error) {

@@ -7,7 +7,7 @@ import type { Database } from '@/lib/database.types';
 const UNAUTHORIZED_ROUTES = [
   '/auth/login',
   '/auth/signup',
-  '/auth/forgotPassword',
+  '/auth/forgot-password',
 ];
 
 export async function middleware(req: NextRequest) {
@@ -42,6 +42,6 @@ export const config = {
     '/auth/signup',
     '/auth/login',
     '/auth/signout',
-    '/auth/forgotPassword/resetPass',
+    '/auth/forgot-password/reset-pass',
   ],
 };
