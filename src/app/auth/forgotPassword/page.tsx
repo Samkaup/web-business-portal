@@ -29,11 +29,10 @@ export default function Login() {
     }
 
     const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
-      redirectTo: `${location.origin}/profile/updatePassword`,
+      redirectTo: `${location.origin}/auth/callback?next=/auth/forgotPassword/resetPass`,
     });
 
     if (error) {
-      console.log(error);
       toast.error(error.message);
       setEmailError(true);
     } else setRequestSent(true);
@@ -56,8 +55,8 @@ export default function Login() {
                   </h2>
                 </div>
                 <p className="text-lg tracking-tight text-gray-600 text-center">
-                  Við höfum sent þér leiðbeingar til að breyta lykilorðinu þínu
-                  á netfangið <b>{email}</b>
+                  Við höfum sent þér leiðbeiningar til að breyta lykilorðinu
+                  þínu á netfangið <b>{email}</b>
                 </p>
               </div>
 
