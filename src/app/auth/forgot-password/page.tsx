@@ -28,9 +28,7 @@ export default function Login() {
       return;
     }
 
-    const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
-      redirectTo: `${location.origin}/auth/callback?next=/auth/forgot-password/reset-pass`,
-    });
+    const { error } = await supabaseClient.auth.resetPasswordForEmail(email);
 
     if (error) {
       toast.error(error.message);
