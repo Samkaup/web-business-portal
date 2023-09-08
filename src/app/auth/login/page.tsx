@@ -97,7 +97,7 @@ export default function Login() {
 
               <div className="text-sm leading-6">
                 <Link
-                  href="/auth/forgotPassword"
+                  href="/auth/forgot-password"
                   className="font-semibold text-company-900 hover:text-company-800"
                 >
                   Gleymt lykilorð?

@@ -1,11 +1,12 @@
 'use client';
 
+import supabaseClient from '@/utils/supabase-browser';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { toast } from 'react-hot-toast';
 
 import TextInput from '@/components/ui/Input/textInput';
-import supabaseClient from '@/utils/supabase-browser';
+import toast from 'react-hot-toast';
+import Button from '@/components/ui/Button/Button';
 
 export default function Login() {
   const [password, setPassword] = useState('');
@@ -54,6 +55,7 @@ export default function Login() {
 
     if (error) {
       toast.error('Unable to update password');
+      console.log(error);
       return;
     }
 
@@ -62,7 +64,7 @@ export default function Login() {
 
   return (
     <>
-      <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24 ">
+      <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24 bg-white rounded-lg">
         <div className="mx-auto w-full max-w-sm lg:w-96">
           <h2 className="mt-8 text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Breyta Lykilorði
@@ -78,6 +80,7 @@ export default function Login() {
                 label="Lykilorð"
                 isError={passwordError.length !== 0}
                 errorText={passwordError}
+                placeholder="Nýja lykilorðið"
               />
               <TextInput
                 value={rePassword}
@@ -88,15 +91,16 @@ export default function Login() {
                 label="Lykilorð Aftur"
                 isError={rePasswordError.length !== 0}
                 errorText={rePasswordError}
+                placeholder="Nýja lykilorðið"
               />
               <div>
-                <button
-                  className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                <Button
+                  className="w-full flex justify-center"
                   onClick={handleSignUp}
                   type="submit"
                 >
                   Senda
-                </button>
+                </Button>
               </div>
             </form>
           </div>
