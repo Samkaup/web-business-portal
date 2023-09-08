@@ -7,12 +7,12 @@ import { useGetProfile } from '@/utils/react_query_hooks/profile';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import CompanySwitcher from '@/components/CompanySwitcher/CompanySwitcher';
+import classNames from '@/utils/style/classNames';
 
 const navigation = [
   { name: 'Heim', href: '/' },
   { name: 'Hreyfingaryfirlit', href: '/transactions' },
   { name: 'Úttektaraðilar', href: '/contacts' },
-  { name: 'Stillingar fyrirtækis', href: '#' },
 ];
 const userNavigation = [
   {
@@ -26,10 +26,6 @@ const userNavigation = [
     onClick: () => console.log('Settings clicked'),
   },
 ];
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ');
-}
 
 function getInitals(fullName: string) {
   const parts: string[] = fullName.split(' ');
