@@ -2,33 +2,47 @@
 import classNames from '@/utils/style/classNames';
 import RecentTransactions from './RecentTransactions';
 import Departments from './Departments';
+import { useEffect, useState } from 'react';
+import { useTransactionSumByDate } from '@/utils/react_query_hooks/stats';
+import {
+  getDateDaysAgo,
+  getDateNow,
+  getEndOfMonth,
+  getEndOfYear,
+  getStartOfYear,
+  getStartOfMonth,
+} from '@/utils/dateUtils';
+import { formatCurrency } from '@/utils/currency/currency';
 
 const secondaryNavigation = [
-  { name: 'Síðustu 7 daga', href: '#', current: true },
-  { name: 'Síðustu 30 dagar', href: '#', current: false },
-  { name: 'Þetta ár', href: '#', current: false },
+  { name: 'Síðustu 7 dagar', id: 'last_7_days', href: '#' },
+  { name: 'Þessi mánuður', id: 'current_month', href: '#' },
+  { name: 'Þetta ár', id: 'this_year', href: '#' },
 ];
 const stats = [
   {
-    name: 'Færslur',
+    name: 'Upphæð',
+    id: 'amount',
     value: '223.329 kr',
-    change: '+4.75%',
     changeType: 'positive',
   },
   {
     name: 'Staða á heimild',
+    id: 'limit_status',
     value: '-14.002 kr',
     change: '',
     changeType: 'positive',
   },
   {
     name: 'Heimild á fyrirtæki',
+    id: 'total_limit',
     value: '500.000 kr',
     change: '',
     changeType: 'positive',
   },
   {
     name: 'Fjöldi deilda',
+    id: 'num_of_departments',
     value: '24',
     change: '',
     changeType: 'positive',
@@ -36,6 +50,33 @@ const stats = [
 ];
 
 export default function Dashboard() {
+  const [dateFilter, setDateFilter] = useState('current_month');
+  const [dateFrom, setDateFrom] = useState(getStartOfMonth);
+  const [dateTo, setDateTo] = useState(getEndOfMonth);
+
+  useEffect(() => {
+    console.log(dateFilter);
+    switch (dateFilter) {
+      case 'current_month':
+        setDateFrom(getStartOfMonth());
+        setDateTo(getEndOfMonth());
+        break;
+      case 'this_year':
+        setDateFrom(getStartOfYear());
+        setDateTo(getEndOfYear());
+        break;
+      case 'last_7_days':
+        setDateFrom(getDateDaysAgo(7));
+        setDateTo(getDateNow());
+        break;
+    }
+  }, [dateFilter]);
+
+  const { data: transactionSum } = useTransactionSumByDate({
+    dateFrom,
+    dateTo,
+  });
+
   return (
     <>
       <div className="relative isolate overflow-hidden">
@@ -43,15 +84,18 @@ export default function Dashboard() {
         <header className="pb-4 pt-6 sm:pb-6">
           <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-6 px-4 sm:flex-nowrap sm:px-6 lg:px-8">
             <h1 className="text-base font-semibold leading-7 text-gray-900">
-              Færslur
+              Staðan
             </h1>
             <div className="order-last flex w-full gap-x-8 text-sm font-semibold leading-6 sm:order-none sm:w-auto sm:border-l sm:border-gray-200 sm:pl-6 sm:leading-7">
               {secondaryNavigation.map((item) => (
                 <a
                   key={item.name}
                   href={item.href}
+                  onClick={() => setDateFilter(item.id)}
                   className={
-                    item.current ? 'text-company-800' : 'text-gray-700'
+                    item.id === dateFilter
+                      ? 'text-company-800'
+                      : 'text-gray-700'
                   }
                 >
                   {item.name}
@@ -85,24 +129,15 @@ export default function Dashboard() {
                   {stat.change}
                 </dd>
                 <dd className="w-full flex-none text-3xl font-medium leading-10 tracking-tight text-gray-900">
-                  {stat.value}
+                  {stat.id === 'amount' ? (
+                    <>{formatCurrency(transactionSum)}</>
+                  ) : (
+                    <>{stat.value}</>
+                  )}
                 </dd>
               </div>
             ))}
           </dl>
-        </div>
-
-        <div
-          className="absolute left-0 top-full -z-10 mt-96 origin-top-left translate-y-40 -rotate-90 transform-gpu opacity-20 blur-3xl sm:left-1/2 sm:-ml-96 sm:-mt-10 sm:translate-y-0 sm:rotate-0 sm:transform-gpu sm:opacity-50"
-          aria-hidden="true"
-        >
-          <div
-            className="aspect-[1154/678] w-[72.125rem] bg-gradient-to-br from-[#2b324e] to-[#9089FC]"
-            style={{
-              clipPath:
-                'polygon(100% 38.5%, 82.6% 100%, 60.2% 37.7%, 52.4% 32.1%, 47.5% 41.8%, 45.2% 65.6%, 27.5% 23.4%, 0.1% 35.3%, 17.9% 0%, 27.7% 23.4%, 76.2% 2.5%, 74.2% 56%, 100% 38.5%)',
-            }}
-          />
         </div>
       </div>
 
