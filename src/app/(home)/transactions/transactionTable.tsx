@@ -1,13 +1,17 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import { format } from 'date-fns';
 import { PaginationState, SortingState } from '@tanstack/react-table';
 import { DocumentIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { is } from 'date-fns/locale';
+import supabaseClient from '@/utils/supabase-browser';
 import { useTransactionsTable } from '@/utils/react_query_hooks/transaction';
 import QueryTable from '@/components/QueryTable/QueryTable';
+import { getAllTransactions } from '@/utils/supabase_queries/transaction';
+import { Context } from '@/utils/context-store';
+import { downloadCSV, objectToCsv } from '@/utils/csv';
 
 type Props = {
   searchValue: string;
@@ -20,6 +24,7 @@ export default function TransactionTable({
   dates,
   departmentIds,
 }: Props) {
+  const { company } = useContext(Context);
   const defaultSort = {
     id: 'date',
     desc: true,
@@ -28,6 +33,7 @@ export default function TransactionTable({
   const [sorting, setSorting] = useState<SortingState>([defaultSort]);
   const basePageSize = 15;
   const pageSizes = [basePageSize, 30, 50, 100];
+  const [isDownloading, setIsDownloading] = useState<boolean>(false);
 
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -41,6 +47,26 @@ export default function TransactionTable({
     dateRange: dates,
     filters: departmentIds.map((id: string) => `account_number.eq.${id}`),
   });
+
+  const handleDownloadData = async () => {
+    setIsDownloading(true);
+    const transactions = await getAllTransactions({
+      supabaseClient,
+      sorting: {
+        column: sorting[0].id,
+        options: {
+          ascending: !sorting[0].desc,
+        },
+      },
+      searchValue,
+      dateRange: dates,
+      filters: departmentIds.map((id: string) => `account_number.eq.${id}`),
+      companyId: company.external_identifier,
+    });
+
+    downloadCSV(objectToCsv(transactions), 'hreyfingar');
+    setIsDownloading(false);
+  };
 
   const columns = useMemo(
     () => [
@@ -64,10 +90,9 @@ export default function TransactionTable({
         header: () => <span>Verslun</span>,
       },
       {
-        accessorKey: 'account_number',
-        id: 'accessor_number',
+        accessorKey: 'department_name',
+        id: 'department_name',
         header: () => <span>Deild</span>,
-        cell: async (dep: any) => <span>{dep.getValue()}</span>,
       },
       {
         accessorKey: 'description',
@@ -115,6 +140,8 @@ export default function TransactionTable({
       paginationState={pagination}
       setPaginationState={setPagination}
       pageSizes={pageSizes}
+      onDownload={handleDownloadData}
+      isDownloading={isDownloading}
     />
   );
 }

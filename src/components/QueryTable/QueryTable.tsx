@@ -15,8 +15,10 @@ import {
 } from '@heroicons/react/24/outline';
 import { NewTableProps } from './QueryTable.types';
 import PageNavigator from '../PageNavigation';
-import CSVDownloadBtn from '../CSVDownloadBtn';
 import EmptyStateSimple from '../ui/EmptyState/EmptyStateSimple';
+import Button from '../ui/Button/Button';
+import { ArrowDownTrayIcon } from '@heroicons/react/20/solid';
+import { Spinner } from '../ui/Spinner/Spinner';
 
 export default function QueryTable<T extends object>({
   query,
@@ -27,6 +29,8 @@ export default function QueryTable<T extends object>({
   setPaginationState,
   pageSizes = [20, 50, 100],
   className,
+  onDownload,
+  isDownloading,
 }: NewTableProps<T>) {
   const basePageSize = pageSizes.at(0);
 
@@ -171,7 +175,23 @@ export default function QueryTable<T extends object>({
             </p>
           </div>
 
-          <CSVDownloadBtn data={query.data?.data} filename="hreyfingar" />
+          {onDownload && query.data?.data.length > 0 && (
+            <Button
+              secondary
+              size="lg"
+              className={className}
+              onClick={onDownload}
+            >
+              <div className="flex justify-between gap-2">
+                Hlaða{' '}
+                {isDownloading ? (
+                  <Spinner color="black" />
+                ) : (
+                  <ArrowDownTrayIcon className="h-5 w-5" />
+                )}
+              </div>
+            </Button>
+          )}
           {/* Page navigation */}
           <PageNavigator
             currentPageIdx={paginationState.pageIndex}
