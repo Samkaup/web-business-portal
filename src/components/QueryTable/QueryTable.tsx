@@ -16,6 +16,7 @@ import {
 import { NewTableProps } from './QueryTable.types';
 import PageNavigator from '../PageNavigation';
 import CSVDownloadBtn from '../CSVDownloadBtn';
+import EmptyStateSimple from '../ui/EmptyState/EmptyStateSimple';
 
 export default function QueryTable<T extends object>({
   query,
@@ -107,44 +108,42 @@ export default function QueryTable<T extends object>({
                 ))}
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {query.isSuccess ? (
-                  <React.Suspense fallback={<TableBodyLoad />}>
-                    {table?.getRowModel().rows.map((row) => (
-                      <tr key={row.id} className="h-14">
-                        {row?.getVisibleCells().map((cell) => (
-                          <td
-                            key={cell.id}
-                            className="whitespace-nowrap px-3 py-4 text-sm text-gray-600"
-                          >
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext()
-                            )}
-                          </td>
+                {query.isSuccess && table?.getRowModel().rows.length > 0 ? (
+                  <>
+                    {!query.isFetching ? (
+                      <React.Suspense fallback={<TableBodyLoad />}>
+                        {table?.getRowModel().rows.map((row) => (
+                          <tr key={row.id} className="h-14">
+                            {row?.getVisibleCells().map((cell) => (
+                              <td
+                                key={cell.id}
+                                className="whitespace-nowrap px-3 py-4 text-sm text-gray-600"
+                              >
+                                {flexRender(
+                                  cell.column.columnDef.cell,
+                                  cell.getContext()
+                                )}
+                              </td>
+                            ))}
+                          </tr>
                         ))}
-                      </tr>
-                    ))}
-                  </React.Suspense>
+                      </React.Suspense>
+                    ) : (
+                      <TableBodyLoad />
+                    )}
+                  </>
                 ) : (
-                  <TableBodyLoad />
+                  <tr className="flex justify-center">
+                    <td className="m-2">
+                      <EmptyStateSimple
+                        title="Engar hreyfingar fundust"
+                        subtitle="Deildir eru til að aðgreina úttektaraðila milli viðskiptaeininga, þær upplýsingar berast svo með rafrænum reikningi."
+                        actionBtnText="Stofna deild"
+                      />
+                    </td>
+                  </tr>
                 )}
               </tbody>
-              <tfoot className="md:hidden">
-                {table?.getFooterGroups().map((footerGroup) => (
-                  <tr key={footerGroup.id}>
-                    {footerGroup.headers.map((header) => (
-                      <th key={header.id}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.footer,
-                              header.getContext()
-                            )}
-                      </th>
-                    ))}
-                  </tr>
-                ))}
-              </tfoot>
             </table>
           </div>
         </div>
