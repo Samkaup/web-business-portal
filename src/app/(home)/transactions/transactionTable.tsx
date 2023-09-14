@@ -71,8 +71,8 @@ export default function TransactionTable({
   const columns = useMemo(
     () => [
       {
-        accessorKey: 'date',
-        id: 'date',
+        accessorKey: 'date', // Name of attribute to access its data
+        id: 'date', // Name of column for sorting
         header: () => <span>Dagsetning</span>,
         cell: (props: any) => {
           return (
@@ -90,8 +90,8 @@ export default function TransactionTable({
         header: () => <span>Verslun</span>,
       },
       {
-        accessorKey: 'department_name',
-        id: 'department_name',
+        accessorKey: 'department_name', // Name of attribute to access its data
+        id: 'department(name)', // Name of foriegn table and column for sorting
         header: () => <span>Deild</span>,
       },
       {

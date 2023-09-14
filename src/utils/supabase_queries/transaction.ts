@@ -150,7 +150,7 @@ export const getAllTransactions = async ({
     companyId: companyId,
   });
 
-  while (!data || data.length === 0) {
+  while (!data || data.length > 0) {
     allTransactions = [...allTransactions, ...data];
 
     if (data.length < pageSize) break;
@@ -169,6 +169,7 @@ export const getAllTransactions = async ({
       filters: filters,
       companyId: companyId,
     });
+
     data = result.data;
   }
 

@@ -7,6 +7,7 @@ export type SortingProps = {
   column: string;
   options: {
     ascending: boolean;
+    foriegnTable?: string;
   };
 };
 

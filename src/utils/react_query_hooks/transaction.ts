@@ -87,12 +87,15 @@ export const useTransactionsTable = ({
           from: rangeFrom,
           to: rangeTo,
         },
-        sorting: {
-          column: sorting[0].id,
-          options: {
-            ascending: !sorting[0].desc,
-          },
-        },
+        sorting:
+          sorting.length > 0
+            ? {
+                column: sorting[0].id,
+                options: {
+                  ascending: !sorting[0].desc,
+                },
+              }
+            : undefined,
         searchValue,
         dateRange,
         filters: filters,
