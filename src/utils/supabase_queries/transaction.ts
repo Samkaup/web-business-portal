@@ -105,6 +105,7 @@ export type Payload = {
   departmentFilters?: string[];
   filters?: string[];
   companyId?: string;
+  csv?: boolean;
 };
 
 export const getTransactionsTable = async ({
@@ -123,6 +124,7 @@ export const getTransactionsTable = async ({
       description,
       amount_debit,
       department!inner ( 
+        name,
         company_id 
       )`,
     { count: 'exact' }
@@ -148,9 +150,7 @@ export const getTransactionsTable = async ({
   query = end ? query.filter('date', 'lte', formatDate(end)) : query;
 
   // Set company_id
-  query = companyId
-    ? query.filter('department.company_id', 'eq', companyId)
-    : query;
+  if (companyId) query = query.filter('department.company_id', 'eq', companyId);
 
   const { data, count, error } = await query;
 
@@ -159,5 +159,66 @@ export const getTransactionsTable = async ({
     throw error;
   }
 
-  return { data, rowCount: count };
+  return {
+    data: data.map((t) => ({
+      date: t.date,
+      store_number: t.store_number,
+      department_name: t.department.name,
+      description: t.description,
+      amount_debit: t.amount_debit,
+    })),
+    rowCount: count,
+  };
+};
+
+export const getAllTransactions = async ({
+  supabaseClient,
+  sorting,
+  searchValue,
+  dateRange,
+  filters,
+  companyId,
+}: Payload) => {
+  let allTransactions: any[] = [];
+  let pageIndex = 0;
+  const pageSize = 1000;
+
+  let { data } = await getTransactionsTable({
+    supabaseClient,
+    range: {
+      from: pageIndex * pageSize,
+      to: (pageIndex + 1) * (pageSize - 1),
+    },
+    sorting: sorting,
+    searchValue,
+    dateRange,
+    filters: filters,
+    companyId: companyId,
+  });
+
+  while (!data || data.length > 0) {
+    allTransactions = [...allTransactions, ...data];
+
+    if (data.length < pageSize) break;
+
+    pageIndex++;
+
+    const result = await getTransactionsTable({
+      supabaseClient,
+      range: {
+        from: pageIndex * pageSize,
+        to: (pageIndex + 1) * (pageSize - 1),
+      },
+      sorting: sorting,
+      searchValue,
+      dateRange,
+      filters: filters,
+      companyId: companyId,
+    });
+
+    data = result.data;
+  }
+
+  // Construct response
+  return allTransactions;
 };
