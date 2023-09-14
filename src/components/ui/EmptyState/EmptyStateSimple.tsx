@@ -9,7 +9,7 @@ type Props = {
 };
 export default function EmptyStateSimple({
   title = 'No data',
-  subtitle = 'Get started by creating data',
+  subtitle = '',
   actionBtnText = 'New data',
   actionBtnClick,
 }: Props) {
