@@ -50,6 +50,52 @@ export const getTransactionCount = async (
   return count;
 };
 
+type TransactionSumByDateProps = {
+  supabase: AppSupabaseClient;
+  companyId: string;
+  dateFrom: Date;
+  dateTo: Date;
+};
+export const getTransactionSumByDate = async ({
+  supabase,
+  companyId,
+  dateFrom,
+  dateTo,
+}: TransactionSumByDateProps): Promise<number> => {
+  let query = supabase.from('transaction').select(
+    ` date,
+      store_number,
+      account_number,
+      description,
+      amount_debit,
+      department!inner ( 
+        company_id 
+      )`
+  );
+  // Set Date Range
+  const start: Date | null = dateFrom;
+  const end: Date | null = dateTo;
+  query = start ? query.filter('date', 'gte', formatDate(start)) : query;
+  query = end ? query.filter('date', 'lte', formatDate(end)) : query;
+  query = companyId
+    ? query.filter('department.company_id', 'eq', companyId)
+    : query;
+
+  const { data, error } = await query;
+
+  let amount = 0;
+  data.forEach((item) => {
+    amount += item.amount_debit;
+  });
+
+  if (error) {
+    console.log(error.message);
+    throw error;
+  }
+
+  return amount;
+};
+
 export type Payload = {
   supabaseClient: AppSupabaseClient;
   range?: RangeProps;
