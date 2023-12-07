@@ -181,7 +181,7 @@ export default function QueryTable<T extends object>({
             onClick={onDownload}
           >
             <div className="flex justify-between items-center gap-2">
-              Hlaða{' '}
+              Sækja hreyfingayfirlit{' '}
               {isDownloading ? (
                 <Spinner color="black" />
               ) : (
