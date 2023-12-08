@@ -19,7 +19,7 @@ export default function Login() {
   const [emailError, setEmailError] = useState<boolean>(false);
   const [requestSent, setRequestSent] = useState<boolean>(false);
 
-  const handleResetPassword = async (e: React.FormEvent<HTMLButtonElement>) => {
+  const handleResetPassword = (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     if (email.length === 0) {
@@ -28,12 +28,13 @@ export default function Login() {
       return;
     }
 
-    const { error } = await supabaseClient.auth.resetPasswordForEmail(email);
-
-    if (error) {
-      toast.error(error.message);
-      setEmailError(true);
-    } else setRequestSent(true);
+    supabaseClient.auth
+      .resetPasswordForEmail(email)
+      .then(() => setRequestSent(true))
+      .catch((error) => {
+        toast.error(error.message);
+        setEmailError(true);
+      });
   };
 
   return (
