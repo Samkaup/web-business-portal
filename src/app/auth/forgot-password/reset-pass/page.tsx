@@ -8,7 +8,7 @@ import TextInput from '@/components/ui/Input/textInput';
 import toast from 'react-hot-toast';
 import Button from '@/components/ui/Button/Button';
 
-export default function Login() {
+export default function ResetPass() {
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [rePassword, setRePassword] = useState('');
@@ -55,7 +55,7 @@ export default function Login() {
 
     if (error) {
       toast.error('Unable to update password');
-      console.log(error);
+      console.error(error);
       return;
     }
 

@@ -18,12 +18,10 @@ const userNavigation = [
   {
     name: 'Mínar stillingar',
     href: '/profile',
-    onClick: () => console.log('Mínar stillingar'),
   },
   {
     name: 'Fyrirtækin mín',
     href: '/company',
-    onClick: () => console.log('Settings clicked'),
   },
 ];
 
