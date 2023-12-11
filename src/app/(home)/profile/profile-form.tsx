@@ -3,19 +3,20 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
+import { toast } from 'react-hot-toast';
 
-import { Button } from '@/components/Shadcn/ui/button';
+import supabaseClient from '@/utils/supabase-browser';
+import Button from '@/components/ui/Button/Button';
+
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from '@/components/Shadcn/ui/form';
 import { Input } from '@/components/Shadcn/ui/input';
-import { toast } from '@/components/Shadcn/ui/use-toast';
 
 const resetPassSchema = z
   .object({
@@ -33,13 +34,9 @@ const resetPassSchema = z
       required_error: 'Vantar Lykilorð Aftur',
     }),
   })
-  .superRefine(({ confirmPassword, password }, ctx) => {
-    if (confirmPassword !== password) {
-      ctx.addIssue({
-        code: 'custom',
-        message: 'Lykilorðin passa ekki saman',
-      });
-    }
+  .refine((data) => data.password === data.confirmPassword, {
+    path: ['confirmPassword'],
+    message: 'Lykilorðin passa ekki saman',
   });
 
 type ProfileFormValues = z.infer<typeof resetPassSchema>;
@@ -50,16 +47,20 @@ export function ProfileForm() {
     mode: 'onChange',
   });
 
-  function onSubmit(data: ProfileFormValues) {
-    toast({
-      title: 'You submitted the following values:',
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
+  const onSubmit = async (data: ProfileFormValues) => {
+    const { error } = await supabaseClient.auth.updateUser({
+      password: data.password,
     });
-  }
+
+    if (error) {
+      toast.error('Ekki er hægt að uppfæra lykilorð');
+      console.error(error);
+      return;
+    }
+
+    form.reset({ password: '', confirmPassword: '' });
+    toast.success('Lykilorðið uppfært.');
+  };
 
   return (
     <Form {...form}>
@@ -69,19 +70,28 @@ export function ProfileForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Username</FormLabel>
+              <FormLabel>Lykilorð</FormLabel>
               <FormControl>
-                <Input placeholder="shadcn" {...field} />
+                <Input {...field} type="password" />
               </FormControl>
-              <FormDescription>
-                This is your public display name. It can be your real name or a
-                pseudonym. You can only change this once every 30 days.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">Update profile</Button>
+        <FormField
+          control={form.control}
+          name="confirmPassword"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Lykilorð Aftur</FormLabel>
+              <FormControl>
+                <Input {...field} type="password" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit">Uppfæra lykilorð</Button>
       </form>
     </Form>
   );

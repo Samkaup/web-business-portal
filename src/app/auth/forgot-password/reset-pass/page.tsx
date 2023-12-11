@@ -42,7 +42,7 @@ export default function ResetPass() {
     return valid;
   };
 
-  const handleSignUp = async (e: React.FormEvent<HTMLButtonElement>) => {
+  const handleResetPass = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     if (!updatePassValid()) {
@@ -96,7 +96,7 @@ export default function ResetPass() {
               <div>
                 <Button
                   className="w-full flex justify-center"
-                  onClick={handleSignUp}
+                  onClick={handleResetPass}
                   type="submit"
                 >
                   Senda

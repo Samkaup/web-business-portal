@@ -10,7 +10,7 @@ export default function HomePage() {
 
   return (
     <>
-      <Header title={company.name} />
+      <Header title={company?.name} />
       <div className="pt-10">
         <Dashboard />
       </div>
