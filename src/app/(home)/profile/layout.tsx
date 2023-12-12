@@ -14,16 +14,8 @@ const sidebarNavItems = [
     href: '/profile',
   },
   {
-    title: 'Heimildir',
-    href: '/profile/amounts',
-  },
-  {
     title: 'Tilkynningar',
     href: '/profile/notifications',
-  },
-  {
-    title: 'Útlit',
-    href: '/profile/appearance',
   },
 ];
 
