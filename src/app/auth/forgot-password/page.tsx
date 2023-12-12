@@ -10,7 +10,7 @@ import Link from 'next/link';
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
-  EnvelopeIcon,
+  EnvelopeIcon
 } from '@heroicons/react/24/outline';
 import Button from '@/components/ui/Button/Button';
 
@@ -18,6 +18,24 @@ export default function Login() {
   const [email, setEmail] = useState<string>('');
   const [emailError, setEmailError] = useState<boolean>(false);
   const [requestSent, setRequestSent] = useState<boolean>(false);
+
+  const handleVerifyOTP = async (token: string) => {
+    if (!token) {
+      return false;
+    }
+    const { data, error } = await supabaseClient.auth.verifyOtp({
+      email,
+      token,
+      type: 'email'
+    });
+    if (error) {
+      setEmailError(true);
+    }
+    if (data) {
+      console.log(data);
+    }
+    return true;
+  };
 
   const handleResetPassword = (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -57,6 +75,7 @@ export default function Login() {
                   Við höfum sent þér leiðbeiningar til að breyta lykilorðinu
                   þínu á netfangið <b>{email}</b>
                 </p>
+                <Button onClick={() => handleVerifyOTP('1234')}></Button>
               </div>
 
               <p className="text-center text-sm">
