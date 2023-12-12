@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
 
   // Check if we have a session
   const {
-    data: { session },
+    data: { session }
   } = await supabase.auth.getSession();
 
   if (session) {
@@ -15,6 +15,6 @@ export async function POST(req: NextRequest) {
   }
 
   return NextResponse.redirect(new URL('/auth/login', req.url), {
-    status: 302,
+    status: 302
   });
 }

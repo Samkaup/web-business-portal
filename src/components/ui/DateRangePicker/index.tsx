@@ -2,7 +2,7 @@ import { DPDay, useDatePickerContext } from '@rehookify/datepicker';
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
-  CalendarDaysIcon,
+  CalendarDaysIcon
 } from '@heroicons/react/20/solid';
 import classNames from '@/utils/style/classNames';
 import { DateRangePreset, PresetButtonProps, Props } from './index.types';
@@ -12,11 +12,11 @@ export default function DateRangePicker({
   selectedDates,
   setSelectedDates,
   presets,
-  className,
+  className
 }: Props) {
   const {
     data: { weekDays, calendars },
-    propGetters: { dayButton, subtractOffset, addOffset },
+    propGetters: { dayButton, subtractOffset, addOffset }
   } = useDatePickerContext();
 
   // calendars[0] is always present, this is an initial calendar

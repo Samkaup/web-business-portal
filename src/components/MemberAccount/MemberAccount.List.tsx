@@ -5,7 +5,7 @@ import {
   ChevronUpIcon,
   InformationCircleIcon,
   TrashIcon,
-  UserIcon,
+  UserIcon
 } from '@heroicons/react/24/outline';
 import { Disclosure, Transition } from '@headlessui/react';
 import { format } from 'date-fns';
@@ -27,13 +27,13 @@ export default function MemberAccountListWithContacts({ departments }: Props) {
     {
       name: 'Stofna úttektaraðila',
       icon: <UserIcon className="w-4 h-4" />,
-      onClick: () => setShowContact(true),
+      onClick: () => setShowContact(true)
     },
     {
       name: 'Eyða deild',
       icon: <TrashIcon className="w-4 h-4 text-red-600" />,
-      onClick: () => setShowModal(true),
-    },
+      onClick: () => setShowModal(true)
+    }
   ];
   const sort = (obj, key) => {
     return obj.sort(function (a, b) {

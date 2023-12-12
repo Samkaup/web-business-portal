@@ -21,7 +21,7 @@ export const SlideOver = ({
   description = 'Description',
   children,
   toggleOpen,
-  onCancel,
+  onCancel
 }: Props) => {
   const toggleOpenState = () => {
     toggleOpen(!isOpen);

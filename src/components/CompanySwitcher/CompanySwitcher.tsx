@@ -25,7 +25,7 @@ export default function CompanySwitcher() {
                 options={data.map((c) => ({
                   id: c.external_identifier,
                   label: `${c.name} - ${c.external_identifier}`,
-                  key: c.external_identifier,
+                  key: c.external_identifier
                 }))}
                 value={
                   company

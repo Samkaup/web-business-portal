@@ -6,14 +6,14 @@ import { Fragment } from 'react';
 const days = [
   {
     date: 'Today',
-    dateTime: '2023-03-22',
-  },
+    dateTime: '2023-03-22'
+  }
 ];
 
 const statuses = {
   Greitt: 'text-green-700 bg-green-50 ring-green-600/20',
   Úttekið: 'text-gray-600 bg-gray-50 ring-gray-500/10',
-  Eindagi: 'text-red-700 bg-red-50 ring-red-600/10',
+  Eindagi: 'text-red-700 bg-red-50 ring-red-600/10'
 };
 
 export default function () {

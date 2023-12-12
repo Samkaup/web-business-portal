@@ -10,43 +10,43 @@ import {
   getEndOfMonth,
   getEndOfYear,
   getStartOfYear,
-  getStartOfMonth,
+  getStartOfMonth
 } from '@/utils/dateUtils';
 import { formatCurrency } from '@/utils/currency/currency';
 
 const secondaryNavigation = [
   { name: 'Síðustu 7 dagar', id: 'last_7_days', href: '#' },
   { name: 'Þessi mánuður', id: 'current_month', href: '#' },
-  { name: 'Þetta ár', id: 'this_year', href: '#' },
+  { name: 'Þetta ár', id: 'this_year', href: '#' }
 ];
 const stats = [
   {
     name: 'Upphæð',
     id: 'amount',
     value: '223.329 kr',
-    changeType: 'positive',
+    changeType: 'positive'
   },
   {
     name: 'Staða á heimild',
     id: 'limit_status',
     value: '-14.002 kr',
     change: '',
-    changeType: 'positive',
+    changeType: 'positive'
   },
   {
     name: 'Heimild á fyrirtæki',
     id: 'total_limit',
     value: '500.000 kr',
     change: '',
-    changeType: 'positive',
+    changeType: 'positive'
   },
   {
     name: 'Fjöldi deilda',
     id: 'num_of_departments',
     value: '24',
     change: '',
-    changeType: 'positive',
-  },
+    changeType: 'positive'
+  }
 ];
 
 export default function Dashboard() {
@@ -74,7 +74,7 @@ export default function Dashboard() {
 
   const { data: transactionSum } = useTransactionSumByDate({
     dateFrom,
-    dateTo,
+    dateTo
   });
 
   return (

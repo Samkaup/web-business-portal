@@ -33,7 +33,7 @@ export const objectToCsv = (data: { [key: string]: any }[]) => {
 
 export const downloadCSV = (csvString: string, filename: string) => {
   const blob = new Blob(['\uFEFF' + csvString], {
-    type: 'data:text/csv;charset=utf-8,',
+    type: 'data:text/csv;charset=utf-8,'
   });
   const blobURL = window.URL.createObjectURL(blob);
 

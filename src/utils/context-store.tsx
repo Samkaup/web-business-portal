@@ -16,7 +16,7 @@ export const Context = createContext<{
   setCompany: () => {
     return true;
   },
-  slideOver: {} as useSlideOverType,
+  slideOver: {} as useSlideOverType
 });
 
 export const ContextProvider = ({ children }) => {

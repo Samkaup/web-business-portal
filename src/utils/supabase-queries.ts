@@ -32,7 +32,7 @@ export const getTable = async <T extends RowName>({
   sorting,
   searchValue,
   filter,
-  dateRange,
+  dateRange
 }: TableProps<T>) => {
   let query = supabaseClient
     .from(table)

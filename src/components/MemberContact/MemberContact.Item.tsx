@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 import {
   EnvelopeIcon,
-  PhoneArrowUpRightIcon,
+  PhoneArrowUpRightIcon
 } from '@heroicons/react/24/outline';
 import { DeleteItemButton } from '../DeleteItemButton/DeleteItemButton';
 
