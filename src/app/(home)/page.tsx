@@ -2,8 +2,8 @@
 
 import Dashboard from '@/components/Dashboard/Dashboard';
 import Header from '@/components/Header/Header';
-import { useContext } from 'react';
 import { Context } from '@/utils/context-store';
+import { useContext } from 'react';
 
 export default function HomePage() {
   const { company } = useContext(Context);
