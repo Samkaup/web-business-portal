@@ -19,9 +19,9 @@ export const useTransactionSumByDate = ({ dateFrom, dateTo }: Props) => {
         supabase: supabaseClient,
         companyId: company.external_identifier,
         dateFrom: dateFrom,
-        dateTo: dateTo,
+        dateTo: dateTo
       });
     },
-    refetchOnWindowFocus: true,
+    refetchOnWindowFocus: true
   });
 };

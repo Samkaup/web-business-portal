@@ -4,5 +4,5 @@ import { Database } from '@/lib/database.types';
 
 export default () =>
   createServerComponentClient<Database>({
-    cookies,
+    cookies
   });

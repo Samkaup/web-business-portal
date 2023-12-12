@@ -18,8 +18,8 @@ export const DeleteItemButton = ({ table, id, verify, children }: Props) => {
     fetch(`/api/delete?table=${table}&id=${id}`, {
       method: 'DELETE',
       headers: {
-        'Content-Type': 'application/json',
-      },
+        'Content-Type': 'application/json'
+      }
     })
       .then((res) => {
         if (res.status == 200) {

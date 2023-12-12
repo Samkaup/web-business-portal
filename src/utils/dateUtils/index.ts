@@ -4,7 +4,7 @@ import {
   startOfDay,
   endOfDay,
   startOfYear,
-  endOfYear,
+  endOfYear
 } from 'date-fns';
 
 export function getDateNow(): Date {

@@ -2,7 +2,7 @@ import { UseQueryResult } from '@tanstack/react-query';
 import {
   SortingState,
   type ColumnDef,
-  PaginationState,
+  PaginationState
 } from '@tanstack/react-table';
 
 export type DefaultSort = {

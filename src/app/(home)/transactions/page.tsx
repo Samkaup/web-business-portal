@@ -5,7 +5,7 @@ import { DateRangePreset } from '@/components/ui/DateRangePicker/index.types';
 import {
   getDateDaysAgo,
   getDateMonthsAgo,
-  getDateNow,
+  getDateNow
 } from '@/utils/dateUtils';
 import { DatePickerProvider } from '@rehookify/datepicker';
 import { useState } from 'react';
@@ -21,7 +21,7 @@ export default function Transactions() {
   const [searchValue, setSearchValue] = useState<string>('');
   const [selectedDates, onDatesChange] = useState<Date[]>([
     getDateDaysAgo(37),
-    dateToday,
+    dateToday
   ]);
 
   const departments = useDepartments();
@@ -33,7 +33,7 @@ export default function Transactions() {
     if (departments)
       return departments.map((d: Row<'department'>) => ({
         id: d.external_identifier,
-        label: d.name,
+        label: d.name
       }));
     return [];
   };
@@ -41,24 +41,24 @@ export default function Transactions() {
   const dateRangePresets: DateRangePreset[] = [
     {
       lable: 'Síðustu 5 dagar',
-      dates: [getDateDaysAgo(4), dateToday],
+      dates: [getDateDaysAgo(4), dateToday]
     },
     {
       lable: 'Síðustu 14 dagar',
-      dates: [getDateDaysAgo(13), dateToday],
+      dates: [getDateDaysAgo(13), dateToday]
     },
     {
       lable: 'Síðustu 30 dagar',
-      dates: [getDateDaysAgo(29), dateToday],
+      dates: [getDateDaysAgo(29), dateToday]
     },
     {
       lable: 'Síðustu 3 mánuðir',
-      dates: [getDateMonthsAgo(3), dateToday],
+      dates: [getDateMonthsAgo(3), dateToday]
     },
     {
       lable: 'Síðustu 6 mánuðir',
-      dates: [getDateMonthsAgo(6), dateToday],
-    },
+      dates: [getDateMonthsAgo(6), dateToday]
+    }
   ];
 
   return (
@@ -69,7 +69,7 @@ export default function Transactions() {
         config={{
           selectedDates,
           onDatesChange,
-          dates: { mode: 'range', maxDate: new Date() },
+          dates: { mode: 'range', maxDate: new Date() }
         }}
       >
         <div className="flex flex-col gap-4 px-4 sm:px-6 lg:px-8">

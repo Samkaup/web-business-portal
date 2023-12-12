@@ -4,7 +4,7 @@ export default function Logo({
   width = 150,
   height = 75,
   alt = 'Samkaup',
-  variant = 'white',
+  variant = 'white'
 }) {
   let src = '/logos/samkaup_logo.png';
   if (variant !== 'white') {

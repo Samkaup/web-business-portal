@@ -2,7 +2,7 @@ import MemberContactEdit from '@/components/MemberContact/MemberContact.Edit';
 import { getContact } from '@/utils/supabase_queries/contact';
 import createClient from '@/utils/supabase-server';
 export default async function MemberContact({
-  params,
+  params
 }: {
   params: { id: string };
 }) {

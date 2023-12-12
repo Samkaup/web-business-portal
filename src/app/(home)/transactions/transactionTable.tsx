@@ -22,12 +22,12 @@ type Props = {
 export default function TransactionTable({
   searchValue,
   dates,
-  departmentIds,
+  departmentIds
 }: Props) {
   const { company } = useContext(Context);
   const defaultSort = {
     id: 'date',
-    desc: true,
+    desc: true
   };
 
   const [sorting, setSorting] = useState<SortingState>([defaultSort]);
@@ -37,7 +37,7 @@ export default function TransactionTable({
 
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
-    pageSize: basePageSize,
+    pageSize: basePageSize
   });
 
   const query = useTransactionsTable({
@@ -45,7 +45,7 @@ export default function TransactionTable({
     sorting,
     searchValue,
     dateRange: dates,
-    filters: departmentIds.map((id: string) => `account_number.eq.${id}`),
+    filters: departmentIds.map((id: string) => `account_number.eq.${id}`)
   });
 
   const handleDownloadData = async () => {
@@ -55,13 +55,13 @@ export default function TransactionTable({
       sorting: {
         column: sorting[0].id,
         options: {
-          ascending: !sorting[0].desc,
-        },
+          ascending: !sorting[0].desc
+        }
       },
       searchValue,
       dateRange: dates,
       filters: departmentIds.map((id: string) => `account_number.eq.${id}`),
-      companyId: company.external_identifier,
+      companyId: company.external_identifier
     });
 
     downloadCSV(objectToCsv(transactions), 'hreyfingar');
@@ -78,26 +78,26 @@ export default function TransactionTable({
           return (
             <span>
               {format(new Date(props.getValue()), 'dd. MMM yyyy', {
-                locale: is,
+                locale: is
               })}
             </span>
           );
-        },
+        }
       },
       {
         accessorKey: 'store_number',
         id: 'store_number',
-        header: () => <span>Verslun</span>,
+        header: () => <span>Verslun</span>
       },
       {
         accessorKey: 'department_name', // Name of attribute to access its data
         id: 'department(name)', // Name of foriegn table and column for sorting
-        header: () => <span>Deild</span>,
+        header: () => <span>Deild</span>
       },
       {
         accessorKey: 'description',
         id: 'description',
-        header: () => <span>Skýring</span>,
+        header: () => <span>Skýring</span>
       },
       {
         accessorKey: 'amount_debit',
@@ -113,7 +113,7 @@ export default function TransactionTable({
               kr.
             </span>
           );
-        },
+        }
       },
       {
         accessorKey: 'actions',
@@ -125,8 +125,8 @@ export default function TransactionTable({
               <DocumentIcon className="h-4 w-4 mr-2"></DocumentIcon>Reikningur
             </Link>
           );
-        },
-      },
+        }
+      }
     ],
     []
   );

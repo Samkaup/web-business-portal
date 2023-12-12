@@ -6,14 +6,14 @@ const navigation = {
     { name: 'Um Samkaup', href: 'https://www.samkaup.is/um-samkaup/' },
     {
       name: 'Samfélagið',
-      href: 'https://www.samkaup.is/um-samkaup/samfelagid/',
+      href: 'https://www.samkaup.is/um-samkaup/samfelagid/'
     },
-    { name: 'Verslanir', href: 'https://www.samkaup.is/verslanir/' },
+    { name: 'Verslanir', href: 'https://www.samkaup.is/verslanir/' }
   ],
   support: [
     { name: 'Hafa samband', href: 'https://www.samkaup.is/hafa-samband/' },
     { name: 'Persónuvernd', href: 'https://www.samkaup.is/personuvernd/' },
-    { name: 'Skilmálar', href: 'https://www.samkaup.is/skilmalar/' },
+    { name: 'Skilmálar', href: 'https://www.samkaup.is/skilmalar/' }
   ],
 
   social: [
@@ -28,9 +28,9 @@ const navigation = {
             clipRule="evenodd"
           />
         </svg>
-      ),
-    },
-  ],
+      )
+    }
+  ]
 };
 
 export default function Footer() {

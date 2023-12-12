@@ -6,12 +6,12 @@ import {
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
-  useReactTable,
+  useReactTable
 } from '@tanstack/react-table';
 
 import {
   ArrowDownIcon as ChevronDownIcon,
-  ArrowUpIcon as ChevronUpIcon,
+  ArrowUpIcon as ChevronUpIcon
 } from '@heroicons/react/24/outline';
 import { NewTableProps } from './QueryTable.types';
 import PageNavigator from '../PageNavigation';
@@ -30,7 +30,7 @@ export default function QueryTable<T extends object>({
   pageSizes = [20, 50, 100],
   className,
   onDownload,
-  isDownloading,
+  isDownloading
 }: NewTableProps<T>) {
   const basePageSize = pageSizes.at(0);
 
@@ -40,14 +40,14 @@ export default function QueryTable<T extends object>({
     pageCount: Math.ceil(query.data?.rowCount / paginationState.pageSize),
     state: {
       pagination: paginationState,
-      sorting: sortingState,
+      sorting: sortingState
     },
     manualPagination: true,
     manualSorting: true,
     onPaginationChange: setPaginationState,
     onSortingChange: setSortingState,
     getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
+    getSortedRowModel: getSortedRowModel()
   });
 
   const Skeleton = () => (
@@ -99,7 +99,7 @@ export default function QueryTable<T extends object>({
                               className: header.column.getCanSort()
                                 ? 'cursor-pointer select-none'
                                 : '',
-                              onClick: header.column.getToggleSortingHandler(),
+                              onClick: header.column.getToggleSortingHandler()
                             }}
                           >
                             {flexRender(
@@ -112,7 +112,7 @@ export default function QueryTable<T extends object>({
                               ),
                               asc: (
                                 <ChevronDownIcon className="inline-block ml-3 -mr-1 h-4 w-4" />
-                              ),
+                              )
                             }[header.column.getIsSorted() as string] ?? null}
                           </div>
                         )}

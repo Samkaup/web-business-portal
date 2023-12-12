@@ -9,7 +9,7 @@ import { Fragment } from 'react';
 const statuses = {
   Greitt: 'text-green-700 bg-green-50 ring-green-600/20',
   Úttekið: 'text-gray-600 bg-gray-50 ring-gray-500/10',
-  Eindagi: 'text-red-700 bg-red-50 ring-red-600/10',
+  Eindagi: 'text-red-700 bg-red-50 ring-red-600/10'
 };
 const clients = [
   {
@@ -20,8 +20,8 @@ const clients = [
       date: 'December 13, 2022',
       dateTime: '2022-12-13',
       amount: '129.923 kr',
-      status: 'Eindagi',
-    },
+      status: 'Eindagi'
+    }
   },
   {
     id: 2,
@@ -31,8 +31,8 @@ const clients = [
       date: 'January 22, 2023',
       dateTime: '2023-01-22',
       amount: '49.231 kr',
-      status: 'Greitt',
-    },
+      status: 'Greitt'
+    }
   },
   {
     id: 3,
@@ -42,9 +42,9 @@ const clients = [
       date: 'January 23, 2023',
       dateTime: '2023-01-23',
       amount: '0 kr',
-      status: 'Greitt',
-    },
-  },
+      status: 'Greitt'
+    }
+  }
 ];
 export default function () {
   const departments = useRecentDepartments();

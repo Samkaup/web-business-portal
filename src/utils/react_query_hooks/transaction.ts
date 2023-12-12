@@ -4,7 +4,7 @@ import supabaseClient from '@/utils/supabase-browser';
 import {
   getRecentCompanyTransactions,
   getTransactions,
-  getTransactionsTable,
+  getTransactionsTable
 } from '../supabase_queries/transaction';
 import { QueryDataAndCount } from '../utilTypes';
 import { PaginationState, SortingState } from '@tanstack/react-table';
@@ -57,7 +57,7 @@ export const useTransactionsTable = ({
   sorting,
   searchValue,
   dateRange,
-  filters,
+  filters
 }: Payload) => {
   const { company } = useContext(Context);
 
@@ -70,8 +70,8 @@ export const useTransactionsTable = ({
         searchValue,
         dateRange,
         filters,
-        company,
-      },
+        company
+      }
     ],
     async () => {
       if (!company) return { rowCount: 0, data: [] };
@@ -85,21 +85,21 @@ export const useTransactionsTable = ({
         supabaseClient,
         range: {
           from: rangeFrom,
-          to: rangeTo,
+          to: rangeTo
         },
         sorting:
           sorting.length > 0
             ? {
                 column: sorting[0].id,
                 options: {
-                  ascending: !sorting[0].desc,
-                },
+                  ascending: !sorting[0].desc
+                }
               }
             : undefined,
         searchValue,
         dateRange,
         filters: filters,
-        companyId: company.external_identifier,
+        companyId: company.external_identifier
       });
     },
     { keepPreviousData: true }
