@@ -15,7 +15,10 @@ import {
 } from '@heroicons/react/24/outline';
 import { NewTableProps } from './QueryTable.types';
 import PageNavigator from '../PageNavigation';
-import CSVDownloadBtn from '../CSVDownloadBtn';
+import EmptyStateSimple from '../ui/EmptyState/EmptyStateSimple';
+import Button from '../ui/Button/Button';
+import { ArrowDownTrayIcon } from '@heroicons/react/20/solid';
+import { Spinner } from '../ui/Spinner/Spinner';
 
 export default function QueryTable<T extends object>({
   query,
@@ -26,6 +29,8 @@ export default function QueryTable<T extends object>({
   setPaginationState,
   pageSizes = [20, 50, 100],
   className,
+  onDownload,
+  isDownloading,
 }: NewTableProps<T>) {
   const basePageSize = pageSizes.at(0);
 
@@ -63,12 +68,22 @@ export default function QueryTable<T extends object>({
     </>
   );
 
+  if (query.isSuccess && table?.getRowModel().rows.length <= 0)
+    return (
+      <div className="flex-col flex items-center justify-center w-100 p-8">
+        <EmptyStateSimple
+          title="Engar hreyfingar fundust"
+          actionBtnText="Stofna deild"
+        />
+      </div>
+    );
+
   return (
     <div className={className}>
       <div className="flow-root">
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-            <table className="min-w-full divide-y divide-gray-300">
+            <table className="min-w-full divide-y divide-gray-30">
               <thead>
                 {table.getHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id}>
@@ -107,49 +122,36 @@ export default function QueryTable<T extends object>({
                 ))}
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {query.isSuccess ? (
-                  <React.Suspense fallback={<TableBodyLoad />}>
-                    {table?.getRowModel().rows.map((row) => (
-                      <tr key={row.id} className="h-14">
-                        {row?.getVisibleCells().map((cell) => (
-                          <td
-                            key={cell.id}
-                            className="whitespace-nowrap px-3 py-4 text-sm text-gray-600"
-                          >
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext()
-                            )}
-                          </td>
+                {query.isSuccess && table?.getRowModel().rows.length > 0 && (
+                  <>
+                    {!query.isFetching ? (
+                      <React.Suspense fallback={<TableBodyLoad />}>
+                        {table?.getRowModel().rows.map((row) => (
+                          <tr key={row.id} className="h-14">
+                            {row?.getVisibleCells().map((cell) => (
+                              <td
+                                key={cell.id}
+                                className="whitespace-nowrap px-3 py-4 text-sm text-gray-600"
+                              >
+                                {flexRender(
+                                  cell.column.columnDef.cell,
+                                  cell.getContext()
+                                )}
+                              </td>
+                            ))}
+                          </tr>
                         ))}
-                      </tr>
-                    ))}
-                  </React.Suspense>
-                ) : (
-                  <TableBodyLoad />
+                      </React.Suspense>
+                    ) : (
+                      <TableBodyLoad />
+                    )}
+                  </>
                 )}
               </tbody>
-              <tfoot className="md:hidden">
-                {table?.getFooterGroups().map((footerGroup) => (
-                  <tr key={footerGroup.id}>
-                    {footerGroup.headers.map((header) => (
-                      <th key={header.id}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.footer,
-                              header.getContext()
-                            )}
-                      </th>
-                    ))}
-                  </tr>
-                ))}
-              </tfoot>
             </table>
           </div>
         </div>
       </div>
-
       {/* Pagination */}
       <div className="px-4 py-3 flex items-center justify-center border-t border-gray-200/50 sm:px-6">
         <div className="sm:flex-1 sm:flex sm:items-center sm:justify-between mt-4">
@@ -172,7 +174,21 @@ export default function QueryTable<T extends object>({
             </p>
           </div>
 
-          <CSVDownloadBtn data={query.data?.data} filename="hreyfingar" />
+          <Button
+            secondary
+            size="lg"
+            className={className}
+            onClick={onDownload}
+          >
+            <div className="flex justify-between items-center gap-2">
+              Sækja hreyfingayfirlit{' '}
+              {isDownloading ? (
+                <Spinner color="black" />
+              ) : (
+                <ArrowDownTrayIcon className="h-5 w-5" />
+              )}
+            </div>
+          </Button>
           {/* Page navigation */}
           <PageNavigator
             currentPageIdx={paginationState.pageIndex}

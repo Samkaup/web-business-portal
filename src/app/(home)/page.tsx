@@ -1,14 +1,10 @@
-'use client';
 import Dashboard from '@/components/Dashboard/Dashboard';
 import Header from '@/components/Header/Header';
-import { Context } from '@/utils/context-store';
-import { useContext } from 'react';
 
 export default function HomePage() {
-  const { company } = useContext(Context);
   return (
     <>
-      <Header title={company?.name}></Header>
+      <Header />
       <div className="pt-10">
         <Dashboard />
       </div>

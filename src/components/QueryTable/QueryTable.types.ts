@@ -25,4 +25,6 @@ export type NewTableProps<T extends object> = {
   setPaginationState: (state: PaginationState) => void;
   pageSizes: number[];
   className?: string;
+  onDownload?: () => void;
+  isDownloading?: boolean;
 };

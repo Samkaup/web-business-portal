@@ -1,3 +1,12 @@
+import {
+  startOfMonth,
+  endOfMonth,
+  startOfDay,
+  endOfDay,
+  startOfYear,
+  endOfYear,
+} from 'date-fns';
+
 export function getDateNow(): Date {
   return new Date(Date.now());
 }
@@ -14,6 +23,39 @@ export function getDateDaysAgo(numMonths: number): Date {
 
   date.setDate(date.getDate() - numMonths);
   return date;
+}
+export function getStartOfYear(date?: Date): Date {
+  const now: Date = getDateNow();
+
+  return startOfYear(date ? date : now);
+}
+
+export function getEndOfYear(date?: Date): Date {
+  const now: Date = getDateNow();
+
+  return endOfYear(date ? date : now);
+}
+
+export function getStartOfMonth(date?: Date): Date {
+  const now: Date = getDateNow();
+
+  return startOfMonth(date ? date : now);
+}
+
+export function getEndOfMonth(date?: Date): Date {
+  const now: Date = getDateNow();
+
+  return endOfMonth(date ? date : now);
+}
+
+export function getStartOfDay(date?: Date): Date {
+  const now: Date = getDateNow();
+  return startOfDay(date ? date : now);
+}
+
+export function getEndOfDay(date?: Date): Date {
+  const now: Date = getDateNow();
+  return endOfDay(date ? date : now);
 }
 
 export function formatDate(date: Date): string {

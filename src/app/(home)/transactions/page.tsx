@@ -90,7 +90,7 @@ export default function Transactions() {
 
             <DebouncedInput
               value={searchValue}
-              onChange={(value) => setSearchValue(String(value))}
+              onChange={(value) => setSearchValue(value as string)}
               name="search"
               placeholder="Leita í lista"
               className="w-80"
