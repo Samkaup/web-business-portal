@@ -8,7 +8,7 @@ import TextInput from '@/components/ui/Input/textInput';
 import toast from 'react-hot-toast';
 import Button from '@/components/ui/Button/Button';
 
-export default function Login() {
+export default function ResetPass() {
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [rePassword, setRePassword] = useState('');
@@ -42,7 +42,7 @@ export default function Login() {
     return valid;
   };
 
-  const handleSignUp = async (e: React.FormEvent<HTMLButtonElement>) => {
+  const handleResetPass = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     if (!updatePassValid()) {
@@ -50,12 +50,12 @@ export default function Login() {
       return;
     }
     const { error } = await supabaseClient.auth.updateUser({
-      password: password,
+      password: password
     });
 
     if (error) {
       toast.error('Unable to update password');
-      console.log(error);
+      console.error(error);
       return;
     }
 
@@ -96,7 +96,7 @@ export default function Login() {
               <div>
                 <Button
                   className="w-full flex justify-center"
-                  onClick={handleSignUp}
+                  onClick={handleResetPass}
                   type="submit"
                 >
                   Senda
