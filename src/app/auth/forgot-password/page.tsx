@@ -10,30 +10,63 @@ import Link from 'next/link';
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
-  EnvelopeIcon,
+  EnvelopeIcon
 } from '@heroicons/react/24/outline';
 import Button from '@/components/ui/Button/Button';
+import OTPInput from '@/components/Inputs/OTPInput';
+import { useRouter } from 'next/navigation';
+import { getURL } from '@/lib/utils';
 
 export default function Login() {
+  const router = useRouter();
+  const [isLoading, setLoading] = useState(false);
   const [email, setEmail] = useState<string>('');
   const [emailError, setEmailError] = useState<boolean>(false);
   const [requestSent, setRequestSent] = useState<boolean>(false);
 
-  const handleResetPassword = async (e: React.FormEvent<HTMLButtonElement>) => {
-    e.preventDefault();
+  const handleVerifyOTP = async (token: string) => {
+    if (!token) {
+      return false;
+    }
+    const { data, error } = await supabaseClient.auth.verifyOtp({
+      email,
+      token,
+      type: 'email'
+    });
+    if (error) {
+      console.error(error);
+      setEmailError(true);
+      toast.error('Auðkenniskóði eða tengill ekki gildur, reyndu aftur');
+    }
+    if (data?.session) {
+      router.push('/auth/forgot-password/reset-pass');
+    } else {
+      toast.error('Auðkenniskóði eða tengill ekki gildur, reyndu aftur');
+      setEmailError(true);
+    }
+  };
 
+  const handleResetPassword = (e: React.FormEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setLoading(true);
     if (email.length === 0) {
-      toast.error('Missing email');
+      toast.error('Vantar netfang');
       setEmailError(true);
       return;
     }
-
-    const { error } = await supabaseClient.auth.resetPasswordForEmail(email);
-
-    if (error) {
-      toast.error(error.message);
-      setEmailError(true);
-    } else setRequestSent(true);
+    console.log(`${getURL()}auth/forgot-password/reset-pass`);
+    supabaseClient.auth
+      .resetPasswordForEmail(email, {
+        redirectTo: `${getURL()}auth/forgot-password/reset-pass`
+      })
+      .then(() => setRequestSent(true))
+      .catch((error) => {
+        toast.error(error.message);
+        setEmailError(true);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (
@@ -57,6 +90,8 @@ export default function Login() {
                   þínu á netfangið <b>{email}</b>
                 </p>
               </div>
+
+              <OTPInput onAction={handleVerifyOTP}></OTPInput>
 
               <p className="text-center text-sm">
                 Enginn tölvupóstur í innhólfinu þínu? Kíktu í "Spam/Junk"
@@ -93,6 +128,7 @@ export default function Login() {
                   <div>
                     <Button
                       size="lg"
+                      isLoading={isLoading}
                       className="w-full flex justify-center gap-1"
                       onClick={handleResetPassword}
                     >

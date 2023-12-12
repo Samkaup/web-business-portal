@@ -12,19 +12,17 @@ import classNames from '@/utils/style/classNames';
 const navigation = [
   { name: 'Heim', href: '/' },
   { name: 'Hreyfingaryfirlit', href: '/transactions' },
-  { name: 'Úttektaraðilar', href: '/contacts' },
+  { name: 'Úttektaraðilar', href: '/contacts' }
 ];
 const userNavigation = [
   {
     name: 'Mínar stillingar',
-    href: '/profile',
-    onClick: () => console.log('Mínar stillingar'),
+    href: '/profile'
   },
   {
     name: 'Fyrirtækin mín',
-    href: '/company',
-    onClick: () => console.log('Settings clicked'),
-  },
+    href: '/company'
+  }
 ];
 
 function getInitals(fullName: string) {

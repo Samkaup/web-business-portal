@@ -1,7 +1,6 @@
 'use client';
 
 import { Separator } from '@/components/Shadcn/ui/separator';
-import { ProfileForm } from './profile-form';
 import { useGetProfile } from '@/utils/react_query_hooks/profile';
 
 export default async function Profile() {
@@ -16,7 +15,6 @@ export default async function Profile() {
         </p>
       </div>
       <Separator />
-      <ProfileForm />
     </div>
   );
 }
