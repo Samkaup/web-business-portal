@@ -48,12 +48,12 @@ export default function MemberContactNew({ departmentId, onSave }: Props) {
         full_name: fullName,
         email_address: emailAddress,
         cell_phone: cellPhone,
-        department_id: departmentId,
+        department_id: departmentId
       };
 
       await createContact({ supabase, contact });
       queryClient.invalidateQueries({
-        queryKey: [`department_with_contacts`],
+        queryKey: [`department_with_contacts`]
       });
       onSave();
     } catch (e) {

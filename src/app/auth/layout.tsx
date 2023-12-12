@@ -1,7 +1,7 @@
 import Image from 'next/image';
 
 export default function AuthLayout({
-  children,
+  children
 }: {
   children: React.ReactNode;
 }) {

@@ -44,11 +44,11 @@ export default function DepartmentCreate({ onCancel, onSave }: Props) {
       const department = {
         name: name,
         external_identifier: externalIdentifier,
-        company_id: company.external_identifier,
+        company_id: company.external_identifier
       };
       await createDepartment({ supabase, department });
       queryClient.invalidateQueries({
-        queryKey: [`department_with_contacts`],
+        queryKey: [`department_with_contacts`]
       });
       onSave();
     } catch (e) {

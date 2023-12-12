@@ -18,7 +18,7 @@ const useSlideOver = () => {
 
   return {
     isOpen,
-    setIsOpen,
+    setIsOpen
   };
 };
 

@@ -11,7 +11,7 @@ export default function EmptyStateSimple({
   title = 'No data',
   subtitle = '',
   actionBtnText = 'New data',
-  actionBtnClick,
+  actionBtnClick
 }: Props) {
   return (
     <div className="text-center">

@@ -7,7 +7,7 @@ import type { Database } from '@/lib/database.types';
 const UNAUTHORIZED_ROUTES = [
   '/auth/login',
   '/auth/signup',
-  '/auth/forgot-password',
+  '/auth/forgot-password'
 ];
 
 export async function middleware(req: NextRequest) {
@@ -15,7 +15,7 @@ export async function middleware(req: NextRequest) {
   const supabase = createMiddlewareClient<Database>({ req, res });
 
   const {
-    data: { session },
+    data: { session }
   } = await supabase.auth.getSession();
 
   // if user is signed in and the current path is / redirect the user to /account
@@ -40,6 +40,6 @@ export const config = {
     '/auth/signup',
     '/auth/login',
     '/auth/signout',
-    '/auth/forgot-password/reset-pass',
-  ],
+    '/auth/forgot-password/reset-pass'
+  ]
 };

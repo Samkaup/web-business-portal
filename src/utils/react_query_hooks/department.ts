@@ -5,7 +5,7 @@ import {
   DepartmentWithContacts,
   getDepartmentsByCompany,
   getDepartmentsWithContacts,
-  getRecentDepartmentsByCompany,
+  getRecentDepartmentsByCompany
 } from '../supabase_queries/department';
 
 import { useContext } from 'react';
@@ -47,9 +47,9 @@ export const useDepartmentsWithContacts = (company_id: string) => {
     queryFn: async () => {
       return await getDepartmentsWithContacts({
         supabase: supabaseClient,
-        company_id: company_id,
+        company_id: company_id
       });
     },
-    refetchOnWindowFocus: true,
+    refetchOnWindowFocus: true
   });
 };

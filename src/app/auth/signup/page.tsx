@@ -74,10 +74,10 @@ export default function Login() {
       options: {
         data: {
           fullName,
-          phoneNr,
+          phoneNr
         },
-        emailRedirectTo: `${location.origin}/auth/callback`,
-      },
+        emailRedirectTo: `${location.origin}/auth/callback`
+      }
     });
     if (error) {
       toast.error('Unabel to create user');

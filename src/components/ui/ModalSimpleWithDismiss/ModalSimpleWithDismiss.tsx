@@ -13,7 +13,7 @@ export default function ModalSimpleWithDismiss({
   isLoading,
   errorText,
   onAction,
-  onCancel,
+  onCancel
 }: Props) {
   return (
     <Transition.Root show={open} as={Fragment}>

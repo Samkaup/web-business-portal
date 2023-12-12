@@ -2,7 +2,7 @@ import { Spinner } from '@/components/ui/Spinner/Spinner';
 import { Props } from './LoadingBlock.types';
 export const LoadingBlock = ({
   title = 'Sæki gögn..',
-  className = '',
+  className = ''
 }: Props) => {
   return (
     <>

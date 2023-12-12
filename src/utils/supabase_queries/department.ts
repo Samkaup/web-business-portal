@@ -41,7 +41,7 @@ type DepartmentWithContactsProps = {
 };
 export const getDepartmentsWithContacts = async ({
   supabase,
-  company_id,
+  company_id
 }: DepartmentWithContactsProps): Promise<DepartmentWithContacts[]> => {
   if (!company_id) {
     throw Error('company_id parameter is missing');
@@ -107,7 +107,7 @@ type createDepartmentProps = {
 };
 export const createDepartment = async ({
   supabase,
-  department,
+  department
 }: createDepartmentProps): Promise<TableRow<'department'>> => {
   if (!department) {
     throw Error('department parameter is missing');

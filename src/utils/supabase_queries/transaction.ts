@@ -60,7 +60,7 @@ export const getTransactionSumByDate = async ({
   supabase,
   companyId,
   dateFrom,
-  dateTo,
+  dateTo
 }: TransactionSumByDateProps): Promise<number> => {
   let query = supabase.from('transaction').select(
     ` date,
@@ -115,7 +115,7 @@ export const getTransactionsTable = async ({
   searchValue,
   dateRange,
   filters,
-  companyId,
+  companyId
 }: Payload) => {
   let query = supabaseClient.from('transaction').select(
     ` date,
@@ -134,7 +134,7 @@ export const getTransactionsTable = async ({
 
   if (sorting)
     query = query.order(sorting.column as string & keyof Row<'transaction'>, {
-      ascending: sorting.options.ascending,
+      ascending: sorting.options.ascending
     });
 
   // Apply additional filters
@@ -165,9 +165,9 @@ export const getTransactionsTable = async ({
       store_number: t.store_number,
       department_name: t.department.name,
       description: t.description,
-      amount_debit: t.amount_debit,
+      amount_debit: t.amount_debit
     })),
-    rowCount: count,
+    rowCount: count
   };
 };
 
@@ -177,7 +177,7 @@ export const getAllTransactions = async ({
   searchValue,
   dateRange,
   filters,
-  companyId,
+  companyId
 }: Payload) => {
   let allTransactions: any[] = [];
   let pageIndex = 0;
@@ -187,13 +187,13 @@ export const getAllTransactions = async ({
     supabaseClient,
     range: {
       from: pageIndex * pageSize,
-      to: (pageIndex + 1) * (pageSize - 1),
+      to: (pageIndex + 1) * (pageSize - 1)
     },
     sorting: sorting,
     searchValue,
     dateRange,
     filters: filters,
-    companyId: companyId,
+    companyId: companyId
   });
 
   while (!data || data.length > 0) {
@@ -207,13 +207,13 @@ export const getAllTransactions = async ({
       supabaseClient,
       range: {
         from: pageIndex * pageSize,
-        to: (pageIndex + 1) * (pageSize - 1),
+        to: (pageIndex + 1) * (pageSize - 1)
       },
       sorting: sorting,
       searchValue,
       dateRange,
       filters: filters,
-      companyId: companyId,
+      companyId: companyId
     });
 
     data = result.data;

@@ -4,7 +4,7 @@ import { ClientLayout } from './ClientLayout';
 export const revalidate = 0;
 
 export default async function RootLayout({
-  children,
+  children
 }: {
   children: React.ReactNode;
 }) {

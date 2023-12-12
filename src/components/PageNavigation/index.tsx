@@ -10,7 +10,7 @@ type Props = {
 export default function PageNavigator({
   currentPageIdx,
   pageCount,
-  setPage,
+  setPage
 }: Props) {
   const canGetPrevPage = () => currentPageIdx !== 0;
   const canGetNextPage = () => currentPageIdx < pageCount - 1;
@@ -56,7 +56,7 @@ export default function PageNavigator({
       ) : (
         <>
           {Array.from({
-            length: currentPageIdx < 2 ? 3 : currentPageIdx < 3 ? 4 : 1,
+            length: currentPageIdx < 2 ? 3 : currentPageIdx < 3 ? 4 : 1
           }).map((_, idx) => (
             <PageButton pageIdx={idx} key={idx} />
           ))}
@@ -68,7 +68,7 @@ export default function PageNavigator({
               {Array.from([
                 currentPageIdx - 1,
                 currentPageIdx,
-                currentPageIdx + 1,
+                currentPageIdx + 1
               ]).map((num) => (
                 <PageButton pageIdx={num} key={num} />
               ))}
@@ -86,7 +86,7 @@ export default function PageNavigator({
                   ? 3
                   : currentPageIdx > pageCount - 4
                   ? 4
-                  : 1,
+                  : 1
             },
             (_, idx) => idx
           )

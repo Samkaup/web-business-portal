@@ -4,7 +4,7 @@ import Navigation from '@/components/Navigation/Navigation';
 import '@/app/globals.css';
 
 export default function HomeLayout({
-  children,
+  children
 }: {
   children: React.ReactNode;
 }) {
