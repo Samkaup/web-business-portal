@@ -1,16 +1,21 @@
+import { Button } from '@/components/Shadcn/ui/button';
+import { Spinner } from '../Spinner/Spinner';
+
 type ButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   primary?: boolean;
   secondary?: boolean;
+  isLoading?: boolean;
   size?: ButtonSize;
 }
 
-export default function Button({
+export default function ButtonCustom({
   primary = true,
   secondary = false,
   size,
   className,
+  isLoading,
   children,
   ...props
 }: Props) {
@@ -47,8 +52,14 @@ export default function Button({
   if (className) baseClassName = baseClassName + ' ' + className;
 
   return (
-    <button className={baseClassName} {...props}>
-      {children}
-    </button>
+    <Button className={baseClassName} {...props} disabled={isLoading}>
+      {isLoading ? (
+        <>
+          <Spinner /> <span className="ml-2">Augnablik..</span>
+        </>
+      ) : (
+        <>{children}</>
+      )}
+    </Button>
   );
 }

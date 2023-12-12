@@ -24,7 +24,7 @@ export default function AlertWithDescription({
   actionBtnText = 'Action',
   cancelBtnText = 'Cancel',
   onActionBtnClick,
-  onCancelBtnClick,
+  onCancelBtnClick
 }: Props) {
   let bgTypeClass = '';
   let fgTitleTypeClass = '';

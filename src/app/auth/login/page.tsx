@@ -42,7 +42,7 @@ export default function Login() {
     } else {
       const { error } = await supabaseClient.auth.signInWithPassword({
         email,
-        password,
+        password
       });
 
       if (error) {
