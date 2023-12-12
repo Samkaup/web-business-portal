@@ -43,7 +43,7 @@ export const getTable = async <T extends RowName>({
   /* eslint-disable */
   if (sorting)
     query = query.order(sorting.column as string & keyof Row<T>, {
-      ascending: sorting.options.ascending,
+      ascending: sorting.options.ascending
     });
   /* eslint-enable */
 
