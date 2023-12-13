@@ -89,7 +89,9 @@ export default function Navigation() {
                             <span className="sr-only">Open user menu</span>
                             <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white ">
                               <span className="font-medium leading-none text-company-950">
-                                {isSuccess ? getInitals(data.full_name) : ''}
+                                {isSuccess
+                                  ? getInitals(data.profile.full_name)
+                                  : ''}
                               </span>
                             </span>
                           </Menu.Button>
@@ -184,13 +186,13 @@ export default function Navigation() {
                     <div className="flex-shrink-0">
                       <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white ">
                         <span className="font-medium leading-none text-company-950">
-                          {isSuccess ? getInitals(data.full_name) : ''}
+                          {isSuccess ? getInitals(data.profile.full_name) : ''}
                         </span>
                       </span>
                     </div>
                     <div className="ml-3">
                       <div className="text-base font-medium text-white">
-                        {isSuccess ? data?.full_name : ''}
+                        {isSuccess && data.profile.full_name}
                       </div>
                     </div>
                     <button

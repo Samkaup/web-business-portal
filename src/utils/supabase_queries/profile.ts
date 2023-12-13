@@ -1,9 +1,18 @@
 import { AppSupabaseClient, TableRow } from '@/types';
+import { User } from '@supabase/auth-helpers-nextjs';
+
+export type UserProfile = {
+  user: User;
+  profile: TableRow<'profile'>;
+};
 
 export const getProfile = async (
   supabase: AppSupabaseClient
-): Promise<TableRow<'profile'>> => {
-  const { data: userData, error: getUserError } = await supabase.auth.getUser();
+): Promise<UserProfile> => {
+  const {
+    data: { user },
+    error: getUserError,
+  } = await supabase.auth.getUser();
 
   if (getUserError) {
     console.log(getUserError);
@@ -13,7 +22,7 @@ export const getProfile = async (
   const { data: profileData, error } = await supabase
     .from('profile')
     .select('*')
-    .eq('id', userData.user?.id)
+    .eq('id', user?.id)
     .single();
 
   if (error) {
@@ -21,5 +30,8 @@ export const getProfile = async (
     throw error;
   }
 
-  return profileData;
+  return {
+    profile: profileData,
+    user: user,
+  };
 };
