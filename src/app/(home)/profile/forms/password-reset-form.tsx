@@ -41,7 +41,7 @@ const resetPassSchema = z
 
 type ProfileFormValues = z.infer<typeof resetPassSchema>;
 
-export function ProfileForm() {
+export function PassResetForm() {
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(resetPassSchema),
     mode: 'onChange',

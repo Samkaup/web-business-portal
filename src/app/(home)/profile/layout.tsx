@@ -17,6 +17,10 @@ const sidebarNavItems = [
     title: 'Tilkynningar',
     href: '/profile/notifications',
   },
+  {
+    title: 'Fyrirtæki',
+    href: '/profile/companies',
+  },
 ];
 
 interface SettingsLayoutProps {
