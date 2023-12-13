@@ -5,22 +5,22 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Forms',
-  description: 'Advanced form example using react-hook-form and Zod.',
+  description: 'Advanced form example using react-hook-form and Zod.'
 };
 
 const sidebarNavItems = [
   {
     title: 'Prófíllinn minn',
-    href: '/profile',
+    href: '/profile'
   },
   {
     title: 'Tilkynningar',
-    href: '/profile/notifications',
+    href: '/profile/notifications'
   },
   {
     title: 'Fyrirtæki',
-    href: '/profile/companies',
-  },
+    href: '/profile/companies'
+  }
 ];
 
 interface SettingsLayoutProps {
