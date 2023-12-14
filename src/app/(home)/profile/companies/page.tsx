@@ -1,6 +1,14 @@
-import { Separator } from '@/components/Shadcn/ui/separator';
+'use client';
 
-export default async function Notifications() {
+import { Separator } from '@/components/Shadcn/ui/separator';
+import { Context } from '@/utils/context-store';
+import { useCompanies } from '@/utils/react_query_hooks/company';
+import { useContext } from 'react';
+
+export default async function Companies() {
+  const { company, setCompany } = useContext(Context);
+  const { data, isSuccess } = useCompanies();
+
   return (
     <div className="space-y-6">
       <div>

@@ -14,7 +14,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
+  FormMessage
 } from '@/components/Shadcn/ui/form';
 import { Input } from '@/components/Shadcn/ui/input';
 
@@ -22,21 +22,21 @@ const resetPassSchema = z
   .object({
     password: z
       .string({
-        required_error: 'Vantar Lykilorð',
+        required_error: 'Vantar Lykilorð'
       })
       .min(6, {
-        message: 'Lykilorð má ekki vera styttra en 6 stafir',
+        message: 'Lykilorð má ekki vera styttra en 6 stafir'
       })
       .max(72, {
-        message: 'Lykilorð má ekki vera lengra en 72 stafir',
+        message: 'Lykilorð má ekki vera lengra en 72 stafir'
       }),
     confirmPassword: z.string({
-      required_error: 'Vantar Lykilorð Aftur',
-    }),
+      required_error: 'Vantar Lykilorð Aftur'
+    })
   })
   .refine((data) => data.password === data.confirmPassword, {
     path: ['confirmPassword'],
-    message: 'Lykilorðin passa ekki saman',
+    message: 'Lykilorðin passa ekki saman'
   });
 
 type ProfileFormValues = z.infer<typeof resetPassSchema>;
@@ -44,12 +44,12 @@ type ProfileFormValues = z.infer<typeof resetPassSchema>;
 export function PassResetForm() {
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(resetPassSchema),
-    mode: 'onChange',
+    mode: 'onChange'
   });
 
   const onSubmit = async (data: ProfileFormValues) => {
     const { error } = await supabaseClient.auth.updateUser({
-      password: data.password,
+      password: data.password
     });
 
     if (error) {
@@ -70,9 +70,9 @@ export function PassResetForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Lykilorð</FormLabel>
+              <FormLabel>Breyta Lykilorð</FormLabel>
               <FormControl>
-                <Input {...field} type="password" />
+                <Input {...field} placeholder="Lykilorð" type="password" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -83,15 +83,20 @@ export function PassResetForm() {
           name="confirmPassword"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Lykilorð Aftur</FormLabel>
               <FormControl>
-                <Input {...field} type="password" />
+                <Input
+                  {...field}
+                  placeholder="Lykilorð Aftur"
+                  type="password"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">Uppfæra lykilorð</Button>
+        <Button type="submit" disabled={!form.formState.isValid}>
+          Uppfæra
+        </Button>
       </form>
     </Form>
   );

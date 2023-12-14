@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 import supabaseClient from '@/utils/supabase-browser';
-import { Button } from '@/components/Shadcn/ui/button';
 import {
   Form,
   FormControl,
@@ -13,43 +12,61 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
+  FormMessage
 } from '@/components/Shadcn/ui/form';
 import { Input } from '@/components/Shadcn/ui/input';
 import toast from 'react-hot-toast';
+import { getURL } from '@/lib/utils';
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle
+} from '@/components/Shadcn/ui/alert';
+import { Terminal } from 'lucide-react';
+import { useGetProfile } from '@/utils/react_query_hooks/profile';
+import { useQueryClient } from '@tanstack/react-query';
+import { useEffect } from 'react';
+import Button from '@/components/ui/Button/Button';
 
 const formSchema = z.object({
-  email: z
-    .string()
-    .min(1, { message: 'Vantar netfang.' })
-    .email({ message: 'Netfang ekki á réttu formi.' }),
+  email: z.string().email({ message: 'Netfang ekki á réttu formi.' })
 });
 
 type EmailFormSchema = z.infer<typeof formSchema>;
 
-type Props = {
-  current_email: string;
-};
+export function EmailResetForm() {
+  const queryClient = useQueryClient();
+  const { data: userProfile, isSuccess } = useGetProfile();
 
-export function EmailResetForm({ current_email }: Props) {
   const form = useForm<EmailFormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: '',
-    },
+      email: ''
+    }
   });
 
+  useEffect(() => {
+    if (isSuccess) {
+      form.reset({
+        email: userProfile.user.email
+      });
+    }
+  }, [userProfile]);
+
   const onSubmit = async (values: EmailFormSchema) => {
-    const { error } = await supabaseClient.auth.updateUser({
-      email: values.email,
-    });
+    const { error } = await supabaseClient.auth.updateUser(
+      {
+        email: values.email
+      },
+      { emailRedirectTo: `${getURL()}auth/login` }
+    );
 
     if (error) {
       toast.error('Ekki var hægt að uppfæra netfangið');
       console.error(error);
       return;
     }
-
+    queryClient.invalidateQueries({ queryKey: ['profile'] });
     toast.success('Netfang uppfært.');
   };
 
@@ -61,11 +78,18 @@ export function EmailResetForm({ current_email }: Props) {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Netfang</FormLabel>
+              <FormLabel>Breyta Netfang</FormLabel>
               <FormControl>
                 <div className="flex w-full items-center space-x-2">
-                  <Input type="email" placeholder={current_email} {...field} />
-                  <Button type="submit">Uppfæra</Button>
+                  <Input {...field} type="email" placeholder="Netfang" />
+                  <Button
+                    type="submit"
+                    disabled={
+                      form.getValues().email === userProfile?.user?.email
+                    }
+                  >
+                    Uppfæra
+                  </Button>
                 </div>
               </FormControl>
               <FormDescription>
@@ -76,6 +100,16 @@ export function EmailResetForm({ current_email }: Props) {
           )}
         />
       </form>
+      {userProfile?.user?.new_email && (
+        <Alert variant="default">
+          <Terminal className="h-4 w-4" />
+          <AlertTitle>Hey!</AlertTitle>
+          <AlertDescription>
+            Tölvupóstur hefur verið sendur á netfangið{' '}
+            {userProfile.user.new_email} til að staðfesta.
+          </AlertDescription>
+        </Alert>
+      )}
     </Form>
   );
 }
