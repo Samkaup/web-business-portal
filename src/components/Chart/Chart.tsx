@@ -4,10 +4,10 @@ import { formatCurrency } from '@/utils/currency/currency';
 import {
   Bar,
   BarChart,
-  LabelList,
   ResponsiveContainer,
   Tooltip,
   XAxis,
+  Rectangle,
   YAxis
 } from 'recharts';
 type Data = {
@@ -19,7 +19,7 @@ type Props = {
 };
 export function Chart({ data }: Props) {
   return (
-    <ResponsiveContainer width="100%" height={350} className="pt-4">
+    <ResponsiveContainer width="100%" height={450} className="pt-4">
       <BarChart
         data={data}
         margin={{
@@ -42,9 +42,12 @@ export function Chart({ data }: Props) {
           axisLine={true}
           tickFormatter={(value) => `${formatCurrency(value)}`}
         />
-        <Bar dataKey="total" fill="rgba(33, 33, 33, 0.5)" radius={[4, 4, 0, 0]}>
-          <LabelList dataKey="name" content={<p>Hello</p>} />
-        </Bar>
+        <Bar
+          dataKey="total"
+          fill="rgba(33, 33, 33, 0.5)"
+          radius={[4, 4, 0, 0]}
+          activeBar={<Rectangle fill="blue" stroke="pink" />}
+        ></Bar>
         <Tooltip
           formatter={(value) =>
             Number(value) <= 0 ? '0 kr' : formatCurrency(Number(value))
