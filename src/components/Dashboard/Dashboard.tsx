@@ -16,7 +16,7 @@ import {
 } from '../Shadcn/ui/card';
 import { useDateRange } from '@/hooks/useDateRange';
 import { Spinner } from '../ui/Spinner/Spinner';
-import { addYears, format } from 'date-fns';
+import { addYears } from 'date-fns';
 import { cn } from '@/lib/utils';
 import {
   ChartBarIcon,
@@ -24,7 +24,6 @@ import {
   DocumentIcon,
   UsersIcon
 } from '@heroicons/react/24/outline';
-import { is } from 'date-fns/locale';
 import { Chart } from '../Chart/Chart';
 import { useTransactionsByMonth } from '@/utils/react_query_hooks/transaction';
 import { LoadingBlock } from '../ui/LoadingBlock/LoadingBlock';
@@ -111,7 +110,7 @@ export default function Dashboard() {
                     ) : (
                       <>
                         <div className="text-2xl font-bold">
-                          {transactions.amount
+                          {transactions?.amount
                             ? formatCurrency(transactions.amount)
                             : '0 kr'}
                         </div>
@@ -121,8 +120,8 @@ export default function Dashboard() {
                           <p className="text-sm text-muted-foreground">
                             <span className={cn('text-company-900')}>
                               {calcDiffPercentage(
-                                transactionsPrevYear.amount,
-                                transactions.amount
+                                transactionsPrevYear?.amount,
+                                transactions?.amount
                               )}
                               %{' '}
                             </span>
@@ -146,7 +145,7 @@ export default function Dashboard() {
                     ) : (
                       <>
                         <div className="text-2xl font-bold">
-                          {transactions.count}
+                          {transactions?.count}
                         </div>
                         {isLoadingTransactionSumPrev ? (
                           <Spinner />
@@ -154,8 +153,8 @@ export default function Dashboard() {
                           <p className="text-sm text-muted-foreground">
                             <span className={cn('text-company-900')}>
                               {calcDiffPercentage(
-                                transactionsPrevYear.count,
-                                transactions.count
+                                transactionsPrevYear?.count,
+                                transactions?.count
                               )}
                               %{' '}
                             </span>
@@ -179,8 +178,8 @@ export default function Dashboard() {
                     ) : (
                       <>
                         <div className="text-2xl font-bold">
-                          {transactions.average
-                            ? formatCurrency(Math.round(transactions.average))
+                          {transactions?.average
+                            ? formatCurrency(Math.round(transactions?.average))
                             : '0 kr'}
                         </div>
                         {isLoadingTransactionSumPrev ? (
@@ -188,8 +187,8 @@ export default function Dashboard() {
                         ) : (
                           <p className="text-sm text-muted-foreground">
                             {' hæst: '}
-                            {transactions.max > 0 &&
-                              formatCurrency(transactions.max)}
+                            {transactions?.max > 0 &&
+                              formatCurrency(transactions?.max)}
                           </p>
                         )}
                       </>
@@ -235,18 +234,9 @@ export default function Dashboard() {
                 <Card className="col-span-3">
                   <CardHeader>
                     <CardTitle>Síðustu hreyfingar</CardTitle>
-                    {dateRange?.from && (
-                      <CardDescription>
-                        frá{' '}
-                        {format(
-                          new Date(dateRange?.from.toISOString()),
-                          'dd. LLL y',
-                          {
-                            locale: is
-                          }
-                        )}
-                      </CardDescription>
-                    )}
+                    <CardDescription>
+                      Reikningar, millifærslur eða greiðslur
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <RecentTransactions />

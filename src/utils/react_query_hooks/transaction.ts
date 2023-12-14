@@ -27,7 +27,7 @@ export const useRecentTransactions = (limit?: number) => {
       // Extract transactions
       return await getRecentCompanyTransactions({
         supabase: supabaseClient,
-        companyId: company.external_identifier,
+        companyId: company?.external_identifier,
         limit
       });
     }
@@ -41,7 +41,7 @@ export const useTransactionsByMonth = (year: number) => {
     // Extract transactions
     return await getTransactionsAndSumByMonth({
       supabase: supabaseClient,
-      companyId: company.external_identifier,
+      companyId: company?.external_identifier,
       year: year
     });
   });

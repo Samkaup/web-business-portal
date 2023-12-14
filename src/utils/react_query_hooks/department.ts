@@ -44,11 +44,11 @@ export const useRecentDepartments = () => {
 export const useDepartmentsWithContacts = () => {
   const { company } = useContext(Context);
   return useQuery<DepartmentWithContacts[]>({
-    queryKey: ['department_with_contacts', company.external_identifier],
+    queryKey: ['department_with_contacts', company?.external_identifier],
     queryFn: async () => {
       return await getDepartmentsWithContacts({
         supabase: supabaseClient,
-        company_id: company.external_identifier
+        company_id: company?.external_identifier
       });
     },
     refetchOnWindowFocus: true
