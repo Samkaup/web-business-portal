@@ -17,16 +17,22 @@ export const getTransactions = async (
   return transactionData;
 };
 
-export const getRecentCompanyTransactions = async (
-  supabase: AppSupabaseClient,
-  companyId: string
-): Promise<TableRow<'transaction'>[]> => {
+type RecentCompanyTransactionsProps = {
+  supabase: AppSupabaseClient;
+  companyId: string;
+  limit: number;
+};
+export const getRecentCompanyTransactions = async ({
+  supabase,
+  companyId,
+  limit
+}: RecentCompanyTransactionsProps): Promise<TableRow<'transaction'>[]> => {
   const { data, error } = await supabase
     .from('transaction')
     .select('*, department!inner (*)')
     .filter('department.company_id', 'eq', companyId)
     .order('date', { ascending: false })
-    .limit(3);
+    .limit(limit);
 
   if (error) {
     console.log(error);
@@ -34,6 +40,47 @@ export const getRecentCompanyTransactions = async (
   }
 
   return data;
+};
+
+type TransactionsByMonthProps = {
+  supabase: AppSupabaseClient;
+  companyId: string;
+  year: number;
+};
+export const getTransactionsAndSumByMonth = async ({
+  supabase,
+  companyId,
+  year
+}: TransactionsByMonthProps): Promise<{ name: string; total: number }[]> => {
+  // Fetch transactions for the specified year
+  const { data: transactions, error } = await supabase
+    .from('transaction')
+    .select('date, amount_debit, department!inner(company_id)')
+    .filter('transaction_type', 'eq', '2')
+    .filter('department.company_id', 'eq', companyId)
+    .gte('date', formatDate(new Date(`${year}-01-01`)))
+    .lte('date', formatDate(new Date(`${year}-12-31`)));
+
+  if (error) throw error;
+
+  // Group and sum transactions by month
+  const monthlySums: { [key: string]: number } = {};
+  for (let month = 1; month <= 12; month++) {
+    const monthKey = `${year}-${month.toString().padStart(2, '0')}`; // YYYY-MM format
+    monthlySums[monthKey] = 0;
+  }
+  // Sum transactions by month
+  transactions?.forEach((transaction) => {
+    const month = transaction.date.slice(0, 7); // Get YYYY-MM format
+    monthlySums[month] = (monthlySums[month] || 0) + transaction.amount_debit;
+  });
+
+  // Convert to array of objects
+  return Object.entries(monthlySums).map(([month, total]) => {
+    const monthDate = new Date(`${month}-01`); // Date object for the first day of the month
+    const monthName = monthDate.toLocaleString('default', { month: 'short' });
+    return { name: `${monthName}`, total };
+  });
 };
 
 export const getTransactionCount = async (
@@ -61,7 +108,13 @@ export const getTransactionSumByDate = async ({
   companyId,
   dateFrom,
   dateTo
-}: TransactionSumByDateProps): Promise<number> => {
+}: TransactionSumByDateProps): Promise<{
+  amount: number;
+  count: number;
+  average: number;
+  min: number;
+  max: number;
+}> => {
   let query = supabase.from('transaction').select(
     ` date,
       store_number,
@@ -77,26 +130,31 @@ export const getTransactionSumByDate = async ({
   const end: Date | null = dateTo;
   query = start ? query.filter('date', 'gte', formatDate(start)) : query;
   query = end ? query.filter('date', 'lte', formatDate(end)) : query;
+  query = query.filter('transaction_type', 'eq', 2);
   query = companyId
     ? query.filter('department.company_id', 'eq', companyId)
     : query;
-
   const { data, error } = await query;
-
   let amount = 0;
+  let min = 0;
+  let max = 0;
   data.forEach((item) => {
     amount += item.amount_debit;
+    if (item.amount_debit <= min) min = item.amount_debit;
+    if (item.amount_debit >= max) max = item.amount_debit;
   });
 
   if (error) {
     console.log(error.message);
     throw error;
   }
+  const count = data.length;
+  const average = count > 0 ? amount / count : 0;
 
-  return amount;
+  return { amount, count, average, min, max };
 };
 
-export type Payload = {
+export type TransactionTableProps = {
   supabaseClient: AppSupabaseClient;
   range?: RangeProps;
   sorting?: SortingProps;
@@ -116,7 +174,7 @@ export const getTransactionsTable = async ({
   dateRange,
   filters,
   companyId
-}: Payload) => {
+}: TransactionTableProps) => {
   let query = supabaseClient.from('transaction').select(
     ` date,
       store_number,
@@ -178,7 +236,7 @@ export const getAllTransactions = async ({
   dateRange,
   filters,
   companyId
-}: Payload) => {
+}: TransactionTableProps) => {
   let allTransactions: any[] = [];
   let pageIndex = 0;
   const pageSize = 1000;

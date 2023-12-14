@@ -1,149 +1,261 @@
 'use client';
-import classNames from '@/utils/style/classNames';
-import RecentTransactions from './RecentTransactions';
-import Departments from './Departments';
-import { useEffect, useState } from 'react';
-import { useTransactionSumByDate } from '@/utils/react_query_hooks/stats';
-import {
-  getDateDaysAgo,
-  getDateNow,
-  getEndOfMonth,
-  getEndOfYear,
-  getStartOfYear,
-  getStartOfMonth
-} from '@/utils/dateUtils';
-import { formatCurrency } from '@/utils/currency/currency';
 
-const secondaryNavigation = [
-  { name: 'Síðustu 7 dagar', id: 'last_7_days', href: '#' },
-  { name: 'Þessi mánuður', id: 'current_month', href: '#' },
-  { name: 'Þetta ár', id: 'this_year', href: '#' }
-];
-const stats = [
-  {
-    name: 'Upphæð',
-    id: 'amount',
-    value: '223.329 kr',
-    changeType: 'positive'
-  },
-  {
-    name: 'Staða á heimild',
-    id: 'limit_status',
-    value: '-14.002 kr',
-    change: '',
-    changeType: 'positive'
-  },
-  {
-    name: 'Heimild á fyrirtæki',
-    id: 'total_limit',
-    value: '500.000 kr',
-    change: '',
-    changeType: 'positive'
-  },
-  {
-    name: 'Fjöldi deilda',
-    id: 'num_of_departments',
-    value: '24',
-    change: '',
-    changeType: 'positive'
-  }
-];
+import Image from 'next/image';
+import RecentTransactions from './RecentTransactions';
+import { useTransactionSumByDate } from '@/utils/react_query_hooks/stats';
+import { useDepartmentsWithContacts } from '@/utils/react_query_hooks/department';
+import { formatCurrency } from '@/utils/currency/currency';
+import { CalendarDateRangePicker } from '../DateRangePicker/DateRangePicker';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../Shadcn/ui/tabs';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '../Shadcn/ui/card';
+import { useDateRange } from '@/hooks/useDateRange';
+import { Spinner } from '../ui/Spinner/Spinner';
+import { addYears, format } from 'date-fns';
+import { cn } from '@/lib/utils';
+import {
+  ChartBarIcon,
+  CreditCardIcon,
+  DocumentIcon,
+  UsersIcon
+} from '@heroicons/react/24/outline';
+import { is } from 'date-fns/locale';
+import { Chart } from '../Chart/Chart';
+import { useTransactionsByMonth } from '@/utils/react_query_hooks/transaction';
+import { LoadingBlock } from '../ui/LoadingBlock/LoadingBlock';
 
 export default function Dashboard() {
-  const [dateFilter, setDateFilter] = useState('current_month');
-  const [dateFrom, setDateFrom] = useState(getStartOfMonth);
-  const [dateTo, setDateTo] = useState(getEndOfMonth);
-
-  useEffect(() => {
-    console.log(dateFilter);
-    switch (dateFilter) {
-      case 'current_month':
-        setDateFrom(getStartOfMonth());
-        setDateTo(getEndOfMonth());
-        break;
-      case 'this_year':
-        setDateFrom(getStartOfYear());
-        setDateTo(getEndOfYear());
-        break;
-      case 'last_7_days':
-        setDateFrom(getDateDaysAgo(7));
-        setDateTo(getDateNow());
-        break;
+  const { data: dateRange } = useDateRange({ queryKey: 'dateRangeDashboard' });
+  const calcDiffPercentage = (prev: number, curr: number) => {
+    // Check if the previous value is 0 or undefined
+    if (!prev || prev === 0) {
+      // If prev is 0 or undefined, a meaningful percentage change can't be calculated
+      return '100';
     }
-  }, [dateFilter]);
 
-  const { data: transactionSum } = useTransactionSumByDate({
-    dateFrom,
-    dateTo
-  });
+    // Calculate the percentage difference
+    const difference = ((curr - prev) / prev) * 100;
+
+    // Return the difference rounded to two decimal places
+    return difference.toFixed(0);
+  };
+  const { data: transactionsByMonth, isLoading: isLoadingTransactionsByMonth } =
+    useTransactionsByMonth(2023);
+
+  const { data: departmentWithContacts, isLoading: isLoadingDepContacts } =
+    useDepartmentsWithContacts();
+
+  const { data: transactions, isLoading: isLoadingTransactionSum } =
+    useTransactionSumByDate({
+      dateFrom: dateRange?.from,
+      dateTo: dateRange?.to
+    });
+
+  const { data: transactionsPrevYear, isLoading: isLoadingTransactionSumPrev } =
+    useTransactionSumByDate({
+      dateFrom: addYears(dateRange?.from, -1),
+      dateTo: addYears(dateRange?.from, -1)
+    });
 
   return (
     <>
-      <div className="relative isolate overflow-hidden">
-        {/* Secondary navigation */}
-        <header className="pb-4 pt-6 sm:pb-6">
-          <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-6 px-4 sm:flex-nowrap sm:px-6 lg:px-8">
-            <h1 className="text-base font-semibold leading-7 text-gray-900">
-              Staðan
-            </h1>
-            <div className="order-last flex w-full gap-x-8 text-sm font-semibold leading-6 sm:order-none sm:w-auto sm:border-l sm:border-gray-200 sm:pl-6 sm:leading-7">
-              {secondaryNavigation.map((item) => (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  onClick={() => setDateFilter(item.id)}
-                  className={
-                    item.id === dateFilter
-                      ? 'text-company-800'
-                      : 'text-gray-700'
-                  }
-                >
-                  {item.name}
-                </a>
-              ))}
+      <div className="md:hidden">
+        <Image
+          src="/examples/dashboard-light.png"
+          width={1280}
+          height={866}
+          alt="Dashboard"
+          className="block dark:hidden"
+        />
+        <Image
+          src="/examples/dashboard-dark.png"
+          width={1280}
+          height={866}
+          alt="Dashboard"
+          className="hidden dark:block"
+        />
+      </div>
+      <div className="hidden flex-col md:flex">
+        <div className="flex-1 space-y-4 p-8 pt-6">
+          <div className="flex items-center justify-between space-y-2">
+            <h2 className="text-3xl font-bold tracking-tight text-company">
+              Mælaborð
+            </h2>
+            <div className="flex items-center space-x-2">
+              <CalendarDateRangePicker queryKey="dateRangeDashboard" />
             </div>
           </div>
-        </header>
-
-        {/* Stats */}
-        <div className="border-b border-b-gray-900/10 lg:border-t lg:border-t-gray-900/5">
-          <dl className="mx-auto grid max-w-7xl grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 lg:px-2 xl:px-0">
-            {stats.map((stat, statIdx) => (
-              <div
-                key={stat.name}
-                className={classNames(
-                  statIdx % 2 === 1
-                    ? 'sm:border-l'
-                    : statIdx === 2
-                    ? 'lg:border-l'
-                    : '',
-                  'flex items-baseline flex-wrap justify-between gap-y-2 gap-x-4 border-t border-gray-900/5 px-4 py-10 sm:px-6 lg:border-t-0 xl:px-8'
-                )}
-              >
-                <dt className="text-sm font-medium leading-6 text-gray-500">
-                  {stat.name}
-                </dt>
-                <dd
-                  className={classNames('text-gray-700', 'text-xs font-medium')}
-                >
-                  {stat.change}
-                </dd>
-                <dd className="w-full flex-none text-3xl font-medium leading-10 tracking-tight text-gray-900">
-                  {stat.id === 'amount' ? (
-                    <>{formatCurrency(transactionSum)}</>
-                  ) : (
-                    <>{stat.value}</>
-                  )}
-                </dd>
+          <Tabs defaultValue="overview" className="space-y-4">
+            <TabsList>
+              <TabsTrigger value="overview">Yfirlit</TabsTrigger>
+              <TabsTrigger value="analytics">Reikningar</TabsTrigger>
+              <TabsTrigger value="notifications">Tilkynningar</TabsTrigger>
+            </TabsList>
+            <TabsContent value="overview" className="space-y-4">
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">
+                      Reikningsviðskipti
+                    </CardTitle>
+                    <CreditCardIcon className="text-gray-600 w-5 h-5"></CreditCardIcon>
+                  </CardHeader>
+                  <CardContent>
+                    {isLoadingTransactionSum ? (
+                      <Spinner />
+                    ) : (
+                      <>
+                        <div className="text-2xl font-bold">
+                          {transactions.amount
+                            ? formatCurrency(transactions.amount)
+                            : '0 kr'}
+                        </div>
+                        {isLoadingTransactionSumPrev ? (
+                          <Spinner />
+                        ) : (
+                          <p className="text-sm text-muted-foreground">
+                            <span className={cn('text-company-900')}>
+                              {calcDiffPercentage(
+                                transactionsPrevYear.amount,
+                                transactions.amount
+                              )}
+                              %{' '}
+                            </span>
+                            frá síðasta ári
+                          </p>
+                        )}
+                      </>
+                    )}
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">
+                      Fjöldi reikninga
+                    </CardTitle>
+                    <DocumentIcon className="w-5 h-5 text-gray-600"></DocumentIcon>
+                  </CardHeader>
+                  <CardContent>
+                    {isLoadingTransactionSum ? (
+                      <Spinner />
+                    ) : (
+                      <>
+                        <div className="text-2xl font-bold">
+                          {transactions.count}
+                        </div>
+                        {isLoadingTransactionSumPrev ? (
+                          <Spinner />
+                        ) : (
+                          <p className="text-sm text-muted-foreground">
+                            <span className={cn('text-company-900')}>
+                              {calcDiffPercentage(
+                                transactionsPrevYear.count,
+                                transactions.count
+                              )}
+                              %{' '}
+                            </span>
+                            frá síðasta ári
+                          </p>
+                        )}
+                      </>
+                    )}
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">
+                      Meðalupphæð
+                    </CardTitle>
+                    <ChartBarIcon className="w-5 h-5 text-gray-600"></ChartBarIcon>
+                  </CardHeader>
+                  <CardContent>
+                    {isLoadingTransactionSum ? (
+                      <Spinner />
+                    ) : (
+                      <>
+                        <div className="text-2xl font-bold">
+                          {transactions.average
+                            ? formatCurrency(Math.round(transactions.average))
+                            : '0 kr'}
+                        </div>
+                        {isLoadingTransactionSumPrev ? (
+                          <Spinner />
+                        ) : (
+                          <p className="text-sm text-muted-foreground">
+                            {' hæst: '}
+                            {transactions.max > 0 &&
+                              formatCurrency(transactions.max)}
+                          </p>
+                        )}
+                      </>
+                    )}
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">
+                      Úttektaraðilar
+                    </CardTitle>
+                    <UsersIcon className="w-5 h-5 text-gray-600"></UsersIcon>
+                  </CardHeader>
+                  <CardContent>
+                    {isLoadingDepContacts ? (
+                      <Spinner></Spinner>
+                    ) : (
+                      <>
+                        <div className="text-2xl font-bold">
+                          {departmentWithContacts?.length}
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          +201 since last hour
+                        </p>
+                      </>
+                    )}
+                  </CardContent>
+                </Card>
               </div>
-            ))}
-          </dl>
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+                <Card className="col-span-4">
+                  <CardHeader>
+                    <CardTitle>Viðskipti á árinu</CardTitle>
+                  </CardHeader>
+                  <CardContent className="pl-2">
+                    {isLoadingTransactionsByMonth ? (
+                      <LoadingBlock></LoadingBlock>
+                    ) : (
+                      <Chart data={transactionsByMonth} />
+                    )}
+                  </CardContent>
+                </Card>
+                <Card className="col-span-3">
+                  <CardHeader>
+                    <CardTitle>Síðustu hreyfingar</CardTitle>
+                    {dateRange?.from && (
+                      <CardDescription>
+                        frá{' '}
+                        {format(
+                          new Date(dateRange?.from.toISOString()),
+                          'dd. LLL y',
+                          {
+                            locale: is
+                          }
+                        )}
+                      </CardDescription>
+                    )}
+                  </CardHeader>
+                  <CardContent>
+                    <RecentTransactions />
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+          </Tabs>
         </div>
-      </div>
-
-      <div className="space-y-16 py-16 xl:space-y-20">
-        <RecentTransactions />
-        <Departments />
       </div>
     </>
   );

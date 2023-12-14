@@ -12,7 +12,13 @@ type Props = {
 
 export const useTransactionSumByDate = ({ dateFrom, dateTo }: Props) => {
   const { company } = useContext(Context);
-  return useQuery<number>({
+  return useQuery<{
+    amount: number;
+    count: number;
+    average: number;
+    min: number;
+    max: number;
+  }>({
     queryKey: ['transaction_sum_by_date', company, dateFrom, dateTo],
     queryFn: async () => {
       return await getTransactionSumByDate({
