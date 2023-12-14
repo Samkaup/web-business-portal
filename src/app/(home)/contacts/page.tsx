@@ -13,9 +13,7 @@ import DepartmentCreate from '@/components/DepartmentForm/Create';
 
 export default function Contacts() {
   const { company, slideOver } = useContext(Context);
-  const { data: departments, isSuccess } = useDepartmentsWithContacts(
-    company?.external_identifier
-  );
+  const { data: departments, isSuccess } = useDepartmentsWithContacts();
 
   return (
     <>
