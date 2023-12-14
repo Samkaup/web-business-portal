@@ -27,6 +27,7 @@ import {
 import { Chart } from '../Chart/Chart';
 import { useTransactionsByMonth } from '@/utils/react_query_hooks/transaction';
 import { LoadingBlock } from '../ui/LoadingBlock/LoadingBlock';
+import { DepartmentWithContacts } from '@/utils/supabase_queries/department';
 
 export default function Dashboard() {
   const { data: dateRange } = useDateRange({ queryKey: 'dateRangeDashboard' });
@@ -61,6 +62,20 @@ export default function Dashboard() {
       dateTo: addYears(dateRange?.from, -1)
     });
 
+  const getContactsNumForDepartments = (
+    departments: DepartmentWithContacts[]
+  ) => {
+    let totalContacts = 0;
+
+    departments.forEach((department) => {
+      if (department.contact && Array.isArray(department.contact)) {
+        totalContacts += department.contact.length;
+      }
+    });
+
+    return totalContacts;
+  };
+
   return (
     <>
       <div className="md:hidden">
@@ -92,7 +107,7 @@ export default function Dashboard() {
           <Tabs defaultValue="overview" className="space-y-4">
             <TabsList>
               <TabsTrigger value="overview">Yfirlit</TabsTrigger>
-              <TabsTrigger value="analytics">Reikningar</TabsTrigger>
+              <TabsTrigger value="reikningar">Reikningar</TabsTrigger>
               <TabsTrigger value="notifications">Tilkynningar</TabsTrigger>
             </TabsList>
             <TabsContent value="overview" className="space-y-4">
@@ -151,7 +166,7 @@ export default function Dashboard() {
                           <Spinner />
                         ) : (
                           <p className="text-sm text-muted-foreground">
-                            <span className={cn('text-company-900')}>
+                            <span className={cn('text-company-900 ')}>
                               {calcDiffPercentage(
                                 transactionsPrevYear?.count,
                                 transactions?.count
@@ -198,7 +213,7 @@ export default function Dashboard() {
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">
-                      Úttektaraðilar
+                      Deildir
                     </CardTitle>
                     <UsersIcon className="w-5 h-5 text-gray-600"></UsersIcon>
                   </CardHeader>
@@ -211,7 +226,12 @@ export default function Dashboard() {
                           {departmentWithContacts?.length}
                         </div>
                         <p className="text-xs text-muted-foreground">
-                          +201 since last hour
+                          <span className="text-company-900">
+                            {getContactsNumForDepartments(
+                              departmentWithContacts
+                            )}{' '}
+                          </span>
+                          úttektaraðilar skráðir
                         </p>
                       </>
                     )}
@@ -243,6 +263,18 @@ export default function Dashboard() {
                   </CardContent>
                 </Card>
               </div>
+            </TabsContent>
+            <TabsContent value="reikningar" className="space-y-4">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-6">
+                  <CardTitle className="text-xl font-medium">
+                    Reikningar
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <RecentTransactions limit={40}></RecentTransactions>
+                </CardContent>
+              </Card>
             </TabsContent>
           </Tabs>
         </div>

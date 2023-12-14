@@ -4,8 +4,11 @@ import { useRecentTransactions } from '@/utils/react_query_hooks/transaction';
 import { format } from 'date-fns';
 import { is } from 'date-fns/locale';
 
-export default function () {
-  const { data: transactions, isLoading } = useRecentTransactions(6);
+type Props = {
+  limit?: number;
+};
+export default function ({ limit = 6 }: Props) {
+  const { data: transactions, isLoading } = useRecentTransactions(limit);
   return (
     <div className="space-y-8">
       {isLoading ? (

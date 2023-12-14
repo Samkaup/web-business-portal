@@ -55,7 +55,6 @@ export const getDepartmentsWithContacts = async ({
     console.log(error);
     throw error;
   }
-
   return departments;
 };
 
