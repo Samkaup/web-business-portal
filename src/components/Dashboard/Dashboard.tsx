@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import RecentTransactions from './RecentTransactions';
 import { useTransactionSumByDate } from '@/utils/react_query_hooks/stats';
 import { useDepartmentsWithContacts } from '@/utils/react_query_hooks/department';
@@ -78,29 +77,13 @@ export default function Dashboard() {
 
   return (
     <>
-      <div className="md:hidden">
-        <Image
-          src="/examples/dashboard-light.png"
-          width={1280}
-          height={866}
-          alt="Dashboard"
-          className="block dark:hidden"
-        />
-        <Image
-          src="/examples/dashboard-dark.png"
-          width={1280}
-          height={866}
-          alt="Dashboard"
-          className="hidden dark:block"
-        />
-      </div>
-      <div className="hidden flex-col md:flex">
-        <div className="flex-1 space-y-4 p-8 pt-6">
-          <div className="flex items-center justify-between space-y-2">
+      <div className="flex-col md:flex">
+        <div className="flex-1 space-y-4 lg:p-8 p-4 lg:pt-6">
+          <div className="flex items-center justify-between space-y-2 flex-wrap">
             <h2 className="text-3xl font-bold tracking-tight text-company">
               Mælaborð
             </h2>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 ">
               <CalendarDateRangePicker queryKey="dateRangeDashboard" />
             </div>
           </div>

@@ -20,7 +20,12 @@ type Props = {
 export function Chart({ data }: Props) {
   return (
     <ResponsiveContainer width="100%" height={350} className="pt-4">
-      <BarChart data={data}>
+      <BarChart
+        data={data}
+        margin={{
+          top: 20
+        }}
+      >
         <XAxis
           dataKey="name"
           stroke="#2c2c2c"
@@ -31,7 +36,9 @@ export function Chart({ data }: Props) {
         <YAxis
           stroke="#888888"
           fontSize={12}
+          allowDataOverflow={true}
           tickLine={true}
+          dx={-5}
           axisLine={true}
           tickFormatter={(value) => `${formatCurrency(value)}`}
         />
