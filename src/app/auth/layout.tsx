@@ -6,16 +6,17 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="relative h-screen">
+    <div className="min-h-screen flex items-center justify-center ">
       <Image
         src="/images/Samkaup_litrík_dama.jpg"
         alt="samkaup background"
         fill
-        className="absolute inset-0 object-cover"
+        className="absolute inset-0 object-cover "
         priority
       />
-      <div className="relative z-10 flex flex-col items-center justify-center h-full bg-company-900/50 backdrop-brightness-50">
-        {children}
+      <div className="absolute inset-0 bg-black/50 backdrop-brightness-75 z-10"></div>
+      <div className="relative z-10">
+        <div className="flex flex-col items-center p-6 ">{children}</div>
       </div>
     </div>
   );

@@ -57,14 +57,17 @@ export default function Login() {
 
   return (
     <>
-      <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24 bg-white rounded-lg">
-        <div className="mx-auto w-full max-w-sm lg:w-96 ">
+      <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24 bg-white rounded-lg shadow-lg">
+        <div className="mx-auto w-full max-w-sm lg:w-96">
           <div className="flex justify-center">
             <Logo width={250} variant="blue"></Logo>
           </div>
-          <h2 className="mt-8 text-2xl font-bold leading-9 tracking-tight text-gray-900 text-center">
-            Innskráning
+          <h2 className="mt-8 text-2xl font-bold leading-9 tracking-tight text-company text-center">
+            Mínar síður | Innskráning
           </h2>
+          <p className="text-sm text-company text-muted-foreground w-full text-center">
+            Kerfið er í prófun. Hafið samband í síma 421-5400 fyrir aðstoð
+          </p>
           <div className="mt-10">
             <form action="#" method="POST" className="space-y-6">
               <TextInput
