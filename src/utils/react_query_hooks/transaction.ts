@@ -26,7 +26,7 @@ export const useRecentTransactions = () => {
       // Extract transactions
       return await getRecentCompanyTransactions(
         supabaseClient,
-        company.external_identifier
+        company?.external_identifier
       );
     }
   );

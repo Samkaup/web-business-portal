@@ -17,7 +17,7 @@ export const useTransactionSumByDate = ({ dateFrom, dateTo }: Props) => {
     queryFn: async () => {
       return await getTransactionSumByDate({
         supabase: supabaseClient,
-        companyId: company.external_identifier,
+        companyId: company?.external_identifier,
         dateFrom: dateFrom,
         dateTo: dateTo
       });
