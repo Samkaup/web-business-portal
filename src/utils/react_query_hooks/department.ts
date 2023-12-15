@@ -19,7 +19,7 @@ export const useDepartments = () => {
     async () => {
       return getDepartmentsByCompany(
         supabaseClient,
-        company.external_identifier
+        company?.external_identifier
       );
     },
     { keepPreviousData: true }
@@ -34,7 +34,7 @@ export const useRecentDepartments = () => {
     async () => {
       return getRecentDepartmentsByCompany(
         supabaseClient,
-        company.external_identifier
+        company?.external_identifier
       );
     },
     { keepPreviousData: true }

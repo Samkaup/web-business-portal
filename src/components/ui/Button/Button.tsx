@@ -52,7 +52,7 @@ export default function ButtonCustom({
   if (className) baseClassName = baseClassName + ' ' + className;
 
   return (
-    <Button className={baseClassName} {...props} disabled={isLoading}>
+    <Button className={baseClassName} disabled={isLoading} {...props}>
       {isLoading ? (
         <>
           <Spinner /> <span className="ml-2">Augnablik..</span>

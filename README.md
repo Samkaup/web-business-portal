@@ -1,18 +1,17 @@
-# B2B Portal 
-Samkaup's very own business portal for customers that are in business with Samkaup. They are able to fetch invoices, add related parties to their accounting structure and even check their account balance. 
+# B2B Portal
 
-
+Samkaup's very own business portal for customers that are in business with Samkaup. They are able to fetch invoices, add related parties to their accounting structure and even check their account balance.
 
 ### Development
 
 1. Clone the repo
 2. Install dependencies with `yarn`
 3. Login to your supabase instance
-5. Link Supabase to your project using `yarn supabase link --project-ref <project-ref>`. You can get your project ref from the Supabase Project dashboard (Project Settings -> API)
-6. Duplicate `.env.local.example` and rename it to `.env.local` and add the Project ref, Supabase URL and anon key.
-7. Push the database schema to your Supabase project using `yarn supabase db push`.
-8. Generate types for your Supabase tables using `yarn generate:types:local`.
-9. Run `yarn dev` to start the development server.
+4. Link Supabase to your project using `yarn supabase link --project-ref <project-ref>`. You can get your project ref from the Supabase Project dashboard (Project Settings -> API)
+5. Duplicate `.env.local.example` and rename it to `.env.local` and add the Project ref, Supabase URL and anon key.
+6. Push the database schema to your Supabase project using `yarn supabase db push`.
+7. Generate types for your Supabase tables using `yarn generate:types:local`.
+8. Run `yarn dev` to start the development server.
 
 ## Features Nextbase
 
@@ -40,10 +39,6 @@ Samkaup's very own business portal for customers that are in business with Samka
 
 We use Vercel for deployment
 
-
 ### Troubleshooting
 
 Checkout the [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) file for common issues.
-
-
-

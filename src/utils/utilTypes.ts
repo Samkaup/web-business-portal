@@ -15,3 +15,8 @@ export type QueryDataAndCount<T> = {
   data: T[];
   rowCount: number;
 };
+
+export type PaginationProps = {
+  page?: number;
+  pageSize?: number;
+};

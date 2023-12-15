@@ -121,8 +121,8 @@ export const getTransactionSumByDate = async ({
       account_number,
       description,
       amount_debit,
-      department!inner ( 
-        company_id 
+      department!inner (
+        company_id
       )`
   );
   // Set Date Range
@@ -181,9 +181,9 @@ export const getTransactionsTable = async ({
       account_number,
       description,
       amount_debit,
-      department!inner ( 
+      department!inner (
         name,
-        company_id 
+        company_id
       )`,
     { count: 'exact' }
   );

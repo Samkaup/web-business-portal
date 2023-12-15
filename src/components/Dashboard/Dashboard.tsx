@@ -1,5 +1,4 @@
 'use client';
-
 import RecentTransactions from './RecentTransactions';
 import { useTransactionSumByDate } from '@/utils/react_query_hooks/stats';
 import { useDepartmentsWithContacts } from '@/utils/react_query_hooks/department';

@@ -41,25 +41,27 @@ const resetPassSchema = z
 
 type ProfileFormValues = z.infer<typeof resetPassSchema>;
 
-export function ProfileForm() {
+export function PassResetForm() {
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(resetPassSchema),
     mode: 'onChange'
   });
 
-  const onSubmit = async (data: ProfileFormValues) => {
-    const { error } = await supabaseClient.auth.updateUser({
-      password: data.password
-    });
+  const onSubmit = (data: ProfileFormValues) => {
+    supabaseClient.auth
+      .updateUser({
+        password: data.password
+      })
+      .then(({ error }) => {
+        if (error) {
+          toast.error('Ekki er hægt að uppfæra lykilorð');
+          console.error(error);
+          return;
+        }
 
-    if (error) {
-      toast.error('Ekki er hægt að uppfæra lykilorð');
-      console.error(error);
-      return;
-    }
-
-    form.reset({ password: '', confirmPassword: '' });
-    toast.success('Lykilorðið uppfært.');
+        form.reset({ password: '', confirmPassword: '' });
+        toast.success('Lykilorðið uppfært.');
+      });
   };
 
   return (
@@ -70,9 +72,9 @@ export function ProfileForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Lykilorð</FormLabel>
+              <FormLabel>Breyta Lykilorð</FormLabel>
               <FormControl>
-                <Input {...field} type="password" />
+                <Input {...field} placeholder="Lykilorð" type="password" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -83,15 +85,20 @@ export function ProfileForm() {
           name="confirmPassword"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Lykilorð Aftur</FormLabel>
               <FormControl>
-                <Input {...field} type="password" />
+                <Input
+                  {...field}
+                  placeholder="Lykilorð Aftur"
+                  type="password"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">Uppfæra lykilorð</Button>
+        <Button type="submit" disabled={!form.formState.isValid}>
+          Uppfæra
+        </Button>
       </form>
     </Form>
   );
