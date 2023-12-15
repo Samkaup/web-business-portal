@@ -6,7 +6,7 @@ import {
   ToastDescription,
   ToastProvider,
   ToastTitle,
-  ToastViewport,
+  ToastViewport
 } from '@/components/Shadcn/ui/toast';
 import { useToast } from '@/components/Shadcn/ui/use-toast';
 

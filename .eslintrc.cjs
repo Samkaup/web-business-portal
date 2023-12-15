@@ -9,53 +9,49 @@ module.exports = {
         'eslint:recommended',
         'plugin:@typescript-eslint/recommended',
         'plugin:@next/next/recommended',
-        'prettier',
+        'prettier'
       ],
       parser: '@typescript-eslint/parser',
       parserOptions: {
-        project: tsConfigs,
+        project: tsConfigs
       },
       plugins: ['@typescript-eslint', 'prettier'],
       rules: {
-        'prettier/prettier': 'error',
+        'prettier/prettier': 'error'
       },
       files: [
         'src/**/*.ts',
         'src/**/*.tsx',
         'emails/**/*.ts',
-        'emails/**/*.tsx',
-      ],
+        'emails/**/*.tsx'
+      ]
     },
     {
       extends: [
         'eslint:recommended',
         'plugin:@typescript-eslint/recommended',
-        'prettier',
+        'prettier'
       ],
       parser: '@typescript-eslint/parser',
       parserOptions: {
-        project: tsConfigs,
+        project: tsConfigs
       },
-      plugins: [
-        '@typescript-eslint',
-        'prettier',
-        'plugin:playwright/playwright-test',
-      ],
+      plugins: ['@typescript-eslint', 'prettier'],
       rules: {
-        'prettier/prettier': 'error',
+        'prettier/prettier': 'error'
       },
-      files: ['e2e/**/*.spec.ts'],
+      files: ['e2e/**/*.spec.ts']
     },
     {
       extends: ['eslint:recommended', 'prettier', 'esnext'],
       files: '*.mjs',
-      rules: ruleOverrides,
+      rules: ruleOverrides
     },
     {
       extends: ['prettier'],
       files: '*.js',
-      rules: ruleOverrides,
-    },
+      rules: ruleOverrides
+    }
   ],
-  root: true,
+  root: true
 };

@@ -80,6 +80,9 @@ dependencies:
   next-sitemap:
     specifier: ^4.0.9
     version: 4.2.3(next@13.5.6)
+  playwright-test@latest:
+    specifier: link:eslint-plugin-plugin:playwright/playwright-test@latest
+    version: link:eslint-plugin-plugin:playwright/playwright-test@latest
   react:
     specifier: ^18.2.0
     version: 18.2.0
