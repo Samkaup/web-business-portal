@@ -16,18 +16,14 @@ const sidebarNavItems = [
   {
     title: 'Tilkynningar',
     href: '/profile/notifications'
-  },
-  {
-    title: 'Fyrirtæki',
-    href: '/profile/companies'
   }
 ];
 
-interface SettingsLayoutProps {
+type Props = {
   children: React.ReactNode;
-}
+};
 
-export default function SettingsLayout({ children }: SettingsLayoutProps) {
+export default function SettingsLayout({ children }: Props) {
   return (
     <>
       <div className="hidden space-y-6 p-10 pb-16 md:block">

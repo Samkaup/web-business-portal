@@ -1,3 +1,4 @@
+'use client';
 import {} from '@/components/Shadcn/ui/card';
 import { Input } from '@/components/Shadcn/ui/input';
 import { useEffect, useRef, useState } from 'react';

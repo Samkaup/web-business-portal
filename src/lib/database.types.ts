@@ -162,18 +162,21 @@ export interface Database {
           created_at: string | null
           full_name: string | null
           id: string
+          notificationSettings: Json
           updated_at: string | null
         }
         Insert: {
           created_at?: string | null
           full_name?: string | null
           id: string
+          notificationSettings?: Json
           updated_at?: string | null
         }
         Update: {
           created_at?: string | null
           full_name?: string | null
           id?: string
+          notificationSettings?: Json
           updated_at?: string | null
         }
         Relationships: [

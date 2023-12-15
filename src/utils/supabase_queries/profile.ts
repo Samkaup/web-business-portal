@@ -11,7 +11,7 @@ export const getProfile = async (
 ): Promise<UserProfile> => {
   const {
     data: { user },
-    error: getUserError,
+    error: getUserError
   } = await supabase.auth.getUser();
 
   if (getUserError) {
@@ -32,6 +32,6 @@ export const getProfile = async (
 
   return {
     profile: profileData,
-    user: user,
+    user: user
   };
 };
