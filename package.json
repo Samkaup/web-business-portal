@@ -50,7 +50,6 @@
     "next": "^13.4.2",
     "next-seo": "^6.0.0",
     "next-sitemap": "^4.0.9",
-    "playwright-test@latest": "link:eslint-plugin-plugin:playwright/playwright-test@latest",
     "react": "^18.2.0",
     "react-aria": "^3.26.0",
     "react-day-picker": "^8.9.1",
