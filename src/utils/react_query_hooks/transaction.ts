@@ -4,6 +4,7 @@ import supabaseClient from '@/utils/supabase-browser';
 import {
   getRecentCompanyTransactions,
   getTransactions,
+  getTransactionsAndSumByMonth,
   getTransactionsTable
 } from '../supabase_queries/transaction';
 import { QueryDataAndCount } from '../utilTypes';
@@ -17,19 +18,33 @@ export const useTransactions = () => {
   });
 };
 
-export const useRecentTransactions = () => {
+export const useRecentTransactions = (limit?: number) => {
   const { company } = useContext(Context);
 
   return useQuery<TableRow<'transaction'>[]>(
-    ['recentTransaction', { company }],
+    ['recentTransaction', { company, limit }],
     async () => {
       // Extract transactions
-      return await getRecentCompanyTransactions(
-        supabaseClient,
-        company?.external_identifier
-      );
+      return await getRecentCompanyTransactions({
+        supabase: supabaseClient,
+        companyId: company?.external_identifier,
+        limit
+      });
     }
   );
+};
+
+export const useTransactionsByMonth = (year: number) => {
+  const { company } = useContext(Context);
+
+  return useQuery(['transactionsByMonth', { company, year }], async () => {
+    // Extract transactions
+    return await getTransactionsAndSumByMonth({
+      supabase: supabaseClient,
+      companyId: company?.external_identifier,
+      year: year
+    });
+  });
 };
 
 export type DepartmentsMap = {

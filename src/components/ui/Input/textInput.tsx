@@ -1,3 +1,4 @@
+import { Input } from '@/components/Shadcn/ui/input';
 import classNames from '@/utils/style/classNames';
 import { ExclamationCircleIcon } from '@heroicons/react/20/solid';
 
@@ -14,7 +15,7 @@ type Props = {
   isError?: boolean;
   errorText?: string | null;
   className?: string | null;
-  [key: string]: any;
+  [key: string]: unknown;
 };
 
 export default function TextInput({
@@ -32,9 +33,8 @@ export default function TextInput({
   ...props
 }: Props) {
   const baseStyle = 'block w-full rounded-md border-0 py-1.5 pl-2 sm:leading-6';
-
   const normalStyle =
-    'text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm focus:ring-inset focus:ring-1 focus:ring-inset focus:ring-company-600 hover:ring-company-600';
+    'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-company-600 ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus:ring-company-600 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50';
   const errorStyle =
     'pr-10 text-red-900 ring-1 ring-inset ring-red-300 placeholder:text-red-300 focus:ring-2 focus:ring-inset focus:ring-red-500 sm:text-sm sm:leading-6';
 
@@ -42,7 +42,7 @@ export default function TextInput({
     <div className={className}>
       {label ? <Label label={label} name={name} /> : <></>}
       <div className="relative rounded-md shadow-sm mt-2">
-        <input
+        <Input
           type={type ? type : ''}
           name={name ? name : ''}
           autoComplete={autoComplete ? autoComplete : ''}
