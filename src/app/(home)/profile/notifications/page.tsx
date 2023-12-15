@@ -59,20 +59,19 @@ export default function SettingsNotificationsPage() {
     }
   }, [isSuccess]);
 
-  const onSubmit = async (data: NotificationsSchema) => {
-    console.log(data);
-    const { error } = await supabaseBrowser
+  const onSubmit = (data: NotificationsSchema) => {
+    supabaseBrowser
       .from('profile')
       .update({ notificationSettings: data })
-      .eq('id', userProfile?.profile?.id);
-
-    if (error) {
-      toast.error('Ekki var hægt að uppfæra tilkynningar');
-      console.error(error);
-      return;
-    }
-
-    toast.success('Tilkynningar uppfærðar');
+      .eq('id', userProfile?.profile?.id)
+      .then(({ error }) => {
+        if (error) {
+          toast.error('Ekki var hægt að uppfæra tilkynningar');
+          console.error(error);
+          return;
+        }
+        toast.success('Tilkynningar uppfærðar');
+      });
   };
 
   return (

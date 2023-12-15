@@ -53,21 +53,23 @@ export function EmailResetForm() {
     }
   }, [userProfile]);
 
-  const onSubmit = async (values: EmailFormSchema) => {
-    const { error } = await supabaseClient.auth.updateUser(
-      {
-        email: values.email
-      },
-      { emailRedirectTo: `${getURL()}auth/login` }
-    );
-
-    if (error) {
-      toast.error('Ekki var hægt að uppfæra netfangið');
-      console.error(error);
-      return;
-    }
-    queryClient.invalidateQueries({ queryKey: ['profile'] });
-    toast.success('Netfang uppfært.');
+  const onSubmit = (values: EmailFormSchema) => {
+    supabaseClient.auth
+      .updateUser(
+        {
+          email: values.email
+        },
+        { emailRedirectTo: `${getURL()}auth/login` }
+      )
+      .then(({ error }) => {
+        if (error) {
+          toast.error('Ekki var hægt að uppfæra netfangið');
+          console.error(error);
+          return;
+        }
+        queryClient.invalidateQueries({ queryKey: ['profile'] });
+        toast.success('Netfang uppfært.');
+      });
   };
 
   return (

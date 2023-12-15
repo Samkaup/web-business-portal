@@ -47,19 +47,21 @@ export function PassResetForm() {
     mode: 'onChange'
   });
 
-  const onSubmit = async (data: ProfileFormValues) => {
-    const { error } = await supabaseClient.auth.updateUser({
-      password: data.password
-    });
+  const onSubmit = (data: ProfileFormValues) => {
+    supabaseClient.auth
+      .updateUser({
+        password: data.password
+      })
+      .then(({ error }) => {
+        if (error) {
+          toast.error('Ekki er hægt að uppfæra lykilorð');
+          console.error(error);
+          return;
+        }
 
-    if (error) {
-      toast.error('Ekki er hægt að uppfæra lykilorð');
-      console.error(error);
-      return;
-    }
-
-    form.reset({ password: '', confirmPassword: '' });
-    toast.success('Lykilorðið uppfært.');
+        form.reset({ password: '', confirmPassword: '' });
+        toast.success('Lykilorðið uppfært.');
+      });
   };
 
   return (

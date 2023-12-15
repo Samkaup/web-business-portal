@@ -26,26 +26,27 @@ export default async function Companies() {
     pageSize: 10
   });
 
-  const deleteCompanyProfile = async (companyId: string) => {
-    const { error } = await supabaseBrowser
+  const deleteCompanyProfile = (companyId: string) => {
+    supabaseBrowser
       .from('company_profile')
       .delete()
       .eq('company_id', companyId)
-      .eq('profile_id', userProfile.profile.id);
+      .eq('profile_id', userProfile.profile.id)
+      .then(({ error }) => {
+        if (error) {
+          toast.error('Ekki var hægt að uppfæra netfangið');
+          console.error(error);
+          return;
+        }
 
-    if (error) {
-      toast.error('Ekki var hægt að uppfæra netfangið');
-      console.error(error);
-      return;
-    }
+        // Change company context if the company being deleted is the same as the one in context
+        if (company?.external_identifier === companyId) {
+          setCompany(companies.at(1));
+        }
 
-    // Change company context if the company being deleted is the same as the one in context
-    if (company?.external_identifier === companyId) {
-      setCompany(companies.at(1));
-    }
-
-    setShowModal(false);
-    queryClient.invalidateQueries();
+        setShowModal(false);
+        queryClient.invalidateQueries();
+      });
   };
 
   return (
