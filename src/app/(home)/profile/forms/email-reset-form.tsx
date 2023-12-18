@@ -14,7 +14,6 @@ import {
   FormLabel,
   FormMessage
 } from '@/components/Shadcn/ui/form';
-import { Input } from '@/components/Shadcn/ui/input';
 import toast from 'react-hot-toast';
 import { getURL } from '@/lib/utils';
 import {
@@ -27,6 +26,7 @@ import { useGetProfile } from '@/utils/react_query_hooks/profile';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import Button from '@/components/ui/Button/Button';
+import TextInput from '@/components/ui/Input/textInput';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Netfang ekki á réttu formi.' })
@@ -83,7 +83,12 @@ export function EmailResetForm() {
               <FormLabel>Breyta Netfang</FormLabel>
               <FormControl>
                 <div className="flex w-full items-center space-x-2">
-                  <Input {...field} type="email" placeholder="Netfang" />
+                  <TextInput
+                    {...field}
+                    type="email"
+                    placeholder="Netfang"
+                    className="w-full"
+                  />
                   <Button
                     type="submit"
                     disabled={
