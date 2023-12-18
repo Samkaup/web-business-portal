@@ -61,7 +61,7 @@ type Payload = {
 
 type FilteredTransaction = {
   date: Row<'transaction'>['date'];
-  store_number: Row<'transaction'>['store_number'];
+  store_number: Row<'store'>['name'];
   department_name: Row<'department'>['name'];
   description: Row<'transaction'>['description'];
   amount_debit: Row<'transaction'>['amount_debit'];
