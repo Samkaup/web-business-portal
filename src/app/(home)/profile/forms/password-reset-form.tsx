@@ -16,7 +16,7 @@ import {
   FormLabel,
   FormMessage
 } from '@/components/Shadcn/ui/form';
-import { Input } from '@/components/Shadcn/ui/input';
+import TextInput from '@/components/ui/Input/textInput';
 
 const resetPassSchema = z
   .object({
@@ -74,7 +74,7 @@ export function PassResetForm() {
             <FormItem>
               <FormLabel>Breyta Lykilorð</FormLabel>
               <FormControl>
-                <Input {...field} placeholder="Lykilorð" type="password" />
+                <TextInput {...field} placeholder="Lykilorð" type="password" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -86,7 +86,7 @@ export function PassResetForm() {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input
+                <TextInput
                   {...field}
                   placeholder="Lykilorð Aftur"
                   type="password"

@@ -11,7 +11,7 @@ import { useCompaniesPagination } from '@/utils/react_query_hooks/company';
 import { useGetProfile } from '@/utils/react_query_hooks/profile';
 import supabaseBrowser from '@/utils/supabase-browser';
 import { useQueryClient } from '@tanstack/react-query';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
 export default async function Companies() {
@@ -25,6 +25,10 @@ export default async function Companies() {
     page: 1,
     pageSize: 10
   });
+
+  useEffect(() => {
+    console.log(userProfile);
+  }, [userProfile]);
 
   const deleteCompanyProfile = (companyId: string) => {
     supabaseBrowser
@@ -76,15 +80,17 @@ export default async function Companies() {
               </h4>
             </div>
 
-            <Button
-              variant="destructive"
-              onClick={() => {
-                setShowModal(true);
-                setCompanyToDelete(company);
-              }}
-            >
-              Eyða
-            </Button>
+            {userProfile?.user?.app_metadata?.userrole !== 'ADMIN' && (
+              <Button
+                variant="destructive"
+                onClick={() => {
+                  setShowModal(true);
+                  setCompanyToDelete(company);
+                }}
+              >
+                Afskrá
+              </Button>
+            )}
           </Card>
         ))}
     </div>

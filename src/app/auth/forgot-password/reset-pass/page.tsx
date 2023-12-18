@@ -50,6 +50,7 @@ export default function ResetPass() {
     try {
       if (!updatePassValid()) {
         toast.error('Tókst ekki að uppfæra lykilorð');
+        setLoading(false);
         return;
       }
       const { error } = await supabaseClient.auth.updateUser({
