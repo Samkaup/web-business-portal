@@ -189,6 +189,39 @@ export interface Database {
           }
         ]
       }
+      store: {
+        Row: {
+          address: string | null
+          city: string | null
+          created_at: string
+          id: number
+          name: string
+          price_group: string
+          sub_price_group: string | null
+          zipcode: string | null
+        }
+        Insert: {
+          address?: string | null
+          city?: string | null
+          created_at?: string
+          id?: number
+          name: string
+          price_group: string
+          sub_price_group?: string | null
+          zipcode?: string | null
+        }
+        Update: {
+          address?: string | null
+          city?: string | null
+          created_at?: string
+          id?: number
+          name?: string
+          price_group?: string
+          sub_price_group?: string | null
+          zipcode?: string | null
+        }
+        Relationships: []
+      }
       transaction: {
         Row: {
           account_number: string | null
@@ -282,6 +315,13 @@ export interface Database {
             isOneToOne: false
             referencedRelation: "department"
             referencedColumns: ["external_identifier"]
+          },
+          {
+            foreignKeyName: "transaction_store_number_fkey"
+            columns: ["store_number"]
+            isOneToOne: false
+            referencedRelation: "store"
+            referencedColumns: ["id"]
           }
         ]
       }
