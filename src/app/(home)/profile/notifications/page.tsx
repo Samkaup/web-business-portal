@@ -10,7 +10,6 @@ import {
 } from '@/components/Shadcn/ui/form';
 import toast from 'react-hot-toast';
 import { Switch } from '@/components/Shadcn/ui/switch';
-import Button from '@/components/ui/Button/Button';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -26,6 +25,7 @@ import supabaseBrowser from '@/utils/supabase-browser';
 import { Slider } from '@/components/Shadcn/ui/slider';
 import { Separator } from '@/components/Shadcn/ui/separator';
 import { Label } from '@/components/Shadcn/ui/label';
+import Button from '@/components/ui/Button/Button';
 
 const notificationsFormSchema = z.object({
   notificationsOn: z.boolean().optional(),
@@ -43,19 +43,34 @@ const notificationsFormSchema = z.object({
 
 type NotificationsSchema = z.infer<typeof notificationsFormSchema>;
 
+const defaultSettings = {
+  notificationsOn: true,
+  webNotifications: {
+    on: true
+  },
+  emailNotifications: {
+    on: true
+  },
+  limitNotifications: {
+    on: false,
+    percentage: 80
+  }
+};
+
 export default function SettingsNotificationsPage() {
   const { data: userProfile, isSuccess } = useGetProfile();
 
   const form = useForm<NotificationsSchema>({
     resolver: zodResolver(notificationsFormSchema),
-    defaultValues: {}
+    defaultValues: defaultSettings
   });
 
   useEffect(() => {
     if (isSuccess) {
-      form.reset(
-        userProfile.profile.notificationSettings as NotificationsSchema
-      );
+      form.reset({
+        ...defaultSettings,
+        ...(userProfile.profile.notificationSettings as NotificationsSchema)
+      });
     }
   }, [isSuccess]);
 
@@ -63,7 +78,7 @@ export default function SettingsNotificationsPage() {
     supabaseBrowser
       .from('profile')
       .update({ notificationSettings: data })
-      .eq('id', userProfile?.profile?.id)
+      .eq('id', userProfile.profile.id)
       .then(({ error }) => {
         if (error) {
           toast.error('Ekki var hægt að uppfæra tilkynningar');
@@ -241,7 +256,7 @@ export default function SettingsNotificationsPage() {
                 </CollapsibleContent>
               </Collapsible>
             </div>
-            <Button type="submit">Uppfæra tilkynningar</Button>
+            <Button type="submit">Uppfæra</Button>
           </form>
         </Form>
       </div>
