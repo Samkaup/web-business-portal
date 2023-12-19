@@ -1,9 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import supabaseClient from '@/utils/supabase-browser';
 
-import { useContext } from 'react';
-import { Context } from '@/utils/context-store';
 import { getTransactionSumByDate } from '../supabase_queries/transaction';
+import { useCompany } from '@/hooks/useCompany';
 
 type Props = {
   dateFrom: Date;
@@ -11,7 +10,7 @@ type Props = {
 };
 
 export const useTransactionSumByDate = ({ dateFrom, dateTo }: Props) => {
-  const { company } = useContext(Context);
+  const { company } = useCompany();
   return useQuery<{
     amount: number;
     count: number;

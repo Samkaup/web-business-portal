@@ -9,8 +9,7 @@ import {
 } from '../supabase_queries/transaction';
 import { QueryDataAndCount } from '../utilTypes';
 import { PaginationState, SortingState } from '@tanstack/react-table';
-import { useContext } from 'react';
-import { Context } from '../context-store';
+import { useCompany } from '@/hooks/useCompany';
 
 export const useTransactions = () => {
   return useQuery<TableRow<'transaction'>[]>(['transactions'], async () => {
@@ -19,7 +18,7 @@ export const useTransactions = () => {
 };
 
 export const useRecentTransactions = (limit?: number) => {
-  const { company } = useContext(Context);
+  const { company } = useCompany();
 
   return useQuery<TableRow<'transaction'>[]>(
     ['recentTransaction', { company, limit }],
@@ -35,7 +34,7 @@ export const useRecentTransactions = (limit?: number) => {
 };
 
 export const useTransactionsByMonth = (year: number) => {
-  const { company } = useContext(Context);
+  const { company } = useCompany();
 
   return useQuery(['transactionsByMonth', { company, year }], async () => {
     // Extract transactions
@@ -74,7 +73,7 @@ export const useTransactionsTable = ({
   dateRange,
   filters
 }: Payload) => {
-  const { company } = useContext(Context);
+  const { company } = useCompany();
 
   return useQuery<QueryDataAndCount<FilteredTransaction>>(
     [

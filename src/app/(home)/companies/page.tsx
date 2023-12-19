@@ -5,18 +5,18 @@ import { Button } from '@/components/Shadcn/ui/button';
 import { Card } from '@/components/Shadcn/ui/card';
 import { Separator } from '@/components/Shadcn/ui/separator';
 import ModalSimpleWithDismiss from '@/components/ui/ModalSimpleWithDismiss/ModalSimpleWithDismiss';
+import { useCompany } from '@/hooks/useCompany';
 import { TableRow } from '@/types';
-import { Context } from '@/utils/context-store';
 import { useCompaniesPagination } from '@/utils/react_query_hooks/company';
 import { useGetProfile } from '@/utils/react_query_hooks/profile';
 import supabaseBrowser from '@/utils/supabase-browser';
 import { useQueryClient } from '@tanstack/react-query';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
 export default async function Companies() {
   const [showModal, setShowModal] = useState<boolean>(false);
-  const { company, setCompany } = useContext(Context);
+  const { company, setSelectedCompany } = useCompany();
   const [companyToDelete, setCompanyToDelete] =
     useState<TableRow<'company'> | null>(null);
   const { data: userProfile } = useGetProfile();
@@ -45,7 +45,7 @@ export default async function Companies() {
 
         // Change company context if the company being deleted is the same as the one in context
         if (company?.external_identifier === companyId) {
-          setCompany(companies.at(1));
+          setSelectedCompany(companies.at(1));
         }
 
         setShowModal(false);

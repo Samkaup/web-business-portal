@@ -1,6 +1,6 @@
 'use client';
 
-import { useContext, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { format } from 'date-fns';
 import { PaginationState, SortingState } from '@tanstack/react-table';
 import { DocumentIcon } from '@heroicons/react/24/outline';
@@ -10,8 +10,8 @@ import supabaseClient from '@/utils/supabase-browser';
 import { useTransactionsTable } from '@/utils/react_query_hooks/transaction';
 import QueryTable from '@/components/QueryTable/QueryTable';
 import { getAllTransactions } from '@/utils/supabase_queries/transaction';
-import { Context } from '@/utils/context-store';
 import { downloadCSV, objectToCsv } from '@/utils/csv';
+import { useCompany } from '@/hooks/useCompany';
 
 type Props = {
   searchValue: string;
@@ -24,7 +24,7 @@ export default function TransactionTable({
   dates,
   departmentIds
 }: Props) {
-  const { company } = useContext(Context);
+  const { company } = useCompany();
   const defaultSort = {
     id: 'date',
     desc: true
