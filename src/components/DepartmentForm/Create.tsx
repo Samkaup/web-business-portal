@@ -1,19 +1,19 @@
 import TextInput from '../ui/Input/textInput';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from '../ui/Button/Button';
 import AlertWithDescription from '../ui/Alert/AlertWithDescription';
-import { Context } from '@/utils/context-store';
 import { Spinner } from '../ui/Spinner/Spinner';
 import supabase from '@/utils/supabase-browser';
 import { createDepartment } from '@/utils/supabase_queries/department';
 import { useQueryClient } from '@tanstack/react-query';
+import { useCompany } from '@/hooks/useCompany';
 type Props = {
   onCancel?: () => void;
   onSave?: () => void;
 };
 
 export default function DepartmentCreate({ onCancel, onSave }: Props) {
-  const { company } = useContext(Context);
+  const { company } = useCompany();
   const queryClient = useQueryClient();
   const [name, setName] = useState('');
   const [externalIdentifier, setExternalIdentifier] = useState('');

@@ -37,7 +37,10 @@ export default function CompanySwitcher() {
     return initalsArr.join('');
   }
   const updateCompany = (name: string) => {
-    const selectedCompany = companies.find((c) => c.name.toString() === name);
+    const selectedCompany = companies.find(
+      (c) => c.name.toString().toLowerCase() === name
+    );
+    setOpen(false);
     setSelectedCompany(selectedCompany);
   };
 
@@ -47,10 +50,10 @@ export default function CompanySwitcher() {
         <div>
           <Link href="#" onClick={() => setOpen(true)}>
             <p className="text-sm font-medium leading-none px-4 text-white">
-              {company.name}
+              {company?.name}
             </p>
             <p className="text-sm font-medium leading-none pt-1 px-4 text-muted-foreground">
-              kt. {company.external_identifier}
+              kt. {company?.external_identifier}
             </p>
           </Link>
         </div>

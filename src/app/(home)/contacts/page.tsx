@@ -1,25 +1,27 @@
 'use client';
-import { Suspense, useContext } from 'react';
+import { Suspense } from 'react';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import Header from '@/components/Header/Header';
 import Button from '@/components/ui/Button/Button';
 import { SlideOver } from '@/components/ui/SlideOver/SlideOver';
 import MemberAccountListWithContacts from '@/components/MemberAccount/MemberAccount.List';
-import { Context } from '@/utils/context-store';
 import { useDepartmentsWithContacts } from '@/utils/react_query_hooks/department';
 import EmptyStateSimple from '@/components/ui/EmptyState/EmptyStateSimple';
 import LoadingSkeleton from '@/components/LoadingSkeleton/LoadingSkeleton';
 import DepartmentCreate from '@/components/DepartmentForm/Create';
+import useSlideOver from '@/hooks/useSlideOver';
+import { useCompany } from '@/hooks/useCompany';
 
 export default function Contacts() {
-  const { company, slideOver } = useContext(Context);
+  const { isOpen, setIsOpen } = useSlideOver();
+  const { company } = useCompany();
   const { data: departments, isSuccess } = useDepartmentsWithContacts();
 
   return (
     <>
       <Header title={`Deildir & úttektaraðilar: ${company?.name ?? ''}`}>
         <div className="flex justify-center mt-4">
-          <Button size="lg" onClick={() => slideOver.setIsOpen(true)}>
+          <Button size="lg" onClick={() => setIsOpen(true)}>
             Stofna deild
             <PlusIcon className="-mr-0.5 h-5 w-5 text-white" />
           </Button>
@@ -27,15 +29,15 @@ export default function Contacts() {
       </Header>
       <Suspense fallback={<LoadingSkeleton />}>
         <SlideOver
-          isOpen={slideOver.isOpen}
+          isOpen={isOpen}
           title="Ný deild"
           description="Deildir aðgreina úttektaraðila og veita aukið upplýsingaflæði um úttekt."
-          toggleOpen={() => slideOver.setIsOpen(true)}
-          onCancel={() => slideOver.setIsOpen(false)}
+          toggleOpen={() => setIsOpen(true)}
+          onCancel={() => setIsOpen(false)}
         >
           <DepartmentCreate
-            onSave={() => slideOver.setIsOpen(false)}
-            onCancel={() => slideOver.setIsOpen(false)}
+            onSave={() => setIsOpen(false)}
+            onCancel={() => setIsOpen(false)}
           />
         </SlideOver>
         {isSuccess && (
@@ -49,7 +51,7 @@ export default function Contacts() {
                 <EmptyStateSimple
                   title={`Engar deildir skráðar fyrir ${company?.name}`}
                   subtitle="Deildir eru til að aðgreina úttektaraðila milli viðskiptaeininga, þær upplýsingar berast svo með rafrænum reikningi."
-                  actionBtnClick={() => slideOver.setIsOpen(true)}
+                  actionBtnClick={() => setIsOpen(true)}
                   actionBtnText="Stofna deild"
                 />
               </div>

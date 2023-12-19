@@ -8,11 +8,9 @@ import {
   getRecentDepartmentsByCompany
 } from '../supabase_queries/department';
 
-import { useContext } from 'react';
-import { Context } from '@/utils/context-store';
-
+import { useCompany } from '@/hooks/useCompany';
 export const useDepartments = () => {
-  const { company } = useContext(Context);
+  const { company } = useCompany();
 
   return useQuery<TableRow<'department'>[]>(
     ['department', company],
@@ -27,7 +25,7 @@ export const useDepartments = () => {
 };
 
 export const useRecentDepartments = () => {
-  const { company } = useContext(Context);
+  const { company } = useCompany();
 
   return useQuery<TableRow<'department'>[]>(
     ['recentDepartment', company],
@@ -42,7 +40,7 @@ export const useRecentDepartments = () => {
 };
 
 export const useDepartmentsWithContacts = () => {
-  const { company } = useContext(Context);
+  const { company } = useCompany();
   return useQuery<DepartmentWithContacts[]>({
     queryKey: ['department_with_contacts', company?.external_identifier],
     queryFn: async () => {
