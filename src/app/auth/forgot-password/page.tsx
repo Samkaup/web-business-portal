@@ -54,7 +54,6 @@ export default function Login() {
       setEmailError(true);
       return;
     }
-    console.log(`${getURL()}auth/forgot-password/reset-pass`);
     supabaseClient.auth
       .resetPasswordForEmail(email, {
         redirectTo: `${getURL()}auth/forgot-password/reset-pass`
