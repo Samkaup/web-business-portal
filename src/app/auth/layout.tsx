@@ -1,3 +1,4 @@
+import { ClientLayout } from '@/components/ClientLayout';
 import Image from 'next/image';
 
 export default function AuthLayout({
@@ -16,7 +17,9 @@ export default function AuthLayout({
       />
       <div className="absolute inset-0 bg-black/50 backdrop-brightness-75 z-10"></div>
       <div className="relative z-10">
-        <div className="flex flex-col items-center p-6 ">{children}</div>
+        <div className="flex flex-col items-center p-6 ">
+          <ClientLayout>{children}</ClientLayout>
+        </div>
       </div>
     </div>
   );

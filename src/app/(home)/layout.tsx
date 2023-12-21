@@ -1,7 +1,7 @@
-'use client';
 import Footer from '@/components/Footer/Footer';
 import Navigation from '@/components/Navigation/Navigation';
 import '@/app/globals.css';
+import { ClientLayout } from '@/components/ClientLayout';
 
 export default function HomeLayout({
   children
@@ -9,7 +9,7 @@ export default function HomeLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
+    <ClientLayout>
       <Navigation />
       <div className="flex flex-col min-h-screen">
         <main className="flex-1">
@@ -19,6 +19,6 @@ export default function HomeLayout({
         </main>
         <Footer />
       </div>
-    </>
+    </ClientLayout>
   );
 }
