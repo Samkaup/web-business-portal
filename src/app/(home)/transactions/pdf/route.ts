@@ -16,12 +16,18 @@ export async function GET(request: NextRequest) {
   }
 
   const supabase = createRouteHandlerClient<Database>({ cookies });
+
+  const {
+    data: { session }
+  } = await supabase.auth.getSession();
+
+  if (!session) return new Response('Unauthorized', { status: 401 });
+
   const { data: transaction } = await supabase
     .from('transaction')
     .select('*, department!inner(*, company(*))')
     .eq('id', id)
     .single();
-  console.log(transaction);
 
   const pdfBytes = await generatePDF(transaction);
 
