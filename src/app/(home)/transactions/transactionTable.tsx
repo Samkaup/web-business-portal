@@ -3,14 +3,13 @@
 import { useMemo, useState } from 'react';
 import { format } from 'date-fns';
 import { PaginationState, SortingState } from '@tanstack/react-table';
-import { DocumentIcon } from '@heroicons/react/24/outline';
-import Link from 'next/link';
 import { is } from 'date-fns/locale';
 import supabaseClient from '@/utils/supabase-browser';
 import { useTransactionsTable } from '@/utils/react_query_hooks/transaction';
 import QueryTable from '@/components/QueryTable/QueryTable';
 import { getAllTransactions } from '@/utils/supabase_queries/transaction';
 import { downloadCSV, objectToCsv } from '@/utils/csv';
+import InvoiceDownloadButton from '@/components/InvoiceDownloader';
 import { useCompany } from '@/hooks/useCompany';
 
 type Props = {
@@ -33,7 +32,7 @@ export default function TransactionTable({
   const [sorting, setSorting] = useState<SortingState>([defaultSort]);
   const basePageSize = 15;
   const pageSizes = [basePageSize, 30, 50, 100];
-  const [isDownloading, setIsDownloading] = useState<boolean>(false);
+  const [csvDownloading, setCsvDownloading] = useState<boolean>(false);
 
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -49,7 +48,7 @@ export default function TransactionTable({
   });
 
   const handleDownloadData = async () => {
-    setIsDownloading(true);
+    setCsvDownloading(true);
     const transactions = await getAllTransactions({
       supabaseClient,
       sorting: {
@@ -65,7 +64,7 @@ export default function TransactionTable({
     });
 
     downloadCSV(objectToCsv(transactions), 'hreyfingar');
-    setIsDownloading(false);
+    setCsvDownloading(false);
   };
 
   const columns = useMemo(
@@ -116,16 +115,12 @@ export default function TransactionTable({
         }
       },
       {
-        accessorKey: 'actions',
-        id: 'actions',
+        accessorKey: 'id',
+        id: 'id',
         header: null,
-        cell: (_: any) => {
-          return (
-            <Link href="#" className="hover:text-company-700 inline-flex">
-              <DocumentIcon className="h-4 w-4 mr-2"></DocumentIcon>Reikningur
-            </Link>
-          );
-        }
+        cell: (props: any) => (
+          <InvoiceDownloadButton transactionID={props.getValue()} />
+        )
       }
     ],
     []
@@ -141,7 +136,7 @@ export default function TransactionTable({
       setPaginationState={setPagination}
       pageSizes={pageSizes}
       onDownload={handleDownloadData}
-      isDownloading={isDownloading}
+      isDownloading={csvDownloading}
     />
   );
 }

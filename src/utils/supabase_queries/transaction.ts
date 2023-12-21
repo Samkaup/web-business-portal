@@ -176,7 +176,8 @@ export const getTransactionsTable = async ({
   companyId
 }: TransactionTableProps) => {
   let query = supabaseClient.from('transaction').select(
-    ` date,
+    ` id,
+      date,
       account_number,
       description,
       amount_debit,
@@ -217,9 +218,9 @@ export const getTransactionsTable = async ({
     throw error;
   }
 
-  console.log(data);
   return {
     data: data.map((t) => ({
+      id: t.id,
       date: t.date,
       store_number: t.store?.name,
       department_name: t.department.name,
