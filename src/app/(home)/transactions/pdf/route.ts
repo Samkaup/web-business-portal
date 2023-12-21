@@ -5,7 +5,7 @@ import type { Database } from '@/lib/database.types';
 import FormData from 'form-data';
 import axios from 'axios';
 import fs from 'fs';
-import { generateHTML } from './htmlGenerator';
+import { JoinedTransaction, LineItem, generateHTML } from './htmlGenerator';
 
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url);
@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
 
   const { data: transaction } = await supabase
     .from('transaction')
-    .select('*, department!inner(*, company(*))')
+    .select('*, store(*), department!inner(*, company(*))')
     .eq('id', id)
     .single();
 
@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
   });
 }
 
-const lineItems = [
+const lineItems: LineItem[] = [
   {
     sku: '10023486',
     label: 'Okkar Kremkex 450g',
@@ -63,7 +63,7 @@ const lineItems = [
   }
 ];
 
-const generatePDF = async (transaction: any) => {
+const generatePDF = async (transaction: JoinedTransaction) => {
   const formData = new FormData();
   formData.append(
     'instructions',
@@ -123,16 +123,6 @@ const generatePDF = async (transaction: any) => {
 
     return response.data;
   } catch (e) {
-    const errorString = await streamToString(e.response.data);
-    console.log(errorString);
+    console.log(e);
   }
 };
-
-function streamToString(stream: any) {
-  const chunks = [];
-  return new Promise((resolve, reject) => {
-    stream.on('data', (chunk: any) => chunks.push(Buffer.from(chunk)));
-    stream.on('error', (err: any) => reject(err));
-    stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
-  });
-}

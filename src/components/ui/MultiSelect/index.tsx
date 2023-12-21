@@ -5,7 +5,7 @@ import classNames from '@/utils/style/classNames';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 
 export type Option = {
-  id: any;
+  id: string;
   label: string;
 };
 

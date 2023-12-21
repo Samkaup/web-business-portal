@@ -17,3 +17,12 @@ export type Row<T extends RowName> = T extends TableName
   : T extends ViewName
   ? ViewRow<T>
   : never;
+
+export type FilteredTransaction = {
+  id: Row<'transaction'>['id'];
+  date: Row<'transaction'>['date'];
+  store_number: Row<'store'>['name'];
+  department_name: Row<'department'>['name'];
+  description: Row<'transaction'>['description'];
+  amount_debit: Row<'transaction'>['amount_debit'];
+};

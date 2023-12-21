@@ -1,4 +1,4 @@
-import { AppSupabaseClient, Row, TableRow } from '@/types';
+import { AppSupabaseClient, FilteredTransaction, Row, TableRow } from '@/types';
 import { RangeProps, SortingProps } from '@/utils/utilTypes';
 import { formatDate } from '../dateUtils';
 
@@ -239,7 +239,7 @@ export const getAllTransactions = async ({
   filters,
   companyId
 }: TransactionTableProps) => {
-  let allTransactions: any[] = [];
+  let allTransactions: FilteredTransaction[] = [];
   let pageIndex = 0;
   const pageSize = 1000;
 

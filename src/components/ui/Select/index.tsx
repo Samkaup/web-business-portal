@@ -2,7 +2,7 @@ import classNames from '@/utils/style/classNames';
 import { ChangeEvent } from 'react';
 
 type Option = {
-  id: any;
+  id: string | number;
   label: string;
 };
 

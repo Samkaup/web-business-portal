@@ -1,4 +1,4 @@
-import { Row, TableRow } from '@/types';
+import { FilteredTransaction, Row, TableRow } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import supabaseClient from '@/utils/supabase-browser';
 import {
@@ -56,15 +56,6 @@ type Payload = {
   searchValue?: string | string[];
   dateRange?: Date[];
   filters?: string[];
-};
-
-type FilteredTransaction = {
-  id: Row<'transaction'>['id'];
-  date: Row<'transaction'>['date'];
-  store_number: Row<'store'>['name'];
-  department_name: Row<'department'>['name'];
-  description: Row<'transaction'>['description'];
-  amount_debit: Row<'transaction'>['amount_debit'];
 };
 
 export const useTransactionsTable = ({

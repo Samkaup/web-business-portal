@@ -14,7 +14,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
-export default async function Companies() {
+export default function Companies() {
   const [showModal, setShowModal] = useState<boolean>(false);
   const { company, setSelectedCompany } = useCompany();
   const [companyToDelete, setCompanyToDelete] =

@@ -3,6 +3,7 @@ import { useRecentDepartments } from '@/utils/react_query_hooks/department';
 import classNames from '@/utils/style/classNames';
 import { Menu, Transition } from '@headlessui/react';
 import { EllipsisHorizontalIcon } from '@heroicons/react/20/solid';
+import Image from 'next/image';
 import Link from 'next/link';
 import { Fragment } from 'react';
 
@@ -75,10 +76,12 @@ export default function () {
                   className="overflow-hidden rounded-xl border border-gray-200"
                 >
                   <div className="flex items-center gap-x-4 border-b border-gray-900/5 bg-gray-50 p-6">
-                    <img
+                    <Image
                       src="https://tailwindui.com/img/logos/48x48/tuple.svg"
                       alt={department.name}
-                      className="h-12 w-12 flex-none rounded-lg bg-white object-cover ring-1 ring-gray-900/10"
+                      className="flex-none rounded-lg bg-white object-cover ring-1 ring-gray-900/10"
+                      width={48}
+                      height={48}
                     />
                     <div className="text-sm font-medium leading-6 text-gray-900">
                       {department.name}

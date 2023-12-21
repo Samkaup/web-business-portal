@@ -5,7 +5,7 @@ import { useGetProfile } from '@/utils/react_query_hooks/profile';
 import { PassResetForm } from './forms/password-reset-form';
 import { EmailResetForm } from './forms/email-reset-form';
 
-export default async function Profile() {
+export default function Profile() {
   const { data, isSuccess } = useGetProfile();
 
   return (

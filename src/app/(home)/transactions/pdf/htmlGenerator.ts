@@ -1,4 +1,25 @@
-export const generateHTML = (transaction: any, lineItems: any[]) => {
+import { TableRow } from '@/types';
+
+type JoinedDepartment = TableRow<'department'> & {
+  company: TableRow<'company'>;
+};
+export type JoinedTransaction = TableRow<'transaction'> & {
+  department: JoinedDepartment;
+  store: TableRow<'store'>;
+};
+
+export type LineItem = {
+  sku: string;
+  label: string;
+  quantity: number;
+  unitPrice: number;
+  amount: number;
+};
+
+export const generateHTML = (
+  transaction: JoinedTransaction,
+  lineItems: LineItem[]
+) => {
   return `
     <!DOCTYPE html>
     <html lang="en">
@@ -116,7 +137,7 @@ export const generateHTML = (transaction: any, lineItems: any[]) => {
     `;
 };
 
-function generateLineItemsHTML(items: any[]) {
+function generateLineItemsHTML(items: LineItem[]) {
   return items
     .map((item: any) => {
       return `<tr>
