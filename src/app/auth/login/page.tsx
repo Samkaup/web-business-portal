@@ -66,7 +66,8 @@ export default function Login() {
             Mínar síður | Innskráning
           </h2>
           <p className="text-sm text-company text-muted-foreground w-full text-center">
-            Kerfið er í prófun. Hafið samband í síma 421-5400 fyrir aðstoð
+            Vantar þig aðgang? Hafið samband í síma 421-5400 og við setjum upp
+            fyrir þig.
           </p>
           <div className="mt-10">
             <form action="#" method="POST" className="space-y-6">
