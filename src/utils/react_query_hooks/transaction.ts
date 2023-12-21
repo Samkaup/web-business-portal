@@ -60,6 +60,7 @@ type Payload = {
 };
 
 type FilteredTransaction = {
+  id: Row<'transaction'>['id'];
   date: Row<'transaction'>['date'];
   store_number: Row<'store'>['name'];
   department_name: Row<'department'>['name'];
