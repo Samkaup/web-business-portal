@@ -1,12 +1,18 @@
+import classNames from '@/utils/style/classNames';
+
 type Props = {
   color?: string;
+  className?: string;
 };
 
-export const Spinner = ({ color = '#1C64F2' }: Props) => {
+export const Spinner = ({ color = '#1C64F2', className }: Props) => {
   return (
     <svg
       role="status"
-      className="inline w-4 h-4 text-gray-200 animate-spin "
+      className={classNames(
+        'inline w-4 h-4 text-gray-200 animate-spin',
+        className
+      )}
       viewBox="0 0 100 101"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

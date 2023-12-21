@@ -12,6 +12,7 @@ import { getAllTransactions } from '@/utils/supabase_queries/transaction';
 import { Context } from '@/utils/context-store';
 import { downloadCSV, objectToCsv } from '@/utils/csv';
 import { downloadPDF } from '@/utils/pdf';
+import InvoiceDownloadButton from '@/components/InvoiceDownloader';
 
 type Props = {
   searchValue: string;
@@ -33,7 +34,7 @@ export default function TransactionTable({
   const [sorting, setSorting] = useState<SortingState>([defaultSort]);
   const basePageSize = 15;
   const pageSizes = [basePageSize, 30, 50, 100];
-  const [isDownloading, setIsDownloading] = useState<boolean>(false);
+  const [csvDownloading, setCsvDownloading] = useState<boolean>(false);
 
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -49,7 +50,7 @@ export default function TransactionTable({
   });
 
   const handleDownloadData = async () => {
-    setIsDownloading(true);
+    setCsvDownloading(true);
     const transactions = await getAllTransactions({
       supabaseClient,
       sorting: {
@@ -65,7 +66,7 @@ export default function TransactionTable({
     });
 
     downloadCSV(objectToCsv(transactions), 'hreyfingar');
-    setIsDownloading(false);
+    setCsvDownloading(false);
   };
 
   const columns = useMemo(
@@ -119,17 +120,9 @@ export default function TransactionTable({
         accessorKey: 'id',
         id: 'id',
         header: null,
-        cell: (props: any) => {
-          return (
-            <button
-              type="button"
-              onClick={() => downloadPDF(props.getValue())}
-              className="hover:text-company-700 inline-flex"
-            >
-              <DocumentIcon className="h-4 w-4 mr-2"></DocumentIcon>Reikningur
-            </button>
-          );
-        }
+        cell: (props: any) => (
+          <InvoiceDownloadButton transactionID={props.getValue()} />
+        )
       }
     ],
     []
@@ -145,7 +138,7 @@ export default function TransactionTable({
       setPaginationState={setPagination}
       pageSizes={pageSizes}
       onDownload={handleDownloadData}
-      isDownloading={isDownloading}
+      isDownloading={csvDownloading}
     />
   );
 }
