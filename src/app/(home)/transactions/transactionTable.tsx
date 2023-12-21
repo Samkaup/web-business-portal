@@ -4,7 +4,6 @@ import { useContext, useMemo, useState } from 'react';
 import { format } from 'date-fns';
 import { PaginationState, SortingState } from '@tanstack/react-table';
 import { DocumentIcon } from '@heroicons/react/24/outline';
-import Link from 'next/link';
 import { is } from 'date-fns/locale';
 import supabaseClient from '@/utils/supabase-browser';
 import { useTransactionsTable } from '@/utils/react_query_hooks/transaction';
@@ -12,6 +11,7 @@ import QueryTable from '@/components/QueryTable/QueryTable';
 import { getAllTransactions } from '@/utils/supabase_queries/transaction';
 import { Context } from '@/utils/context-store';
 import { downloadCSV, objectToCsv } from '@/utils/csv';
+import { downloadPDF } from '@/utils/pdf';
 
 type Props = {
   searchValue: string;
@@ -116,14 +116,18 @@ export default function TransactionTable({
         }
       },
       {
-        accessorKey: 'actions',
-        id: 'actions',
+        accessorKey: 'id',
+        id: 'id',
         header: null,
-        cell: (_: any) => {
+        cell: (props: any) => {
           return (
-            <Link href="#" className="hover:text-company-700 inline-flex">
+            <button
+              type="button"
+              onClick={() => downloadPDF(props.getValue())}
+              className="hover:text-company-700 inline-flex"
+            >
               <DocumentIcon className="h-4 w-4 mr-2"></DocumentIcon>Reikningur
-            </Link>
+            </button>
           );
         }
       }
