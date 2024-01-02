@@ -7,18 +7,12 @@ export type TCompany = Database['public']['Tables']['company']['Row'];
 
 const useCompany = () => {
   const queryClient = useQueryClient();
-  const [company, setCompany] = useSessionStorage<TCompany>(
+  const [company, setCompany] = useSessionStorage<TCompany | null>(
     'selected-company',
-    {
-      name: '',
-      external_identifier: '',
-      created_at: '',
-      credit_limit_amount: 0,
-      updated_at: ''
-    }
+    null
   );
 
-  // Fetch loyalty clubs
+  // Fetch Companies
   const { data: companies, isLoading, error, isSuccess } = useCompanies();
 
   // Update the selected loyalty club both in session storage and query client
@@ -27,7 +21,7 @@ const useCompany = () => {
     queryClient.setQueryData(['selectedCompany'], company); // Update query client
   };
 
-  // Initialize the selected loyalty club from session storage or the first club
+  // Initialize the selected company from session storage or the first club
   if (!company && companies) {
     setSelectedCompany(companies[0]);
   }
