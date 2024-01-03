@@ -19,7 +19,7 @@ export default function InvoiceDownloadButton({ transactionID }: Props) {
     <button
       type="button"
       onClick={handleOnClick}
-      className="hover:text-company-700 inline-flex"
+      className="hover:text-company-700 inline-flex items-center"
     >
       {downloading ? (
         <Spinner className="mr-2" />
