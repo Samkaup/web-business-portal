@@ -5,7 +5,7 @@ export const downloadPDF = async (id: string) => {
       'Content-Type': 'application/json'
     }
   });
-  return;
+
   const blob = await res.blob();
   const newBlob = new Blob([blob], {
     type: 'data:text/csv;charset=utf-8,'
