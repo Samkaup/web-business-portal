@@ -44,26 +44,29 @@ export default function ResetPass() {
     return valid;
   };
 
-  const handleResetPass = async (e: React.FormEvent<HTMLButtonElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+
     try {
       if (!updatePassValid()) {
         toast.error('Tókst ekki að uppfæra lykilorð');
         setLoading(false);
         return;
       }
-      const { error } = await supabaseClient.auth.updateUser({
-        password: password
-      });
-      setLoading(false);
-
-      if (error) {
-        toast.error('Tókst ekki að uppfæra lykilorð');
-        console.error(error);
-        return;
-      }
-      router.push('/');
+      supabaseClient.auth
+        .updateUser({
+          password: password
+        })
+        .then(({ error }) => {
+          setLoading(false);
+          if (error) {
+            toast.error('Tókst ekki að uppfæra lykilorð');
+            console.error(error);
+            return;
+          }
+          router.push('/');
+        });
     } catch (e) {
       toast.error('Tókst ekki að uppfæra lykilorð');
       setLoading(false);
@@ -81,13 +84,13 @@ export default function ResetPass() {
             <LockOpenIcon className="ml-2 w-6 h-6"></LockOpenIcon>
           </h2>
           <div className="mt-10">
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={(e) => handleSubmit(e)}>
               <TextInput
                 value={password}
                 onChange={(value) => setPassword(value as string)}
                 name="password"
                 type="password"
-                autoComplete="current-password"
+                autoComplete="new-password"
                 label="Lykilorð"
                 isError={passwordError.length !== 0}
                 errorText={passwordError}
@@ -98,7 +101,7 @@ export default function ResetPass() {
                 onChange={(value) => setRePassword(value as string)}
                 name="password"
                 type="password"
-                autoComplete="current-password"
+                autoComplete="new-password"
                 label="Staðfestu lykilorðið"
                 isError={rePasswordError.length !== 0}
                 errorText={rePasswordError}
@@ -108,7 +111,6 @@ export default function ResetPass() {
                 <Button
                   isLoading={isLoading}
                   className="w-full flex justify-center"
-                  onClick={handleResetPass}
                   type="submit"
                 >
                   Senda
