@@ -25,43 +25,45 @@ export default function Login() {
   const [requestSent, setRequestSent] = useState<boolean>(false);
 
   const handleVerifyOTP = async (token: string) => {
-    if (!token) {
-      return false;
-    }
+    if (!token) return false;
+
     const { data, error } = await supabaseClient.auth.verifyOtp({
       email,
       token,
       type: 'email'
     });
-    if (error) {
-      console.error(error);
-      setEmailError(true);
-      toast.error('Auðkenniskóði eða tengill ekki gildur, reyndu aftur');
-    }
-    if (data?.session) {
+
+    if (data?.session && !error) {
       router.push('/auth/forgot-password/reset-pass');
-    } else {
-      toast.error('Auðkenniskóði eða tengill ekki gildur, reyndu aftur');
-      setEmailError(true);
+      return;
     }
+
+    console.error(error);
+    toast.error('Auðkenniskóði ekki gildur, reyndu aftur');
+    setEmailError(true);
   };
 
   const handleResetPassword = (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setLoading(true);
+
     if (email.length === 0) {
       toast.error('Vantar netfang');
       setEmailError(true);
       return;
     }
+
     supabaseClient.auth
       .resetPasswordForEmail(email, {
         redirectTo: `${getURL()}auth/forgot-password/reset-pass`
       })
-      .then(() => setRequestSent(true))
-      .catch((error) => {
-        toast.error(error.message);
-        setEmailError(true);
+      .then(({ error }) => {
+        if (error) {
+          toast.error(error.message);
+          setEmailError(true);
+          return;
+        }
+        setRequestSent(true);
       })
       .finally(() => {
         setLoading(false);
@@ -85,8 +87,8 @@ export default function Login() {
                   </h2>
                 </div>
                 <p className="text-lg tracking-tight text-gray-600 text-center">
-                  Við höfum sent þér leiðbeiningar til að breyta lykilorðinu
-                  þínu á netfangið <b>{email}</b>
+                  Við höfum sent þér 6-stafa auðkenniskóða á netfangið{' '}
+                  <b>{email}</b> til að breyta lykilorðinu þínu
                 </p>
               </div>
 
