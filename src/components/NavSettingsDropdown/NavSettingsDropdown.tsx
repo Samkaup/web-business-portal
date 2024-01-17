@@ -26,7 +26,7 @@ import { Avatar, AvatarFallback } from '../Shadcn/ui/avatar';
 import Link from 'next/link';
 import { useCompany } from '@/hooks/useCompany';
 
-export default function CompanySwitcher() {
+export default function NavSettingsDropdown() {
   const [open, setOpen] = React.useState(false);
   const { company, companies, setSelectedCompany, isSuccess } = useCompany();
   const { data: user } = useGetProfile();
@@ -43,6 +43,8 @@ export default function CompanySwitcher() {
     setOpen(false);
     setSelectedCompany(selectedCompany);
   };
+
+  const totalNotifications = 0;
 
   return (
     <div className="flex w-full flex-col items-start justify-between px-4 py-3 sm:flex-row sm:items-center">
@@ -69,9 +71,11 @@ export default function CompanySwitcher() {
                   </AvatarFallback>
                 )}
               </Avatar>
-              <div className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 bg-red-500/90 rounded-full text-white text-xs font-bold">
-                2
-              </div>
+              {totalNotifications > 0 && (
+                <div className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 bg-red-500/90 rounded-full text-white text-xs font-bold">
+                  {totalNotifications}
+                </div>
+              )}
             </Link>
           </div>
         </DropdownMenuTrigger>
