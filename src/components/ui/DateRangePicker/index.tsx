@@ -122,7 +122,7 @@ export default function DateRangePicker({
                       key={idx}
                       onClick={() => setSelectedDates(preset.dates)}
                     >
-                      {preset.lable}
+                      {preset.label}
                     </PresetButton>
                   ))}
                 </div>

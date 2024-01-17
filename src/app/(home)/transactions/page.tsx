@@ -1,109 +1,134 @@
 'use client';
 import Header from '@/components/Header/Header';
-import DateRangePicker from '@/components/ui/DateRangePicker';
 import { DateRangePreset } from '@/components/ui/DateRangePicker/index.types';
 import {
   getDateDaysAgo,
   getDateMonthsAgo,
-  getDateNow
+  getDateNow,
+  getStartOfYear,
+  getEndOfYear
 } from '@/utils/dateUtils';
-import { DatePickerProvider } from '@rehookify/datepicker';
 import { useState } from 'react';
 import TransactionTable from './transactionTable';
-import { useDepartments } from '@/utils/react_query_hooks/department';
-import MultiSelect, { type Option } from '@/components/ui/MultiSelect';
+import { useDepartments as useDepartmentsHook } from '@/utils/react_query_hooks/department';
 import { Row } from '@/types';
 import { DebouncedInput } from '@/components/ui/Input/debouncedInput';
+import { CalendarDateRangePicker } from '@/components/DateRangePicker/DateRangePicker';
+import { useDateRange } from '@/hooks/useDateRange';
+import {
+  type MultipleSelectOption,
+  SelectMultiple
+} from '@/components/ui/SelectMultiple';
+import { useDepartments as useSelectedDepartments } from '@/hooks/useDepartments';
 
 export default function Transactions() {
   const dateToday = getDateNow();
 
   const [searchValue, setSearchValue] = useState<string>('');
-  const [selectedDates, onDatesChange] = useState<Date[]>([
-    getDateDaysAgo(37),
-    dateToday
-  ]);
+  const dateRangeQueryKey = 'transactionDateRange';
+  const { data: dateRange } = useDateRange({ queryKey: dateRangeQueryKey });
 
-  const departments = useDepartments();
-  const [selectedDepartments, setSelectedDepartments] = useState<Option[]>([]);
+  const departments = useDepartmentsHook();
+  const selectedDepartmentsQueryKey = 'selectedDepartmentsTransaction';
+  const { data: selectedDepartments } = useSelectedDepartments({
+    queryKey: selectedDepartmentsQueryKey
+  }) as { data: MultipleSelectOption[] | undefined };
 
-  const departmentsToOptions = (
+  const departmentsOptions = (
     departments: Row<'department'>[] | undefined
-  ): Option[] => {
-    if (departments)
-      return departments.map((d: Row<'department'>) => ({
-        id: d.external_identifier,
+  ): MultipleSelectOption[] => {
+    if (departments && departments.length > 0) {
+      return departments.map((d) => ({
+        value: d.external_identifier,
         label: d.name
       }));
+    }
     return [];
   };
 
   const dateRangePresets: DateRangePreset[] = [
     {
-      lable: 'Síðustu 5 dagar',
+      label: 'Síðustu 5 dagar',
       dates: [getDateDaysAgo(4), dateToday]
     },
     {
-      lable: 'Síðustu 14 dagar',
+      label: 'Síðustu 14 dagar',
       dates: [getDateDaysAgo(13), dateToday]
     },
     {
-      lable: 'Síðustu 30 dagar',
+      label: 'Síðustu 30 dagar',
       dates: [getDateDaysAgo(29), dateToday]
     },
     {
-      lable: 'Síðustu 3 mánuðir',
+      label: 'Síðustu 3 mánuðir',
       dates: [getDateMonthsAgo(3), dateToday]
     },
     {
-      lable: 'Síðustu 6 mánuðir',
+      label: 'Síðustu 6 mánuðir',
       dates: [getDateMonthsAgo(6), dateToday]
+    },
+    {
+      label: 'Síðustu 12 mánuðir',
+      dates: [getDateMonthsAgo(12), dateToday]
+    },
+    {
+      label: 'Fyrra ár',
+      dates: [
+        getStartOfYear(new Date(new Date().getFullYear() - 1, 1, 1, 0, 0, 0)),
+        getEndOfYear(new Date(new Date().getFullYear() - 1, 1, 1, 0, 0, 0))
+      ]
+    },
+    {
+      label: 'Núverandi ár',
+      dates: [
+        getStartOfYear(new Date(new Date().getFullYear(), 1, 1, 1, 0, 0)),
+        getEndOfYear(new Date(new Date().getFullYear(), 1, 1, 1, 0, 0))
+      ]
     }
   ];
 
   return (
     <>
       <Header title="Reikningar og hreyfingar" />
-
-      <DatePickerProvider
-        config={{
-          selectedDates,
-          onDatesChange,
-          dates: { mode: 'range', maxDate: new Date() }
-        }}
-      >
-        <div className="flex flex-col gap-4 px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-row justify-between">
-            <div className="flex flex-row gap-4">
-              <DateRangePicker
-                selectedDates={selectedDates}
-                setSelectedDates={onDatesChange}
-                presets={dateRangePresets}
-              />
-              <MultiSelect
-                options={departmentsToOptions(departments.data)}
-                selectedOptions={selectedDepartments}
-                onSelect={setSelectedDepartments}
-                label="Allar deildir"
-              />
-            </div>
-
-            <DebouncedInput
-              value={searchValue}
-              onChange={(value) => setSearchValue(value as string)}
-              name="search"
-              placeholder="Leita í lista"
-              className="w-80"
-            />
-          </div>
-
-          <TransactionTable
-            searchValue={searchValue}
-            dates={selectedDates}
-            departmentIds={selectedDepartments.map((o: Option) => o.id)}
+      <div className="flex flex-col md:flex-row gap-4 lg:py-6 items-start md:items-center">
+        <div className="flex-none">
+          <CalendarDateRangePicker
+            queryKey={dateRangeQueryKey}
+            defaultPreset="Síðustu 30 dagar"
+            presets={dateRangePresets}
           />
         </div>
-      </DatePickerProvider>
+        <div className="flex-auto mt-2">
+          <SelectMultiple
+            options={departmentsOptions(departments.data)}
+            selectPlaceholder={
+              selectedDepartments && selectedDepartments?.length > 0
+                ? ''
+                : 'Allar deildir'
+            }
+            queryKey={selectedDepartmentsQueryKey}
+          ></SelectMultiple>
+        </div>
+        <div className="flex-none">
+          <DebouncedInput
+            value={searchValue}
+            onChange={(value) => setSearchValue(value as string)}
+            name="search"
+            placeholder="Leita í lista"
+            className="w-96"
+          />
+        </div>
+      </div>
+
+      <TransactionTable
+        searchValue={searchValue}
+        dates={[dateRange?.from, dateRange?.to]}
+        departmentIds={
+          selectedDepartments?.map((o: MultipleSelectOption) => {
+            return o?.value;
+          }) ?? []
+        }
+      />
     </>
   );
 }

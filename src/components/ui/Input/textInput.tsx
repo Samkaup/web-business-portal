@@ -33,7 +33,7 @@ export default function TextInput({
   ...props
 }: Props) {
   const baseStyle =
-    'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50';
+    'flex h-10 border-company/20 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50';
   const normalStyle =
     'bg-background px-3 py-2 text-sm ring-company-600 ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus:ring-company-600 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50';
   const errorStyle =
@@ -42,7 +42,7 @@ export default function TextInput({
   return (
     <div className={className}>
       {label ? <Label label={label} name={name} /> : <></>}
-      <div className="relative rounded-md shadow-sm mt-2">
+      <div className="relative rounded-md shadow-sm">
         <Input
           type={type ? type : ''}
           name={name ? name : ''}

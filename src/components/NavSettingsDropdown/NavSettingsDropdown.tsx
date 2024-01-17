@@ -52,7 +52,7 @@ export default function CompanySwitcher() {
             <p className="text-sm font-medium leading-none px-4 text-white">
               {company?.name}
             </p>
-            <p className="text-sm font-medium leading-none pt-1 px-4 text-muted-foreground">
+            <p className="text-sm font-medium leading-none pt-1 px-4 text-white text-opacity-70">
               kt. {company?.external_identifier}
             </p>
           </Link>
@@ -77,15 +77,14 @@ export default function CompanySwitcher() {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[200px]">
           <DropdownMenuGroup>
-            <Link href="/profile" className="hover:bg-company">
+            <Link href="/profile">
               <DropdownMenuLabel>Mínar stillingar</DropdownMenuLabel>
             </Link>
             <DropdownMenuSeparator></DropdownMenuSeparator>
-            <DropdownMenuLabel>
-              <Link href="/companies">Fyrirtæki</Link>
-            </DropdownMenuLabel>
             <DropdownMenuSub>
-              <DropdownMenuSubTrigger>Velja fyrirtæki</DropdownMenuSubTrigger>
+              <DropdownMenuSubTrigger className="hover:bg-gray-400 hover:cursor-pointer">
+                <Link href="/profile">Fyrirtæki</Link>
+              </DropdownMenuSubTrigger>
               <DropdownMenuSubContent className="p-0">
                 <Command>
                   <CommandInput

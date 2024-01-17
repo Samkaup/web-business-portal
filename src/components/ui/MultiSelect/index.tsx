@@ -34,7 +34,7 @@ const MultiSelect = ({ options, selectedOptions, onSelect, label }: Props) => {
   const disabled = () => options.length === 0;
 
   return (
-    <Popover className="relative flex flex-col w-full">
+    <Popover className="relative flex flex-col w-full h-full">
       {({ open }) => (
         <>
           <div className="w-48 flex flex-col mx-auto h-full justify-center">
@@ -44,7 +44,7 @@ const MultiSelect = ({ options, selectedOptions, onSelect, label }: Props) => {
                   'h-full flex justify-start items-center rounded-md border-0 sm:text-sm sm:leading-6 ring-1 ring-inset ring-gray-300',
                   disabled()
                     ? 'text-gray-300 cursor-auto'
-                    : 'text-gray-900 shadow-sm focus:ring-2 focus:ring-inset focus:ring-company-600 hover:ring-company-600'
+                    : 'text-gray-900 shadow-sm focus:ring-2 focus:ring-inset  '
                 )}
                 disabled={disabled()}
               >
