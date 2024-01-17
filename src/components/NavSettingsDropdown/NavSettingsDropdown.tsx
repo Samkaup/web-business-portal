@@ -49,13 +49,15 @@ export default function NavSettingsDropdown() {
   return (
     <div className="flex w-full items-start justify-start sm:flex-row sm:items-center">
       {isSuccess && (
-        <div className="w-full">
-          <p className="w-full text-sm font-medium leading-none text-white">
-            {company?.name}
-          </p>
-          <p className="w-full text-sm font-medium leading-none pt-1 text-muted-foreground">
-            kt. {company?.external_identifier}
-          </p>
+        <div>
+          <Link href="#" onClick={() => setOpen(true)}>
+            <p className="text-sm font-medium leading-none px-4 text-white">
+              {company?.name}
+            </p>
+            <p className="text-sm font-medium leading-none pt-1 px-4 text-white text-opacity-70">
+              kt. {company?.external_identifier}
+            </p>
+          </Link>
         </div>
       )}
       <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -79,15 +81,14 @@ export default function NavSettingsDropdown() {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[200px]">
           <DropdownMenuGroup>
-            <Link href="/profile" className="hover:bg-company">
+            <Link href="/profile">
               <DropdownMenuLabel>Mínar stillingar</DropdownMenuLabel>
             </Link>
             <DropdownMenuSeparator></DropdownMenuSeparator>
-            <DropdownMenuLabel>
-              <Link href="/companies">Fyrirtæki</Link>
-            </DropdownMenuLabel>
             <DropdownMenuSub>
-              <DropdownMenuSubTrigger>Velja fyrirtæki</DropdownMenuSubTrigger>
+              <DropdownMenuSubTrigger className="hover:bg-gray-400 hover:cursor-pointer">
+                <Link href="/profile">Fyrirtæki</Link>
+              </DropdownMenuSubTrigger>
               <DropdownMenuSubContent className="p-0">
                 <Command>
                   <CommandInput

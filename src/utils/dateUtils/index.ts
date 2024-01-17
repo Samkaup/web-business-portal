@@ -4,8 +4,11 @@ import {
   startOfDay,
   endOfDay,
   startOfYear,
-  endOfYear
+  endOfYear,
+  format
 } from 'date-fns';
+
+import { is } from 'date-fns/locale';
 
 export function getDateNow(): Date {
   return new Date(Date.now());
@@ -56,6 +59,12 @@ export function getStartOfDay(date?: Date): Date {
 export function getEndOfDay(date?: Date): Date {
   const now: Date = getDateNow();
   return endOfDay(date ? date : now);
+}
+
+export function formatDateFns(value: Date, formatString: string): string {
+  return format(value, formatString, {
+    locale: is
+  });
 }
 
 export function formatDate(date: Date): string {

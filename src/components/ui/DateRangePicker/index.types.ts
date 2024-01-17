@@ -6,7 +6,7 @@ export type PresetButtonProps = {
 };
 
 export type DateRangePreset = {
-  lable: string;
+  label: string;
   dates: Date[];
 };
 
