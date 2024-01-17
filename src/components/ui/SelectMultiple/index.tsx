@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { X } from 'lucide-react';
+import { CheckIcon, X } from 'lucide-react';
 
 import { Badge } from '@/components/Shadcn/ui/badge';
 import {
@@ -27,14 +27,23 @@ export function SelectMultiple({
 }: Props) {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [open, setOpen] = React.useState(false);
-
   const [selected, setSelected] = React.useState<Option[]>([]);
   const [inputValue, setInputValue] = React.useState('');
-
   const { mutate: updateDateRange } = useUpdateSelectedDepartments(queryKey);
 
+  const handleSelect = (option: Option) => {
+    if (!alreadyInSelectedList(option)) {
+      setSelected([...selected, option]);
+    }
+  };
+  const alreadyInSelectedList = (option: Option) => {
+    return selected.filter((s) => s.value === option.value).length > 0;
+  };
   const handleUnselect = React.useCallback((option: Option) => {
-    setSelected((prev) => prev.filter((s) => s.value !== option.value));
+    const alreadyInSelected = alreadyInSelectedList(option);
+    if (!alreadyInSelected) {
+      setSelected((prev) => prev.filter((s) => s.value !== option.value));
+    }
   }, []);
 
   React.useEffect(() => {
@@ -118,10 +127,13 @@ export function SelectMultiple({
                     }}
                     onSelect={() => {
                       setInputValue('');
-                      setSelected((prev) => [...prev, option]);
+                      handleSelect(option);
                     }}
                     className={'cursor-pointer'}
                   >
+                    {alreadyInSelectedList(option) && (
+                      <CheckIcon className="w-4 h-4 mr-2"></CheckIcon>
+                    )}
                     {option.label}
                   </CommandItem>
                 );
