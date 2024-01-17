@@ -2,7 +2,6 @@
 import { Disclosure } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import Logo from '@/components/Logo/Logo';
-import { useGetProfile } from '@/utils/react_query_hooks/profile';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import classNames from '@/utils/style/classNames';
@@ -24,14 +23,7 @@ const userNavigation = [
   }
 ];
 
-function getInitals(fullName: string) {
-  const parts: string[] = fullName.split(' ');
-  const initalsArr = parts.map((part: string) => part.at(0)).slice(0, 2);
-  return initalsArr.join('');
-}
-
 export default function Navigation() {
-  const { data, isSuccess } = useGetProfile();
   const pathname = usePathname();
 
   return (
@@ -115,21 +107,7 @@ export default function Navigation() {
                   ))}
                 </div>
                 <div className="border-t border-company pb-3 pt-4">
-                  <div className="flex items-center px-5">
-                    <div className="flex-shrink-0">
-                      <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white ">
-                        <span className="font-medium leading-none text-company-950">
-                          {isSuccess ? getInitals(data.profile.full_name) : ''}
-                        </span>
-                      </span>
-                    </div>
-                    <div className="ml-3">
-                      <div className="text-base font-medium text-white">
-                        {isSuccess && data.profile.full_name}
-                      </div>
-                    </div>
-                  </div>
-                  <NavSettingsDropddown></NavSettingsDropddown>
+                  <NavSettingsDropddown />
                   <div className="mt-3 space-y-1 px-2">
                     {userNavigation.map((item) => (
                       <Disclosure.Button

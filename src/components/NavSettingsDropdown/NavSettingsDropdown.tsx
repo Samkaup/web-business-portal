@@ -31,7 +31,7 @@ export default function NavSettingsDropdown() {
   const { company, companies, setSelectedCompany, isSuccess } = useCompany();
   const { data: user } = useGetProfile();
 
-  function getInitals(fullName: string) {
+  function getInitials(fullName: string) {
     const parts: string[] = fullName.split(' ');
     const initalsArr = parts.map((part: string) => part.at(0)).slice(0, 2);
     return initalsArr.join('');
@@ -47,27 +47,25 @@ export default function NavSettingsDropdown() {
   const totalNotifications = 0;
 
   return (
-    <div className="flex w-full flex-col items-start justify-between px-4 py-3 sm:flex-row sm:items-center">
+    <div className="flex w-full items-start justify-start sm:flex-row sm:items-center">
       {isSuccess && (
-        <div>
-          <Link href="#" onClick={() => setOpen(true)}>
-            <p className="text-sm font-medium leading-none px-4 text-white">
-              {company?.name}
-            </p>
-            <p className="text-sm font-medium leading-none pt-1 px-4 text-muted-foreground">
-              kt. {company?.external_identifier}
-            </p>
-          </Link>
+        <div className="w-full">
+          <p className="w-full text-sm font-medium leading-none text-white">
+            {company?.name}
+          </p>
+          <p className="w-full text-sm font-medium leading-none pt-1 text-muted-foreground">
+            kt. {company?.external_identifier}
+          </p>
         </div>
       )}
       <DropdownMenu open={open} onOpenChange={setOpen}>
         <DropdownMenuTrigger asChild>
-          <div className="relative w-10 h-10">
+          <div className="flex w-full items-center">
             <Link href="#">
-              <Avatar className="w-full h-full rounded-full overflow-hidden bg-gray-200">
+              <Avatar className="w-10 h-10 rounded-full overflow-hidden bg-gray-200">
                 {user && (
                   <AvatarFallback className="w-full h-full flex items-center justify-center text-lg font-bold">
-                    {getInitals(user.profile.full_name)}
+                    {getInitials(user.profile.full_name)}
                   </AvatarFallback>
                 )}
               </Avatar>
