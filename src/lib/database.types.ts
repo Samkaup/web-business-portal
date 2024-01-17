@@ -246,6 +246,7 @@ export interface Database {
           due_date: string | null
           edi_reference: number | null
           external_row_number: number
+          id: string
           invoice_number: number
           invoice_reference: string | null
           journal_number: string
@@ -267,6 +268,7 @@ export interface Database {
           due_date?: string | null
           edi_reference?: number | null
           external_row_number: number
+          id?: string
           invoice_number: number
           invoice_reference?: string | null
           journal_number: string
@@ -287,6 +289,7 @@ export interface Database {
           due_date?: string | null
           edi_reference?: number | null
           external_row_number?: number
+          id?: string
           invoice_number?: number
           invoice_reference?: string | null
           journal_number?: string
