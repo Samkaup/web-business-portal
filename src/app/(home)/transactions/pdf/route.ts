@@ -5,7 +5,8 @@ import type { Database } from '@/lib/database.types';
 import FormData from 'form-data';
 import axios from 'axios';
 import fs from 'fs';
-import { JoinedTransaction, LineItem, generateHTML } from './htmlGenerator';
+import { JoinedTransaction, generateHTML } from './htmlGenerator';
+import { TableRow } from '@/types';
 
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url);
@@ -29,7 +30,17 @@ export async function GET(request: NextRequest) {
     .eq('id', id)
     .single();
 
-  const pdfBytes = await generatePDF(transaction);
+  if (!transaction) {
+    return new Response('Not found', { status: 404 });
+  }
+
+  const { data: transactionLines } = await supabase
+    .from('transaction_line')
+    .select('*')
+    .eq('invoice_number', transaction.invoice_number)
+    .eq('sales_number', transaction.sales_number);
+
+  const pdfBytes = await generatePDF(transaction, transactionLines);
 
   return new Response(pdfBytes, {
     headers: {
@@ -39,31 +50,10 @@ export async function GET(request: NextRequest) {
   });
 }
 
-const lineItems: LineItem[] = [
-  {
-    sku: '10023486',
-    label: 'Okkar Kremkex 450g',
-    quantity: 1,
-    unitPrice: 499,
-    amount: 499
-  },
-  {
-    sku: '250801028',
-    label: 'Crawf Kremkex Súkkulaði 500g',
-    quantity: 1,
-    unitPrice: 327,
-    amount: 327
-  },
-  {
-    sku: '241712103',
-    label: 'Frón Mjólkurkex Gróft 400g',
-    quantity: 2,
-    unitPrice: 429,
-    amount: 858
-  }
-];
-
-const generatePDF = async (transaction: JoinedTransaction) => {
+const generatePDF = async (
+  transaction: JoinedTransaction,
+  transactionLines: TableRow<'transaction_line'>[]
+) => {
   const formData = new FormData();
   formData.append(
     'instructions',
@@ -85,7 +75,7 @@ const generatePDF = async (transaction: JoinedTransaction) => {
   );
 
   // Append all files needed to build the PDF
-  formData.append('index.html', generateHTML(transaction, lineItems));
+  formData.append('index.html', generateHTML(transaction, transactionLines));
   formData.append('style.css', fs.createReadStream('./public/pdf/style.css'));
   formData.append(
     'samkaup_logo_blue.png',

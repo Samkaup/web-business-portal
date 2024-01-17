@@ -11,24 +11,36 @@ export interface Database {
     Tables: {
       company: {
         Row: {
+          address: string | null
+          address_2: string | null
+          city: string | null
           created_at: string | null
           credit_limit_amount: number | null
           external_identifier: string
           name: string | null
+          post_code: string | null
           updated_at: string | null
         }
         Insert: {
+          address?: string | null
+          address_2?: string | null
+          city?: string | null
           created_at?: string | null
           credit_limit_amount?: number | null
           external_identifier: string
           name?: string | null
+          post_code?: string | null
           updated_at?: string | null
         }
         Update: {
+          address?: string | null
+          address_2?: string | null
+          city?: string | null
           created_at?: string | null
           credit_limit_amount?: number | null
           external_identifier?: string
           name?: string | null
+          post_code?: string | null
           updated_at?: string | null
         }
         Relationships: []
@@ -232,24 +244,17 @@ export interface Database {
           date: string | null
           description: string | null
           due_date: string | null
+          edi_reference: number | null
           external_row_number: number
           id: string
-          invoice_number: number | null
-          journal_customer_address: string | null
-          journal_customer_name: string | null
-          journal_edi_reference: number | null
-          journal_invoice_amount: number | null
-          journal_invoice_date: string | null
-          journal_invoice_due_date: string | null
-          journal_invoice_reference: string | null
-          journal_quantity: number | null
-          journal_sales_number: number | null
-          journal_vat: number | null
+          invoice_number: number
+          invoice_reference: string | null
+          journal_number: string
+          sales_number: number
           statement_date: string | null
-          statement_number: number | null
           store_number: number | null
           transaction_type: number | null
-          voucher_number: number | null
+          vat: number | null
           full_text_search: string | null
         }
         Insert: {
@@ -261,24 +266,17 @@ export interface Database {
           date?: string | null
           description?: string | null
           due_date?: string | null
+          edi_reference?: number | null
           external_row_number: number
           id?: string
-          invoice_number?: number | null
-          journal_customer_address?: string | null
-          journal_customer_name?: string | null
-          journal_edi_reference?: number | null
-          journal_invoice_amount?: number | null
-          journal_invoice_date?: string | null
-          journal_invoice_due_date?: string | null
-          journal_invoice_reference?: string | null
-          journal_quantity?: number | null
-          journal_sales_number?: number | null
-          journal_vat?: number | null
+          invoice_number: number
+          invoice_reference?: string | null
+          journal_number: string
+          sales_number: number
           statement_date?: string | null
-          statement_number?: number | null
           store_number?: number | null
           transaction_type?: number | null
-          voucher_number?: number | null
+          vat?: number | null
         }
         Update: {
           account_number?: string | null
@@ -289,24 +287,17 @@ export interface Database {
           date?: string | null
           description?: string | null
           due_date?: string | null
+          edi_reference?: number | null
           external_row_number?: number
           id?: string
-          invoice_number?: number | null
-          journal_customer_address?: string | null
-          journal_customer_name?: string | null
-          journal_edi_reference?: number | null
-          journal_invoice_amount?: number | null
-          journal_invoice_date?: string | null
-          journal_invoice_due_date?: string | null
-          journal_invoice_reference?: string | null
-          journal_quantity?: number | null
-          journal_sales_number?: number | null
-          journal_vat?: number | null
+          invoice_number?: number
+          invoice_reference?: string | null
+          journal_number?: string
+          sales_number?: number
           statement_date?: string | null
-          statement_number?: number | null
           store_number?: number | null
           transaction_type?: number | null
-          voucher_number?: number | null
+          vat?: number | null
         }
         Relationships: [
           {
@@ -322,6 +313,68 @@ export interface Database {
             isOneToOne: false
             referencedRelation: "store"
             referencedColumns: ["id"]
+          }
+        ]
+      }
+      transaction_line: {
+        Row: {
+          cost_value: number
+          created_at: string
+          description: string
+          discount_amount: number
+          discount_percent: number
+          id: string
+          invoice_number: number
+          line_amount: number
+          quantity: number
+          rownumber: number
+          sales_number: number
+          sales_price: number
+          sku: string
+          vat_code: string
+          vat_factor: number
+        }
+        Insert: {
+          cost_value: number
+          created_at?: string
+          description: string
+          discount_amount: number
+          discount_percent: number
+          id?: string
+          invoice_number: number
+          line_amount: number
+          quantity: number
+          rownumber: number
+          sales_number: number
+          sales_price: number
+          sku: string
+          vat_code: string
+          vat_factor: number
+        }
+        Update: {
+          cost_value?: number
+          created_at?: string
+          description?: string
+          discount_amount?: number
+          discount_percent?: number
+          id?: string
+          invoice_number?: number
+          line_amount?: number
+          quantity?: number
+          rownumber?: number
+          sales_number?: number
+          sales_price?: number
+          sku?: string
+          vat_code?: string
+          vat_factor?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_invoice_sales"
+            columns: ["invoice_number", "sales_number"]
+            isOneToOne: false
+            referencedRelation: "transaction"
+            referencedColumns: ["invoice_number", "sales_number"]
           }
         ]
       }

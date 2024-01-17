@@ -8,17 +8,9 @@ export type JoinedTransaction = TableRow<'transaction'> & {
   store: TableRow<'store'>;
 };
 
-export type LineItem = {
-  sku: string;
-  label: string;
-  quantity: number;
-  unitPrice: number;
-  amount: number;
-};
-
 export const generateHTML = (
   transaction: JoinedTransaction,
-  lineItems: LineItem[]
+  transactionLines: TableRow<'transaction_line'>[]
 ) => {
   return `
     <!DOCTYPE html>
@@ -46,8 +38,10 @@ export const generateHTML = (
             <div class="flex justify-between mt-10">
               <div>
                 <p>${transaction.department.company.name}</p>
-                <p>Ármúli 3 (STATIC)</p>
-                <p>108 REYKJAVIK (STATIC)</p>
+                <p>${transaction.department.company.address || ''}</p>
+                <p>${transaction.department.company.post_code || ''} ${
+    transaction.department.company.city || ''
+  }</p>
               </div>
               <div class="text-right">
                 <p>Reikningur: ${transaction.invoice_number}</p>
@@ -55,8 +49,7 @@ export const generateHTML = (
                 <p>Viðskiptanúmer: ${transaction.department.company_id}</p>
                 <p>Kennitala: ${transaction.department.company_id}</p>
                 <p>Gjalddagi: ${transaction.due_date}</p>
-                <p>Verslun: Nettó Ísafirði (STATIC)</p>
-                <p>Úttekt af: 200760-3369 Eygló Jónsdóttir (STATIC)</p>
+                <p>Verslun: ${transaction.store.name}</p>
               </div>
             </div>
           </div>
@@ -68,39 +61,18 @@ export const generateHTML = (
                     <th>Vörunr.</th>
                     <th>Lýsing</th>
                     <th>Magn</th>
-                    <th>Ein. Verð</th>
-                    <th>Upphæð</th>
+                    <th class="price">Ein. Verð</th>
+                    <th class="price">Upphæð</th>
                   </tr>
                 </thead>
                 <tbody>
-                  ${generateLineItemsHTML(lineItems)}
+                  ${generateLineItemsHTML(transactionLines)}
                   <tr>
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td>Samtals</td>
-                    <td>${transaction.amount_debit}</td>
-                  </tr>
-                  <tr>
-                    <td></td>
-                    <td>VSK stofn 11.00% = T 3.286 (STATIC)</td>
-                    <td>VSK Upph. 361 (STATIC)</td>
-                    <td></td>
-                    <td></td>
-                  </tr>
-                  <tr>
-                    <td></td>
-                    <td>VSK stofn 24.00% = 40 (STATIC)</td>
-                    <td>VSK Upph. 10 (STATIC)</td>
-                    <td></td>
-                    <td></td>
-                  </tr>
-                  <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>Reikningsuppæð</td>
-                    <td>${transaction.amount_debit}</td>
+                    <td class="price">Samtals</td>
+                    <td class="price">${transaction.amount_debit}</td>
                   </tr>
                 </tbody>
               </table>
@@ -137,15 +109,15 @@ export const generateHTML = (
     `;
 };
 
-function generateLineItemsHTML(items: LineItem[]) {
+function generateLineItemsHTML(items: TableRow<'transaction_line'>[]) {
   return items
-    .map((item: any) => {
+    .map((item: TableRow<'transaction_line'>) => {
       return `<tr>
               <td>${item.sku}</td>
-              <td>${item.label}</td>
+              <td>${item.description}</td>
               <td>${item.quantity}</td>
-              <td>${item.unitPrice.toFixed(2)} T</td>
-              <td>${item.amount}</td>
+              <td class="price">${item.sales_price.toFixed(2)} T</td>
+              <td class="price">${item.line_amount}</td>
             </tr>`;
     })
     .join('');
