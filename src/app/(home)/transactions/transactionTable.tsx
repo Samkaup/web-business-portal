@@ -16,12 +16,16 @@ type Props = {
   searchValue: string;
   dates: Date[];
   departmentIds: string[];
+  pagination: PaginationState;
+  setPagination: (state: PaginationState) => void;
 };
 
 export default function TransactionTable({
   searchValue,
   dates,
-  departmentIds
+  departmentIds,
+  pagination,
+  setPagination
 }: Props) {
   const { company } = useCompany();
   const defaultSort = {
@@ -30,14 +34,8 @@ export default function TransactionTable({
   };
 
   const [sorting, setSorting] = useState<SortingState>([defaultSort]);
-  const basePageSize = 15;
-  const pageSizes = [basePageSize, 30, 50, 100];
+  const pageSizes = [15, 30, 50, 100];
   const [csvDownloading, setCsvDownloading] = useState<boolean>(false);
-
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: basePageSize
-  });
 
   const query = useTransactionsTable({
     pagination,

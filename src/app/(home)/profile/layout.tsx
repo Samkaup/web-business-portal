@@ -12,11 +12,11 @@ const sidebarNavItems = [
   {
     title: 'Prófíllinn minn',
     href: '/profile'
-  },
-  {
-    title: 'Tilkynningar',
-    href: '/profile/notifications'
   }
+  // {
+  //   title: 'Tilkynningar',
+  //   href: '/profile/notifications'
+  // }
 ];
 
 type Props = {

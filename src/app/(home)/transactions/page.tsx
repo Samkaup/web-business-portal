@@ -14,6 +14,7 @@ import { useDepartments } from '@/utils/react_query_hooks/department';
 import MultiSelect, { type Option } from '@/components/ui/MultiSelect';
 import { Row } from '@/types';
 import { DebouncedInput } from '@/components/ui/Input/debouncedInput';
+import { PaginationState } from '@tanstack/react-table';
 
 export default function Transactions() {
   const dateToday = getDateNow();
@@ -23,6 +24,13 @@ export default function Transactions() {
     getDateDaysAgo(37),
     dateToday
   ]);
+
+  const basePageSize = 15;
+
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: basePageSize
+  });
 
   const departments = useDepartments();
   const [selectedDepartments, setSelectedDepartments] = useState<Option[]>([]);
@@ -77,20 +85,29 @@ export default function Transactions() {
             <div className="flex flex-row gap-4">
               <DateRangePicker
                 selectedDates={selectedDates}
-                setSelectedDates={onDatesChange}
+                setSelectedDates={(dates: Date[]) => {
+                  setPagination({ ...pagination, pageIndex: 0 });
+                  onDatesChange(dates);
+                }}
                 presets={dateRangePresets}
               />
               <MultiSelect
                 options={departmentsToOptions(departments.data)}
                 selectedOptions={selectedDepartments}
-                onSelect={setSelectedDepartments}
+                onSelect={(options: Option[]) => {
+                  setPagination({ ...pagination, pageIndex: 0 });
+                  setSelectedDepartments(options);
+                }}
                 label="Allar deildir"
               />
             </div>
 
             <DebouncedInput
               value={searchValue}
-              onChange={(value) => setSearchValue(value as string)}
+              onChange={(value) => {
+                setPagination({ ...pagination, pageIndex: 0 });
+                setSearchValue(value as string);
+              }}
               name="search"
               placeholder="Leita í lista"
               className="w-80"
@@ -101,6 +118,8 @@ export default function Transactions() {
             searchValue={searchValue}
             dates={selectedDates}
             departmentIds={selectedDepartments.map((o: Option) => o.id)}
+            pagination={pagination}
+            setPagination={setPagination}
           />
         </div>
       </DatePickerProvider>
