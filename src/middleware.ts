@@ -40,6 +40,7 @@ export const config = {
     '/auth/signup',
     '/auth/login',
     '/auth/signout',
-    '/auth/forgot-password/reset-pass'
+    '/auth/forgot-password/reset-pass',
+    '/companies'
   ]
 };
