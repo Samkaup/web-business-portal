@@ -6,6 +6,10 @@ export const downloadPDF = async (id: string) => {
     }
   });
 
+  if (!res.ok) {
+    throw new Error('Failed to download PDF');
+  }
+
   const blob = await res.blob();
   const newBlob = new Blob([blob], {
     type: 'data:text/csv;charset=utf-8,'

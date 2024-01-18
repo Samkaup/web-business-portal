@@ -7,6 +7,7 @@ import axios from 'axios';
 import fs from 'fs';
 import { JoinedTransaction, generateHTML } from './htmlGenerator';
 import { TableRow } from '@/types';
+import path from 'path';
 
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url);
@@ -76,26 +77,29 @@ const generatePDF = async (
 
   // Append all files needed to build the PDF
   formData.append('index.html', generateHTML(transaction, transactionLines));
-  formData.append('style.css', fs.createReadStream('./public/pdf/style.css'));
+  formData.append(
+    'style.css',
+    fs.createReadStream(path.resolve('public/pdf/style.css'))
+  );
   formData.append(
     'samkaup_logo_blue.png',
-    fs.createReadStream('./public/logos/samkaup_logo_blue.png')
+    fs.createReadStream(path.resolve('public/logos/samkaup_logo_blue.png'))
   );
   formData.append(
     'netto_logo.png',
-    fs.createReadStream('./public/logos/netto_logo.png')
+    fs.createReadStream(path.resolve('public/logos/netto_logo.png'))
   );
   formData.append(
     'krambudin_logo.png',
-    fs.createReadStream('./public/logos/krambudin_logo.png')
+    fs.createReadStream(path.resolve('public/logos/krambudin_logo.png'))
   );
   formData.append(
     'kjorbudin_logo.png',
-    fs.createReadStream('./public/logos/kjorbudin_logo.png')
+    fs.createReadStream(path.resolve('public/logos/kjorbudin_logo.png'))
   );
   formData.append(
     'iceland_logo.png',
-    fs.createReadStream('./public/logos/iceland_logo.png')
+    fs.createReadStream(path.resolve('public/logos/iceland_logo.png'))
   );
 
   // Request to generate a PDF
@@ -114,5 +118,6 @@ const generatePDF = async (
     return response.data;
   } catch (e) {
     console.log(e);
+    return new Response('Error', { status: 500 });
   }
 };
