@@ -170,7 +170,9 @@ export default function QueryTable<T extends object>({
                   </option>
                 ))}
               </select>
-              <span className="font-medium ml-4">{`af ${query.data?.rowCount} niðurstöðum`}</span>
+              <span className="font-medium ml-4">{`af ${
+                query.data?.rowCount ?? '0'
+              } niðurstöðum`}</span>
             </p>
           </div>
 
