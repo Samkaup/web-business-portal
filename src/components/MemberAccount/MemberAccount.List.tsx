@@ -28,7 +28,7 @@ export default function MemberAccountListWithContacts({ departments }: Props) {
     {
       name: 'Stofna úttektaraðila',
       icon: <UserIcon className="w-4 h-4" />,
-      onClick: () => setShowContact(true)
+      onClick: () => setShowContact(!showContactCreate)
     },
     {
       name: 'Eyða deild',

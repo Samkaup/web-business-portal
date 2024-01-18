@@ -54,11 +54,12 @@ export default function Contacts() {
                 <Terminal className="h-4 w-4" />
                 <AlertTitle>Vissir þú?</AlertTitle>
                 <AlertDescription>
-                  Ef fyrirtækið þitt er með margar deildir eða einingar sem þú
-                  vilt stýra kostnað á. Með því að setja upp deild og
-                  úttektaraðila á deildina þá færðu reikninginn með þessum
-                  upplýsingum beint í fjárhagskerfið þitt. Einnig er hægt að
-                  setja upp vöktun á úttektarheimild fyrir hverja deild.
+                  Ef fyrirtækið þitt er með margar deildir eða viðskiptaeiningar
+                  sem þú vilt stýra kostnað á. Þá er einfalt að setja upp deild
+                  og úttektaraðila á deildina, við það færðu reikninginn með
+                  þessum upplýsingum beint í fjárhagskerfið þitt. Einnig er hægt
+                  að setja upp vöktun á úttektarheimild fyrir hverja deild, ef
+                  notkun vex umfram heimild fá stjórnendur tilkynningu
                 </AlertDescription>
               </Alert>
             )}
