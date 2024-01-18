@@ -82,7 +82,7 @@ export function EmailResetForm() {
             <FormItem>
               <FormLabel>Breyta Netfang</FormLabel>
               <FormControl>
-                <div className="flex w-full items-center space-x-2">
+                <div className="flex flex-col w-full items-start justify-start gap-2 md:flex-row">
                   <TextInput
                     {...field}
                     type="email"
