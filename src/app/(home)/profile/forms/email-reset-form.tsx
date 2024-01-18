@@ -80,7 +80,7 @@ export function EmailResetForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Breyta Netfang</FormLabel>
+              <FormLabel>Breyta netfang</FormLabel>
               <FormControl>
                 <div className="flex flex-col w-full items-start justify-start gap-2 md:flex-row">
                   <TextInput

@@ -72,7 +72,7 @@ export function PassResetForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Breyta Lykilorð</FormLabel>
+              <FormLabel>Breyta lykilorði</FormLabel>
               <FormControl>
                 <TextInput {...field} placeholder="Lykilorð" type="password" />
               </FormControl>
