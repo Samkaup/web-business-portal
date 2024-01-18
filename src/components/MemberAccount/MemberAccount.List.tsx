@@ -127,7 +127,7 @@ export default function MemberAccountListWithContacts({ departments }: Props) {
                         >
                           <div className="flex min-w-0 gap-x-4 items-center">
                             <div className="min-w-0 flex-auto">
-                              <p className="text-lg leading-6 text-gray-900 ">
+                              <p className="text-lg leading-6 text-gray-900 pb-2">
                                 Úttektaraðilar deildar
                               </p>
                             </div>

@@ -65,7 +65,7 @@ export default function MemberContactNew({ departmentId, onSave }: Props) {
   return (
     <>
       <div>
-        <form className="inline-flex items-center pb-4">
+        <form className="flex flex-col sm:flex-row items-center pb-4">
           <TextInput
             value={externalIdentifier}
             label="Kennitala"
@@ -74,7 +74,7 @@ export default function MemberContactNew({ departmentId, onSave }: Props) {
             onChange={(ssn) => setExternalIdentifier(ssn as string)}
           ></TextInput>
           <TextInput
-            className="ml-4"
+            className="lg:ml-4"
             value={fullName}
             isError={fullNameError.length > 0}
             label="Fullt nafn"
@@ -82,7 +82,7 @@ export default function MemberContactNew({ departmentId, onSave }: Props) {
             onChange={(name) => setFullName(name as string)}
           ></TextInput>
           <TextInput
-            className="ml-4"
+            className="lg:ml-4"
             value={emailAddress}
             isError={emailAddressError.length > 0}
             label="Netfang"
@@ -90,7 +90,7 @@ export default function MemberContactNew({ departmentId, onSave }: Props) {
             onChange={(email) => setEmailAddress(email as string)}
           ></TextInput>
           <TextInput
-            className="ml-4"
+            className="lg:ml-4"
             value={cellPhone}
             isError={cellPhoneError.length > 0}
             label="Farsímanúmer"
@@ -99,8 +99,6 @@ export default function MemberContactNew({ departmentId, onSave }: Props) {
           ></TextInput>
           {submitError && <span>Error!</span>}
         </form>
-      </div>
-      <div className="flex items-center gap-x-4">
         <Button type="submit" secondary onClick={handleSubmit}>
           {isLoading ? (
             <Spinner />
