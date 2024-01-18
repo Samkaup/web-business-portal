@@ -19,6 +19,9 @@ const useCompany = () => {
   const setSelectedCompany = (company: TCompany | undefined) => {
     setCompany(company); // Update session storage
     queryClient.setQueryData(['selectedCompany'], company); // Update query client
+
+    // Please add all queries here that might be dependant on Company switch!
+    queryClient.invalidateQueries(['selectedDepartmentsTransaction']);
   };
 
   // Initialize the selected company from session storage or the first club

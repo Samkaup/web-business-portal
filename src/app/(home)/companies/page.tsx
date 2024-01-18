@@ -13,6 +13,14 @@ import supabaseBrowser from '@/utils/supabase-browser';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious
+} from '@/components/Shadcn/ui/pagination';
 
 export default function Companies() {
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -21,8 +29,10 @@ export default function Companies() {
     useState<TableRow<'company'> | null>(null);
   const { data: userProfile } = useGetProfile();
   const queryClient = useQueryClient();
+  const [page, setPage] = useState(1);
+
   const { data: companies, isSuccess } = useCompaniesPagination({
-    page: 1,
+    page: page,
     pageSize: 10
   });
 
@@ -62,7 +72,9 @@ export default function Companies() {
           deleteCompanyProfile(companyToDelete?.external_identifier)
         }
         onCancel={() => setShowModal(false)}
-        description={'Ertu viss um að þú viljir eyða þessu fyrirtæki?'}
+        description={
+          'Ertu viss um að þú viljir afskrá notandann þinn frá þessu fyrirtæki?'
+        }
       />
       <Header title="Fyrirtæki" />
       <p className="text-sm text-muted-foreground">
@@ -71,28 +83,68 @@ export default function Companies() {
       <Separator />
 
       {isSuccess &&
-        companies.map((company: TableRow<'company'>, idx: number) => (
+        companies.map((thisCompany: TableRow<'company'>, idx: number) => (
           <Card key={idx} className="p-3  flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-medium">{company.name}</h3>
+              <h3 className="text-lg font-medium">{thisCompany.name}</h3>
               <h4 className="text-sm text-muted-foreground">
-                {company.external_identifier}
+                {thisCompany.external_identifier}
               </h4>
             </div>
-
-            {userProfile?.user?.app_metadata?.userrole !== 'ADMIN' && (
+            <div className="grid gap-2 grid-cols-2">
               <Button
-                variant="destructive"
-                onClick={() => {
-                  setShowModal(true);
-                  setCompanyToDelete(company);
-                }}
+                variant={
+                  thisCompany.external_identifier ===
+                  company.external_identifier
+                    ? 'default'
+                    : 'outline'
+                }
+                disabled={
+                  thisCompany.external_identifier ===
+                  company.external_identifier
+                }
+                onClick={() => setSelectedCompany(thisCompany)}
               >
-                Afskrá
+                {thisCompany.external_identifier ===
+                company.external_identifier ? (
+                  <span>Valið</span>
+                ) : (
+                  <span>Velja</span>
+                )}
               </Button>
-            )}
+              {userProfile?.user?.app_metadata?.userrole !== 'ADMIN' && (
+                <Button
+                  variant="destructive"
+                  onClick={() => {
+                    setShowModal(true);
+                    setCompanyToDelete(thisCompany);
+                  }}
+                >
+                  Afskrá
+                </Button>
+              )}
+            </div>
           </Card>
         ))}
+
+      {isSuccess && (
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                href="#"
+                onClick={() => setPage(page > 1 ? page - 1 : 1)}
+              />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#">{page}</PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationNext href="#" onClick={() => setPage(page + 1)} />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      )}
     </div>
   );
 }

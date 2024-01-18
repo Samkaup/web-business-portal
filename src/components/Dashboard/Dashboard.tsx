@@ -20,12 +20,21 @@ import {
   ChartBarIcon,
   CreditCardIcon,
   DocumentIcon,
+  InformationCircleIcon,
   UsersIcon
 } from '@heroicons/react/24/outline';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from '@/components/Shadcn/ui/tooltip';
 import { Chart } from '../Chart/Chart';
 import { useTransactionsByMonth } from '@/utils/react_query_hooks/transaction';
 import { LoadingBlock } from '../ui/LoadingBlock/LoadingBlock';
 import { DepartmentWithContacts } from '@/utils/supabase_queries/department';
+import { DateRange } from 'react-day-picker';
+import { formatDate } from '@/utils/dateUtils';
 
 export default function Dashboard() {
   const { data: dateRange } = useDateRange({ queryKey: 'dateRangeDashboard' });
@@ -43,7 +52,7 @@ export default function Dashboard() {
     return difference.toFixed(0);
   };
   const { data: transactionsByMonth, isLoading: isLoadingTransactionsByMonth } =
-    useTransactionsByMonth(2023);
+    useTransactionsByMonth(new Date().getFullYear());
 
   const { data: departmentWithContacts, isLoading: isLoadingDepContacts } =
     useDepartmentsWithContacts();
@@ -74,6 +83,25 @@ export default function Dashboard() {
     return totalContacts;
   };
 
+  const InfoDateRange = ({ dateRange }: { dateRange: DateRange }) => {
+    return (
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger>
+            <InformationCircleIcon className="w-4 h-4 inline-flex ml-1"></InformationCircleIcon>
+          </TooltipTrigger>
+          <TooltipContent>
+            {dateRange && (
+              <p>
+                {formatDate(dateRange.from)} til {formatDate(dateRange.to)}
+              </p>
+            )}
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    );
+  };
+
   return (
     <>
       <div className="flex-col md:flex">
@@ -98,6 +126,7 @@ export default function Dashboard() {
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">
                       Reikningsviðskipti
+                      <InfoDateRange dateRange={dateRange}></InfoDateRange>
                     </CardTitle>
                     <CreditCardIcon className="text-gray-600 w-5 h-5"></CreditCardIcon>
                   </CardHeader>
@@ -114,8 +143,8 @@ export default function Dashboard() {
                         {isLoadingTransactionSumPrev ? (
                           <Spinner />
                         ) : (
-                          <p className="text-sm text-muted-foreground">
-                            <span className={cn('text-company-900')}>
+                          <p className="text-sm text-muted-foreground items-center flex">
+                            <span className={cn('text-company-900 mr-1')}>
                               {calcDiffPercentage(
                                 transactionsPrevYear?.amount,
                                 transactions?.amount
@@ -133,6 +162,7 @@ export default function Dashboard() {
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">
                       Fjöldi reikninga
+                      <InfoDateRange dateRange={dateRange}></InfoDateRange>
                     </CardTitle>
                     <DocumentIcon className="w-5 h-5 text-gray-600"></DocumentIcon>
                   </CardHeader>
@@ -166,6 +196,7 @@ export default function Dashboard() {
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">
                       Meðalupphæð
+                      <InfoDateRange dateRange={dateRange}></InfoDateRange>
                     </CardTitle>
                     <ChartBarIcon className="w-5 h-5 text-gray-600"></ChartBarIcon>
                   </CardHeader>
@@ -223,7 +254,9 @@ export default function Dashboard() {
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
                 <Card className="col-span-4">
                   <CardHeader>
-                    <CardTitle>Viðskipti á árinu</CardTitle>
+                    <CardTitle>
+                      Viðskipti á árinu ({new Date().getFullYear()})
+                    </CardTitle>
                   </CardHeader>
                   <CardContent className="pl-2">
                     {isLoadingTransactionsByMonth ? (
