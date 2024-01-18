@@ -21,6 +21,7 @@ import {
   PaginationNext,
   PaginationPrevious
 } from '@/components/Shadcn/ui/pagination';
+import { cn } from '@/lib/utils';
 
 export default function Companies() {
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -64,7 +65,7 @@ export default function Companies() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 container">
       <ModalSimpleWithDismiss
         title=""
         open={showModal}
@@ -91,7 +92,14 @@ export default function Companies() {
                 {thisCompany.external_identifier}
               </h4>
             </div>
-            <div className="grid gap-2 grid-cols-2">
+            <div
+              className={cn(
+                'grid gap-2',
+                thisCompany.external_identifier === company.external_identifier
+                  ? 'grid-cols-2'
+                  : 'grid-cols-1'
+              )}
+            >
               <Button
                 variant={
                   thisCompany.external_identifier ===

@@ -45,7 +45,7 @@ export default function CompanySwitcher() {
   };
 
   return (
-    <div className="flex w-full flex-col items-start justify-between px-4 py-3 sm:flex-row sm:items-center">
+    <div className="flex w-full flex-row items-start justify-between px-4 py-3 sm:items-center">
       {isSuccess && (
         <div>
           <Link href="#" onClick={() => setOpen(true)}>
@@ -60,7 +60,7 @@ export default function CompanySwitcher() {
       )}
       <DropdownMenu open={open} onOpenChange={setOpen}>
         <DropdownMenuTrigger asChild>
-          <div className="relative w-10 h-10">
+          <div className="relative w-10 h-10 ">
             <Link href="#">
               <Avatar className="w-full h-full rounded-full overflow-hidden bg-gray-200">
                 {user && (
@@ -69,9 +69,10 @@ export default function CompanySwitcher() {
                   </AvatarFallback>
                 )}
               </Avatar>
-              <div className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 bg-red-500/90 rounded-full text-white text-xs font-bold">
+              {/* Enable when Notifications have been setup */}
+              {/* <div className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 bg-red-500/90 rounded-full text-white text-xs font-bold">
                 2
-              </div>
+              </div> */}
             </Link>
           </div>
         </DropdownMenuTrigger>

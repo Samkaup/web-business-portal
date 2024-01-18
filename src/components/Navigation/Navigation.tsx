@@ -113,6 +113,7 @@ export default function Navigation() {
                       <Disclosure.Button
                         key={item.name}
                         as="a"
+                        href={item.href}
                         className="block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-company-950 hover:bg-opacity-75"
                       >
                         {item.name}

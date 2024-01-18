@@ -9,7 +9,7 @@ export default function Profile() {
   const { data, isSuccess } = useGetProfile();
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 container">
       <div>
         <h3 className="text-xl font-medium">
           {isSuccess && data.profile.full_name}
