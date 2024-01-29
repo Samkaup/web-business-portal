@@ -14,7 +14,6 @@ const useCompany = () => {
   );
 
   const { data, isLoading, error, isSuccess } = useCompanies();
-  const companies = data?.companies || [];
 
   const setSelectedCompany = (company: TCompany | undefined) => {
     setCompany(company); // Update session storage
@@ -23,23 +22,23 @@ const useCompany = () => {
   };
 
   useEffect(() => {
-    if (isSuccess && companies.length > 0) {
+    if (isSuccess && data.length > 0) {
       if (
         !company ||
-        !companies.find(
+        !data.find(
           (c: TCompany) =>
             c.external_identifier === company?.external_identifier
         )
       ) {
-        setSelectedCompany(companies[0]);
+        setSelectedCompany(data[0]);
       }
     }
-  }, [company, companies, isSuccess]);
+  }, [company, data, isSuccess]);
 
   return {
     company,
     setSelectedCompany,
-    companies,
+    companies: data,
     isLoading,
     isSuccess,
     error
