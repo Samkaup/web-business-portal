@@ -65,7 +65,7 @@ export default function Companies() {
   };
 
   return (
-    <div className="space-y-6 container">
+    <div className="space-y-6">
       <ModalSimpleWithDismiss
         title=""
         open={showModal}

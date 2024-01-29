@@ -94,7 +94,7 @@ export default function Transactions() {
   ];
 
   return (
-    <div className="flex-1 space-y-4 lg:p-8 p-4 lg:pt-6">
+    <div>
       <Header title="Reikningar og hreyfingar" />
       <div className="flex flex-col md:flex-row gap-4 lg:py-6 items-start md:items-center">
         <div className="flex-none">
