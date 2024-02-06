@@ -13,7 +13,7 @@ export default function Void() {
 
       <p className="text-sm text-company text-muted-foreground w-full text-center">
         Reyndu að skrá þig út og aftur inn. Ef það virkar ekki, hafðu samband
-        við okkur í síma 421-5400 og við lögum þetta í hvelli..
+        við okkur í síma 421-5400 og við lögum þetta í hvelli.
       </p>
       <form method="POST" action="/auth/signout">
         <Button className="w-full flex justify-center" type="submit">
