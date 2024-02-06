@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Database } from '@/lib/database.types';
 import { useSessionStorage } from 'usehooks-ts';
@@ -12,27 +13,32 @@ const useCompany = () => {
     null
   );
 
-  // Fetch Companies
-  const { data: companies, isLoading, error, isSuccess } = useCompanies();
+  const { data, isLoading, error, isSuccess } = useCompanies();
 
-  // Update the selected loyalty club both in session storage and query client
   const setSelectedCompany = (company: TCompany | undefined) => {
     setCompany(company); // Update session storage
     queryClient.setQueryData(['selectedCompany'], company); // Update query client
-
-    // Please add all queries here that might be dependant on Company switch!
     queryClient.invalidateQueries(['selectedDepartmentsTransaction']);
   };
 
-  // Initialize the selected company from session storage or the first club
-  if (!company && companies) {
-    setSelectedCompany(companies[0]);
-  }
+  useEffect(() => {
+    if (isSuccess && data.length > 0) {
+      if (
+        !company ||
+        !data.find(
+          (c: TCompany) =>
+            c.external_identifier === company?.external_identifier
+        )
+      ) {
+        setSelectedCompany(data[0]);
+      }
+    }
+  }, [company, data, isSuccess]);
 
   return {
     company,
     setSelectedCompany,
-    companies,
+    companies: data,
     isLoading,
     isSuccess,
     error

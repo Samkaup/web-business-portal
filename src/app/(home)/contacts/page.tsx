@@ -24,7 +24,7 @@ export default function Contacts() {
   const { data: departments, isSuccess } = useDepartmentsWithContacts();
 
   return (
-    <div className="flex-1 space-y-4 lg:p-8 p-4 lg:pt-6">
+    <div>
       <Header title={`Deildir & úttektaraðilar`}>
         <div className="flex justify-between mt-4 items-center">
           <p className="mr-4 font-thin">Fyrirtæki: {company?.name ?? ''}</p>

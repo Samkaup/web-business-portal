@@ -106,192 +106,186 @@ export default function Dashboard() {
   return (
     <>
       <div className="flex-col md:flex">
-        <div className="flex-1 space-y-4 lg:p-8 p-4 lg:pt-6">
-          <div className="flex items-center justify-between space-y-2 flex-wrap">
-            <Header title="Fyrirtæki" />
-            <div className="flex items-center space-x-2 ">
-              <CalendarDateRangePicker queryKey="dateRangeDashboard" />
-            </div>
+        <div className="flex items-center justify-between space-y-2 flex-wrap">
+          <Header title="Fyrirtæki" />
+          <div className="flex items-center space-x-2 ">
+            <CalendarDateRangePicker queryKey="dateRangeDashboard" />
           </div>
-          <Tabs defaultValue="overview" className="space-y-4">
-            <TabsList>
-              <TabsTrigger value="overview">Yfirlit</TabsTrigger>
-              <TabsTrigger value="reikningar">Reikningar</TabsTrigger>
-              {/* <TabsTrigger value="notifications">Tilkynningar</TabsTrigger> */}
-            </TabsList>
-            <TabsContent value="overview" className="space-y-4">
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">
-                      Reikningsviðskipti
-                      <InfoDateRange dateRange={dateRange}></InfoDateRange>
-                    </CardTitle>
-                    <CreditCardIcon className="text-gray-600 w-5 h-5"></CreditCardIcon>
-                  </CardHeader>
-                  <CardContent>
-                    {isLoadingTransactionSum ? (
-                      <Spinner />
-                    ) : (
-                      <>
-                        <div className="text-2xl font-bold">
-                          {transactions?.amount
-                            ? formatCurrency(transactions.amount)
-                            : '0 kr'}
-                        </div>
-                        {isLoadingTransactionSumPrev ? (
-                          <Spinner />
-                        ) : (
-                          <p className="text-sm text-muted-foreground items-center flex">
-                            <span className={cn('text-company-900 mr-1')}>
-                              {calcDiffPercentage(
-                                transactionsPrevYear?.amount,
-                                transactions?.amount
-                              )}
-                              %{' '}
-                            </span>
-                            frá síðasta ári
-                          </p>
-                        )}
-                      </>
-                    )}
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">
-                      Fjöldi reikninga
-                      <InfoDateRange dateRange={dateRange}></InfoDateRange>
-                    </CardTitle>
-                    <DocumentIcon className="w-5 h-5 text-gray-600"></DocumentIcon>
-                  </CardHeader>
-                  <CardContent>
-                    {isLoadingTransactionSum ? (
-                      <Spinner />
-                    ) : (
-                      <>
-                        <div className="text-2xl font-bold">
-                          {transactions?.count}
-                        </div>
-                        {isLoadingTransactionSumPrev ? (
-                          <Spinner />
-                        ) : (
-                          <p className="text-sm text-muted-foreground">
-                            <span className={cn('text-company-900 ')}>
-                              {calcDiffPercentage(
-                                transactionsPrevYear?.count,
-                                transactions?.count
-                              )}
-                              %{' '}
-                            </span>
-                            frá síðasta ári
-                          </p>
-                        )}
-                      </>
-                    )}
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">
-                      Meðalupphæð
-                      <InfoDateRange dateRange={dateRange}></InfoDateRange>
-                    </CardTitle>
-                    <ChartBarIcon className="w-5 h-5 text-gray-600"></ChartBarIcon>
-                  </CardHeader>
-                  <CardContent>
-                    {isLoadingTransactionSum ? (
-                      <Spinner />
-                    ) : (
-                      <>
-                        <div className="text-2xl font-bold">
-                          {transactions?.average
-                            ? formatCurrency(Math.round(transactions?.average))
-                            : '0 kr'}
-                        </div>
-                        {isLoadingTransactionSumPrev ? (
-                          <Spinner />
-                        ) : (
-                          <p className="text-sm text-muted-foreground">
-                            {' hæst: '}
-                            {transactions?.max > 0 &&
-                              formatCurrency(transactions?.max)}
-                          </p>
-                        )}
-                      </>
-                    )}
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">
-                      Deildir
-                    </CardTitle>
-                    <UsersIcon className="w-5 h-5 text-gray-600"></UsersIcon>
-                  </CardHeader>
-                  <CardContent>
-                    {isLoadingDepContacts ? (
-                      <Spinner></Spinner>
-                    ) : (
-                      <>
-                        <div className="text-2xl font-bold">
-                          {departmentWithContacts?.length}
-                        </div>
-                        <p className="text-xs text-muted-foreground">
-                          <span className="text-company-900">
-                            {getContactsNumForDepartments(
-                              departmentWithContacts
-                            )}{' '}
-                          </span>
-                          úttektaraðilar skráðir
-                        </p>
-                      </>
-                    )}
-                  </CardContent>
-                </Card>
-              </div>
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-                <Card className="col-span-4">
-                  <CardHeader>
-                    <CardTitle>
-                      Viðskipti á árinu ({new Date().getFullYear()})
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="pl-2">
-                    {isLoadingTransactionsByMonth ? (
-                      <LoadingBlock></LoadingBlock>
-                    ) : (
-                      <Chart data={transactionsByMonth} />
-                    )}
-                  </CardContent>
-                </Card>
-                <Card className="col-span-3">
-                  <CardHeader>
-                    <CardTitle>Síðustu hreyfingar</CardTitle>
-                    <CardDescription>
-                      Reikningar, millifærslur eða greiðslur
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <RecentTransactions />
-                  </CardContent>
-                </Card>
-              </div>
-            </TabsContent>
-            <TabsContent value="reikningar" className="space-y-4">
+        </div>
+        <Tabs defaultValue="overview" className="space-y-4">
+          <TabsList>
+            <TabsTrigger value="overview">Yfirlit</TabsTrigger>
+            <TabsTrigger value="reikningar">Reikningar</TabsTrigger>
+            {/* <TabsTrigger value="notifications">Tilkynningar</TabsTrigger> */}
+          </TabsList>
+          <TabsContent value="overview" className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
               <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-6">
-                  <CardTitle className="text-xl font-medium">
-                    Reikningar
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    Reikningsviðskipti
+                    <InfoDateRange dateRange={dateRange}></InfoDateRange>
                   </CardTitle>
+                  <CreditCardIcon className="text-gray-600 w-5 h-5"></CreditCardIcon>
                 </CardHeader>
                 <CardContent>
-                  <RecentTransactions limit={40}></RecentTransactions>
+                  {isLoadingTransactionSum ? (
+                    <Spinner />
+                  ) : (
+                    <>
+                      <div className="text-2xl font-bold">
+                        {transactions?.amount
+                          ? formatCurrency(transactions.amount)
+                          : '0 kr'}
+                      </div>
+                      {isLoadingTransactionSumPrev ? (
+                        <Spinner />
+                      ) : (
+                        <p className="text-sm text-muted-foreground items-center flex">
+                          <span className={cn('text-company-900 mr-1')}>
+                            {calcDiffPercentage(
+                              transactionsPrevYear?.amount,
+                              transactions?.amount
+                            )}
+                            %{' '}
+                          </span>
+                          frá síðasta ári
+                        </p>
+                      )}
+                    </>
+                  )}
                 </CardContent>
               </Card>
-            </TabsContent>
-          </Tabs>
-        </div>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    Fjöldi reikninga
+                    <InfoDateRange dateRange={dateRange}></InfoDateRange>
+                  </CardTitle>
+                  <DocumentIcon className="w-5 h-5 text-gray-600"></DocumentIcon>
+                </CardHeader>
+                <CardContent>
+                  {isLoadingTransactionSum ? (
+                    <Spinner />
+                  ) : (
+                    <>
+                      <div className="text-2xl font-bold">
+                        {transactions?.count}
+                      </div>
+                      {isLoadingTransactionSumPrev ? (
+                        <Spinner />
+                      ) : (
+                        <p className="text-sm text-muted-foreground">
+                          <span className={cn('text-company-900 ')}>
+                            {calcDiffPercentage(
+                              transactionsPrevYear?.count,
+                              transactions?.count
+                            )}
+                            %{' '}
+                          </span>
+                          frá síðasta ári
+                        </p>
+                      )}
+                    </>
+                  )}
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    Meðalupphæð
+                    <InfoDateRange dateRange={dateRange}></InfoDateRange>
+                  </CardTitle>
+                  <ChartBarIcon className="w-5 h-5 text-gray-600"></ChartBarIcon>
+                </CardHeader>
+                <CardContent>
+                  {isLoadingTransactionSum ? (
+                    <Spinner />
+                  ) : (
+                    <>
+                      <div className="text-2xl font-bold">
+                        {transactions?.average
+                          ? formatCurrency(Math.round(transactions?.average))
+                          : '0 kr'}
+                      </div>
+                      {isLoadingTransactionSumPrev ? (
+                        <Spinner />
+                      ) : (
+                        <p className="text-sm text-muted-foreground">
+                          {' hæst: '}
+                          {transactions?.max > 0 &&
+                            formatCurrency(transactions?.max)}
+                        </p>
+                      )}
+                    </>
+                  )}
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Deildir</CardTitle>
+                  <UsersIcon className="w-5 h-5 text-gray-600"></UsersIcon>
+                </CardHeader>
+                <CardContent>
+                  {isLoadingDepContacts ? (
+                    <Spinner></Spinner>
+                  ) : (
+                    <>
+                      <div className="text-2xl font-bold">
+                        {departmentWithContacts?.length}
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        <span className="text-company-900">
+                          {getContactsNumForDepartments(departmentWithContacts)}{' '}
+                        </span>
+                        úttektaraðilar skráðir
+                      </p>
+                    </>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+              <Card className="col-span-4">
+                <CardHeader>
+                  <CardTitle>
+                    Viðskipti á árinu ({new Date().getFullYear()})
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="pl-2">
+                  {isLoadingTransactionsByMonth ? (
+                    <LoadingBlock></LoadingBlock>
+                  ) : (
+                    <Chart data={transactionsByMonth} />
+                  )}
+                </CardContent>
+              </Card>
+              <Card className="col-span-3">
+                <CardHeader>
+                  <CardTitle>Síðustu hreyfingar</CardTitle>
+                  <CardDescription>
+                    Reikningar, millifærslur eða greiðslur
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <RecentTransactions />
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+          <TabsContent value="reikningar" className="space-y-4">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-6">
+                <CardTitle className="text-xl font-medium">
+                  Reikningar
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <RecentTransactions limit={40}></RecentTransactions>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
     </>
   );

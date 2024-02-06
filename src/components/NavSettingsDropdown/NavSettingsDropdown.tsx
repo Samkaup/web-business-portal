@@ -14,7 +14,6 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuSub,
   DropdownMenuSubContent,
@@ -25,6 +24,7 @@ import { useGetProfile } from '@/utils/react_query_hooks/profile';
 import { Avatar, AvatarFallback } from '../Shadcn/ui/avatar';
 import Link from 'next/link';
 import { useCompany } from '@/hooks/useCompany';
+import { TableRow } from '@/types';
 
 export default function CompanySwitcher() {
   const [open, setOpen] = React.useState(false);
@@ -79,12 +79,12 @@ export default function CompanySwitcher() {
         <DropdownMenuContent align="end" className="w-[200px]">
           <DropdownMenuGroup>
             <Link href="/profile" className="hover:bg-company">
-              <DropdownMenuLabel>Mínar stillingar</DropdownMenuLabel>
+              <DropdownMenuItem>Mínar stillingar</DropdownMenuItem>
             </Link>
             <DropdownMenuSeparator></DropdownMenuSeparator>
-            <DropdownMenuLabel>
+            <DropdownMenuItem>
               <Link href="/companies">Fyrirtæki</Link>
-            </DropdownMenuLabel>
+            </DropdownMenuItem>
             <DropdownMenuSub>
               <DropdownMenuSubTrigger>Velja fyrirtæki</DropdownMenuSubTrigger>
               <DropdownMenuSubContent className="p-0">
@@ -97,7 +97,7 @@ export default function CompanySwitcher() {
                   <CommandList>
                     <CommandEmpty>Finn ekki fyrirtæki.</CommandEmpty>
                     <CommandGroup>
-                      {companies?.map((c) => (
+                      {companies?.map((c: TableRow<'company'>) => (
                         <CommandItem
                           key={c.external_identifier}
                           value={c.name}
@@ -114,7 +114,9 @@ export default function CompanySwitcher() {
             <DropdownMenuSeparator />
             <DropdownMenuItem className="text-red-600">
               <form method="POST" action="/auth/signout">
-                <button type="submit">Útskrá</button>
+                <button type="submit" className="w-full">
+                  Útskrá
+                </button>
               </form>
             </DropdownMenuItem>
           </DropdownMenuGroup>
