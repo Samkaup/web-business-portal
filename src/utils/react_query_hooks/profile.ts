@@ -29,7 +29,7 @@ export const useGetProfiles = (search: string, pagination: PaginationProps) => {
     ['profiles', { search, pagination }],
     async () => {
       const res = await fetch(
-        '/api/admin/users/list?' +
+        '/api/admin/users?' +
           new URLSearchParams({
             pageSize: pagination.pageSize.toString(),
             page: pagination.page.toString(),
