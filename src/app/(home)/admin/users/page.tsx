@@ -19,6 +19,7 @@ import { SlideOver } from '@/components/ui/SlideOver/SlideOver';
 import { Profile, useGetProfiles } from '@/utils/react_query_hooks/profile';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
+import { Pen } from 'lucide-react';
 
 export default function UserRegistationPage() {
   const pageSize = 10;
@@ -62,7 +63,7 @@ export default function UserRegistationPage() {
                     {profile.email}
                   </h4>
                 </div>
-                <div className="flex justify-end items-center col-span-4 ">
+                <div className="flex justify-end items-center col-span-4">
                   {profile.company.length > 0 ? (
                     <>
                       {profile.company.map((company) => (
@@ -72,10 +73,13 @@ export default function UserRegistationPage() {
                       ))}
                     </>
                   ) : (
-                    <Button variant="default" disabled>
-                      Skrá fyrirtæki
-                    </Button>
+                    <p className="text-gray-500 text-xs">
+                      Engin fyrirtæki skráð á notanda
+                    </p>
                   )}
+                  <Button variant="ghost" size="icon" title="Breyta notanda">
+                    <Pen className="h-4 w-4" />
+                  </Button>
                 </div>
               </div>
             </Card>

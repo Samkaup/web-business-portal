@@ -77,14 +77,14 @@ export default function CompanySwitcher() {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[200px]">
           <DropdownMenuGroup>
-            <Link href="/profile" className="hover:bg-company">
-              <DropdownMenuItem>Mínar stillingar</DropdownMenuItem>
-            </Link>
             {user && user.user.app_metadata.userrole === 'ADMIN' && (
               <DropdownMenuItem>
                 <Link href="/admin/users">Stjórnsíða (admin)</Link>
               </DropdownMenuItem>
             )}
+            <Link href="/profile" className="hover:bg-company">
+              <DropdownMenuItem>Mínar stillingar</DropdownMenuItem>
+            </Link>
             <DropdownMenuSeparator></DropdownMenuSeparator>
             <DropdownMenuItem>
               <Link href="/companies">Fyrirtæki</Link>
