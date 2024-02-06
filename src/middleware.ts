@@ -16,7 +16,7 @@ const VOID_ROUTES: string[] = [
   '/auth/signout'
 ];
 
-const rediractTo = (url: string, req: NextRequest) => {
+const redirectTo = (url: string, req: NextRequest) => {
   console.log(`Middleware redirecting to '${url}'`);
   return NextResponse.redirect(new URL(url, req.url));
 };
@@ -31,22 +31,22 @@ export async function middleware(req: NextRequest) {
 
   // If user is signed in and path is in UNAUTHORIZED_ROUTES redirect to /
   if (session && UNAUTHORIZED_ROUTES.includes(req.nextUrl.pathname))
-    return rediractTo('/', req);
+    return redirectTo('/', req);
 
   // If user is not signed in and path is not in UNAUTHORIZED_ROUTES redirect to /auth/login
   if (!session && !UNAUTHORIZED_ROUTES.includes(req.nextUrl.pathname))
-    return rediractTo('/auth/login', req);
+    return redirectTo('/auth/login', req);
 
   if (req.nextUrl.pathname.startsWith(ADMIN_ROUTE_PREFIX)) {
-    if (!session) return rediractTo('/auth/login', req);
+    if (!session) return redirectTo('/auth/login', req);
 
     if (session.user.app_metadata.userrole !== 'ADMIN')
-      return rediractTo('/', req);
+      return redirectTo('/', req);
   }
 
   if (session && !VOID_ROUTES.includes(req.nextUrl.pathname)) {
     const result = await getCompany(supabase, {});
-    if (result.length === 0) return rediractTo(VOID_ROUTE, req);
+    if (result.length === 0) return redirectTo(VOID_ROUTE, req);
   }
 
   return res;

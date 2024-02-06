@@ -1,5 +1,6 @@
 'use client';
 
+import { Badge } from '@/components/Shadcn/ui/badge';
 import { Card } from '@/components/Shadcn/ui/card';
 import {
   Pagination,
@@ -11,7 +12,7 @@ import {
 } from '@/components/Shadcn/ui/pagination';
 import { Skeleton } from '@/components/Shadcn/ui/skeleton';
 import UserCreate from '@/components/UserForm/Create';
-import Button from '@/components/ui/Button/Button';
+import { Button } from '@/components/Shadcn/ui/button';
 import EmptyStateSimple from '@/components/ui/EmptyState/EmptyStateSimple';
 import { DebouncedInput } from '@/components/ui/Input/debouncedInput';
 import { SlideOver } from '@/components/ui/SlideOver/SlideOver';
@@ -53,15 +54,29 @@ export default function UserRegistationPage() {
       return (
         <>
           {data.profiles.map((profile: Profile, idx: number) => (
-            <Card
-              key={idx}
-              className="p-3 flex items-center justify-between w-full h-[70px]"
-            >
-              <div>
-                <h3 className="text-lg font-medium">{profile.full_name}</h3>
-                <h4 className="text-sm text-muted-foreground">
-                  {profile.email}
-                </h4>
+            <Card key={idx} className="p-3">
+              <div className="grid grid-cols-6 gap-4">
+                <div className="col-span-2">
+                  <h3 className="text-lg font-medium">{profile.full_name}</h3>
+                  <h4 className="text-sm text-muted-foreground">
+                    {profile.email}
+                  </h4>
+                </div>
+                <div className="flex justify-end items-center col-span-4 ">
+                  {profile.company.length > 0 ? (
+                    <>
+                      {profile.company.map((company) => (
+                        <div>
+                          <Badge variant="outline">{company.name}</Badge>
+                        </div>
+                      ))}
+                    </>
+                  ) : (
+                    <Button variant="default" disabled>
+                      Skrá fyrirtæki
+                    </Button>
+                  )}
+                </div>
               </div>
             </Card>
           ))}
@@ -71,7 +86,7 @@ export default function UserRegistationPage() {
       return (
         <div className="flex-col flex items-center justify-center w-100 p-8">
           <EmptyStateSimple
-            title="Engir notendur fundnir"
+            title={`Engar niðurstöður fyrir: ${search}`}
             actionBtnText="Stofna deild"
           />
         </div>

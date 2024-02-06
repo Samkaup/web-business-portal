@@ -7,10 +7,7 @@ export const getCompany = async (
   search?: string
 ): Promise<TableRow<'company'>[]> => {
   // RLS is enabled
-  const query = supabase
-    .from('company')
-    .select('*, company_profile(id)')
-    .order('name');
+  const query = supabase.from('company').select('*').order('name');
 
   // Set range if pagination details are provided
   if (pagination.pageSize && pagination.page) {

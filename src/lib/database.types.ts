@@ -6,7 +6,7 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[]
 
-export interface Database {
+export type Database = {
   public: {
     Tables: {
       company: {
@@ -47,6 +47,42 @@ export interface Database {
       }
       company_profile: {
         Row: {
+          company_id: string
+          created_at: string | null
+          profile_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          company_id: string
+          created_at?: string | null
+          profile_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          company_id?: string
+          created_at?: string | null
+          profile_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_profile_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "company"
+            referencedColumns: ["external_identifier"]
+          },
+          {
+            foreignKeyName: "company_profile_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profile"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      company_profile_duplicate: {
+        Row: {
           company_id: string | null
           created_at: string | null
           id: string
@@ -69,14 +105,14 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "company_profile_company_id_fkey"
+            foreignKeyName: "company_profile_duplicate_company_id_fkey"
             columns: ["company_id"]
             isOneToOne: false
             referencedRelation: "company"
             referencedColumns: ["external_identifier"]
           },
           {
-            foreignKeyName: "company_profile_profile_id_fkey"
+            foreignKeyName: "company_profile_duplicate_profile_id_fkey"
             columns: ["profile_id"]
             isOneToOne: false
             referencedRelation: "profile"
@@ -172,6 +208,7 @@ export interface Database {
       profile: {
         Row: {
           created_at: string | null
+          email: string | null
           full_name: string | null
           id: string
           notificationSettings: Json
@@ -179,6 +216,7 @@ export interface Database {
         }
         Insert: {
           created_at?: string | null
+          email?: string | null
           full_name?: string | null
           id: string
           notificationSettings?: Json
@@ -186,6 +224,7 @@ export interface Database {
         }
         Update: {
           created_at?: string | null
+          email?: string | null
           full_name?: string | null
           id?: string
           notificationSettings?: Json

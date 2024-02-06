@@ -30,7 +30,6 @@ export default function CompanySwitcher() {
   const [open, setOpen] = React.useState(false);
   const { company, companies, setSelectedCompany, isSuccess } = useCompany();
   const { data: user } = useGetProfile();
-
   function getInitals(fullName: string) {
     const parts: string[] = fullName.split(' ');
     const initalsArr = parts.map((part: string) => part.at(0)).slice(0, 2);
@@ -81,6 +80,11 @@ export default function CompanySwitcher() {
             <Link href="/profile" className="hover:bg-company">
               <DropdownMenuItem>Mínar stillingar</DropdownMenuItem>
             </Link>
+            {user && user.user.app_metadata.userrole === 'ADMIN' && (
+              <DropdownMenuItem>
+                <Link href="/admin/users">Stjórnsíða (admin)</Link>
+              </DropdownMenuItem>
+            )}
             <DropdownMenuSeparator></DropdownMenuSeparator>
             <DropdownMenuItem>
               <Link href="/companies">Fyrirtæki</Link>

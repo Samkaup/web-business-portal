@@ -9,10 +9,14 @@ export const useGetProfile = () => {
   });
 };
 
+export type Company = {
+  name: string;
+};
 export type Profile = {
   id: string;
   full_name: string;
   email: string;
+  company: Company[];
 };
 
 export type ProfilesResponse = {
