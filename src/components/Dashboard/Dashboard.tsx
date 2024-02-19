@@ -109,7 +109,7 @@ export default function Dashboard() {
     <>
       <div className="flex-col md:flex">
         <div className="flex items-center justify-between space-y-2 flex-wrap">
-          <Header title={company.name} />
+          <Header title={company?.name} />
           <div className="flex items-center space-x-2 ">
             <CalendarDateRangePicker queryKey="dateRangeDashboard" />
           </div>
