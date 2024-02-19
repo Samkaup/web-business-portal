@@ -12,6 +12,7 @@ import {
 } from '@/components/Shadcn/ui/pagination';
 import { Skeleton } from '@/components/Shadcn/ui/skeleton';
 import UserCreate from '@/components/UserForm/Create';
+import UserEdit from '@/components/UserForm/Edit';
 import { Button } from '@/components/Shadcn/ui/button';
 import EmptyStateSimple from '@/components/ui/EmptyState/EmptyStateSimple';
 import { DebouncedInput } from '@/components/ui/Input/debouncedInput';
@@ -26,6 +27,8 @@ export default function UserRegistationPage() {
   const [page, setPage] = useState<number>(1);
   const [search, setSearch] = useState<string>('');
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isEditOpen, setEditIsOpen] = useState<boolean>(false);
+  const [userEdit, setUserEdit] = useState<Profile>();
 
   const { data, isSuccess, isLoading } = useGetProfiles(search, {
     page,
@@ -35,6 +38,11 @@ export default function UserRegistationPage() {
   const onSearch = (value: string) => {
     setPage(1);
     setSearch(value);
+  };
+
+  const editUser = (user: Profile) => {
+    setUserEdit(user);
+    setEditIsOpen(true);
   };
 
   const UserCardsRenderer = () => {
@@ -66,8 +74,8 @@ export default function UserRegistationPage() {
                 <div className="flex justify-end items-center col-span-4">
                   {profile.company.length > 0 ? (
                     <>
-                      {profile.company.map((company) => (
-                        <div>
+                      {profile.company.map((company, index) => (
+                        <div key={index}>
                           <Badge variant="outline">{company.name}</Badge>
                         </div>
                       ))}
@@ -77,7 +85,12 @@ export default function UserRegistationPage() {
                       Engin fyrirtæki skráð á notanda
                     </p>
                   )}
-                  <Button variant="ghost" size="icon" title="Breyta notanda">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    title="Breyta notanda"
+                    onClick={() => editUser(profile)}
+                  >
                     <Pen className="h-4 w-4" />
                   </Button>
                 </div>
@@ -165,6 +178,19 @@ export default function UserRegistationPage() {
         <UserCreate
           onSave={() => setIsOpen(false)}
           onCancel={() => setIsOpen(false)}
+        />
+      </SlideOver>
+      <SlideOver
+        isOpen={isEditOpen}
+        title="Breyta notandi"
+        description="Breyta notendaaðgangi, hægt að færa fyrirtæki á nýjan aðgang ofl.."
+        toggleOpen={() => setEditIsOpen(true)}
+        onCancel={() => setEditIsOpen(false)}
+      >
+        <UserEdit
+          onSave={() => setEditIsOpen(false)}
+          onCancel={() => setEditIsOpen(false)}
+          user={userEdit}
         />
       </SlideOver>
     </div>

@@ -36,9 +36,11 @@ import { DepartmentWithContacts } from '@/utils/supabase_queries/department';
 import { DateRange } from 'react-day-picker';
 import { formatDate } from '@/utils/dateUtils';
 import Header from '../Header/Header';
+import { useCompany } from '@/hooks/useCompany';
 
 export default function Dashboard() {
   const { data: dateRange } = useDateRange({ queryKey: 'dateRangeDashboard' });
+  const { company } = useCompany();
   const calcDiffPercentage = (prev: number, curr: number) => {
     // Check if the previous value is 0 or undefined
     if (!prev || prev === 0) {
@@ -107,7 +109,7 @@ export default function Dashboard() {
     <>
       <div className="flex-col md:flex">
         <div className="flex items-center justify-between space-y-2 flex-wrap">
-          <Header title="Fyrirtæki" />
+          <Header title={company.name} />
           <div className="flex items-center space-x-2 ">
             <CalendarDateRangePicker queryKey="dateRangeDashboard" />
           </div>

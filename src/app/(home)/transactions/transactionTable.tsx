@@ -99,7 +99,7 @@ export default function TransactionTable({
       {
         accessorKey: 'amount_debit',
         id: 'amount_debit',
-        header: () => <span>Upphæð (Deb)</span>,
+        header: () => <span>Upphæð</span>,
         cell: (props: any) => {
           return (
             <span>
