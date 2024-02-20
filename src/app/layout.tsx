@@ -1,6 +1,5 @@
 import { ClientLayout } from '@/components/ClientLayout';
 import './globals.css';
-import { ThemeProvider } from '@/components/ThemeProvider/ThemeProvider';
 export const revalidate = 0;
 
 export default async function RootLayout({
@@ -12,14 +11,7 @@ export default async function RootLayout({
     <html className="h-full">
       <head />
       <body className="h-full">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <ClientLayout>{children}</ClientLayout>
-        </ThemeProvider>
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   );
