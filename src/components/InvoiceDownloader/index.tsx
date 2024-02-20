@@ -6,9 +6,13 @@ import toast from 'react-hot-toast';
 
 type Props = {
   transactionID: string;
+  btnText?: string;
 };
 
-export default function InvoiceDownloadButton({ transactionID }: Props) {
+export default function InvoiceDownloadButton({
+  transactionID,
+  btnText = 'Reikningur'
+}: Props) {
   const [downloading, setDownloading] = useState<boolean>(false);
 
   const handleOnClick = () => {
@@ -33,7 +37,7 @@ export default function InvoiceDownloadButton({ transactionID }: Props) {
       ) : (
         <DocumentIcon className="h-4 w-4 mr-2" />
       )}
-      Reikningur
+      {btnText}
     </button>
   );
 }

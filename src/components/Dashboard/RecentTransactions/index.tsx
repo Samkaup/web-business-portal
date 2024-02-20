@@ -1,3 +1,4 @@
+import InvoiceDownloadButton from '@/components/InvoiceDownloader';
 import { LoadingBlock } from '@/components/ui/LoadingBlock/LoadingBlock';
 import { formatCurrency } from '@/utils/currency/currency';
 import { useRecentTransactions } from '@/utils/react_query_hooks/transaction';
@@ -22,14 +23,20 @@ export default function ({ limit = 6 }: Props) {
                   <p className="text-sm font-medium leading-none">
                     {transaction.description}
                   </p>
-                  <p className="text-sm text-muted-foreground">
-                    {format(new Date(transaction.date), 'dd. LLL y', {
-                      locale: is
-                    })}
-                  </p>
+                  <div className="flex">
+                    <p className="text-sm text-muted-foreground pr-2">
+                      {format(new Date(transaction.date), 'dd. LLL y', {
+                        locale: is
+                      })}
+                    </p>
+                    <InvoiceDownloadButton
+                      transactionID={transaction.id}
+                      btnText=""
+                    />
+                  </div>
                 </div>
                 <div className="ml-auto font-medium">
-                  {formatCurrency(transaction.amount_debit)}
+                  <div>{formatCurrency(transaction.amount_debit)}</div>
                 </div>
               </div>
             );
