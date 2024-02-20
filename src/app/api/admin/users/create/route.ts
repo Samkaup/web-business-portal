@@ -17,17 +17,17 @@ const bodySchema = z.object({
   companies: z.array(z.string())
 });
 
-export async function POST(request: NextRequest, response: NextResponse) {
+export async function POST(request: NextRequest) {
   const supabaseRouteClient = createRouteHandlerClient<Database>({ cookies });
 
   const {
     data: { session }
   } = await supabaseRouteClient.auth.getSession();
 
-  if (!session) return new Response('Unauthorized', { status: 401 });
+  if (!session) return new NextResponse('Unauthorized', { status: 401 });
 
   if (session.user.app_metadata.userrole !== 'ADMIN')
-    return new Response('Forbidden', { status: 403 });
+    return new NextResponse('Forbidden', { status: 403 });
 
   // extract body from NextRequest
   const body = await request.json();
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
   try {
     bodySchema.parse(body);
   } catch (error) {
-    return new Response(error.errors, { status: 400 });
+    return new NextResponse(error.errors, { status: 400 });
   }
 
   const supabase = supabaseAdminClient();

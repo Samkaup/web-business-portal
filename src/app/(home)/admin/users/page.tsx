@@ -17,10 +17,13 @@ import { Button } from '@/components/Shadcn/ui/button';
 import EmptyStateSimple from '@/components/ui/EmptyState/EmptyStateSimple';
 import { DebouncedInput } from '@/components/ui/Input/debouncedInput';
 import { SlideOver } from '@/components/ui/SlideOver/SlideOver';
-import { Profile, useGetProfiles } from '@/utils/react_query_hooks/profile';
+import { TProfile, useGetProfiles } from '@/utils/react_query_hooks/profile';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
-import { Pen } from 'lucide-react';
+import { Pen, Trash } from 'lucide-react';
+import toast from 'react-hot-toast';
+import { useQueryClient } from '@tanstack/react-query';
+import { Spinner } from '@/components/ui/Spinner/Spinner';
 
 export default function UserRegistationPage() {
   const pageSize = 10;
@@ -28,8 +31,9 @@ export default function UserRegistationPage() {
   const [search, setSearch] = useState<string>('');
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isEditOpen, setEditIsOpen] = useState<boolean>(false);
-  const [userEdit, setUserEdit] = useState<Profile>();
-
+  const [userEdit, setUserEdit] = useState<TProfile>();
+  const [isLoadingDelete, setIsLoadingDelete] = useState(false);
+  const queryClient = useQueryClient();
   const { data, isSuccess, isLoading } = useGetProfiles(search, {
     page,
     pageSize
@@ -40,9 +44,36 @@ export default function UserRegistationPage() {
     setSearch(value);
   };
 
-  const editUser = (user: Profile) => {
+  const editUser = (user: TProfile) => {
     setUserEdit(user);
     setEditIsOpen(true);
+  };
+
+  const deleteUser = async (userId: string) => {
+    const yes = confirm('Ertu viss um að þú viljir eyða þessum notanda?');
+    if (yes) {
+      setIsLoadingDelete(true);
+      try {
+        const res = await fetch(
+          '/api/admin/users/delete?' +
+            new URLSearchParams({
+              id: userId
+            }),
+          {
+            method: 'DELETE'
+          }
+        );
+        if (res.status !== 200) {
+          throw Error(`HTTP error: ${res.text()}`);
+        }
+      } catch (e) {
+        console.error('Error while deleting user! ', e);
+        toast.error('Villa kom upp við eyðslu á notanda, reyndu aftur.');
+        queryClient.invalidateQueries(['profile']);
+      } finally {
+        setIsLoadingDelete(false);
+      }
+    }
   };
 
   const UserCardsRenderer = () => {
@@ -62,7 +93,7 @@ export default function UserRegistationPage() {
     else if (data.profiles?.length > 0)
       return (
         <>
-          {data.profiles.map((profile: Profile, idx: number) => (
+          {data.profiles.map((profile: TProfile, idx: number) => (
             <Card key={idx} className="p-3">
               <div className="grid grid-cols-6 gap-4">
                 <div className="col-span-2">
@@ -92,6 +123,18 @@ export default function UserRegistationPage() {
                     onClick={() => editUser(profile)}
                   >
                     <Pen className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    title="Eyða notanda"
+                    onClick={() => deleteUser(profile.id)}
+                  >
+                    {isLoadingDelete ? (
+                      <Spinner></Spinner>
+                    ) : (
+                      <Trash className="h-4 w-4 text-red-800" />
+                    )}
                   </Button>
                 </div>
               </div>
@@ -146,7 +189,7 @@ export default function UserRegistationPage() {
               { length: data.pagination.lastPage },
               (_, i) => i + 1
             ).map((pageNumber: number) => (
-              <PaginationItem>
+              <PaginationItem key={pageNumber}>
                 <PaginationLink
                   href="#"
                   isActive={page === pageNumber}
@@ -183,7 +226,7 @@ export default function UserRegistationPage() {
       <SlideOver
         isOpen={isEditOpen}
         title="Breyta notandi"
-        description="Breyta notendaaðgangi, hægt að færa fyrirtæki á nýjan aðgang ofl.."
+        description="Farið varlega í að breyta um notendaupplýsingar og alls ekki veita leyfi á önnur fyrirtæki nema með skriflegu leyfi."
         toggleOpen={() => setEditIsOpen(true)}
         onCancel={() => setEditIsOpen(false)}
       >

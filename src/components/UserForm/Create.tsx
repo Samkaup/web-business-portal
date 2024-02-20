@@ -21,6 +21,7 @@ import { PlusSmallIcon } from '@heroicons/react/24/outline';
 import CompanyForm from './CompanyForm';
 import { SlideOver } from '../ui/SlideOver/SlideOver';
 import toast from 'react-hot-toast';
+import { useQueryClient } from '@tanstack/react-query';
 
 type Props = {
   onCancel?: () => void;
@@ -46,6 +47,7 @@ type CompanySelector = {
 };
 
 export default function UserCreate({ onCancel, onSave }: Props) {
+  const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [companies, setCompanies] = useState<CompanySelector[]>([
@@ -60,7 +62,7 @@ export default function UserCreate({ onCancel, onSave }: Props) {
     mode: 'onChange'
   });
 
-  const onSubmit = (data: UserCreationFormValues) => {
+  const onSubmit = async (data: UserCreationFormValues) => {
     setIsLoading(true);
     const hasError = companies.some((company) => company.value === null);
     if (hasError) {
@@ -73,21 +75,30 @@ export default function UserCreate({ onCancel, onSave }: Props) {
       setIsLoading(false);
       return;
     }
-
-    fetch('/api/admin/users/create', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        ...data,
-        companies: companies.map((company) => company.value.external_identifier)
-      })
-    });
-
-    setIsLoading(false);
-    toast.success('Notandi hefur verið búinn til!');
-    onSave();
+    try {
+      const response = await fetch('/api/admin/users/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          ...data,
+          companies: companies.map(
+            (company) => company.value.external_identifier
+          )
+        })
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error: ${response.status}`);
+      }
+      toast.success('Notandi hefur verið búinn til!');
+      queryClient.invalidateQueries(['profiles']);
+      onSave();
+    } catch (e) {
+      return toast.error(`Villa kom upp við stofnun!: ${e}`);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handelCompanySelect = (index: number, company: TableRow<'company'>) => {

@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import supabaseClient from '@/utils/supabase-browser';
 import { getProfile, UserProfile } from '@/utils/supabase_queries/profile';
 import { PaginationProps } from '../utilTypes';
+import { TableRow } from '@/types';
 
 export const useGetProfile = () => {
   return useQuery<UserProfile>(['profile'], async () => {
@@ -9,14 +10,12 @@ export const useGetProfile = () => {
   });
 };
 
-export type Company = {
-  name: string;
-};
-export type Profile = {
+export type TCompany = TableRow<'company'>;
+export type TProfile = {
   id: string;
   full_name: string;
   email: string;
-  company: Company[];
+  company: TCompany[];
 };
 
 export type ProfilesResponse = {
@@ -25,7 +24,7 @@ export type ProfilesResponse = {
     nextPage: number | null;
     total: number;
   };
-  profiles: Profile[];
+  profiles: TProfile[];
 };
 
 export const useGetProfiles = (search: string, pagination: PaginationProps) => {

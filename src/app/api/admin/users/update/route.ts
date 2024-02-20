@@ -4,6 +4,7 @@ import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { z } from 'zod';
+import { TableRow } from '@/types';
 
 const bodySchema = z.object({
   full_name: z.string({
@@ -16,6 +17,13 @@ const bodySchema = z.object({
     .email({ message: 'Netfang ekki á réttu formi.' }),
   companies: z.array(z.string())
 });
+type TBodyProps = {
+  id: string;
+  full_name: string;
+  password: string;
+  email: string;
+  companies: string[];
+};
 
 export async function PUT(request: NextRequest, response: NextResponse) {
   const supabaseRouteClient = createRouteHandlerClient<Database>({ cookies });
@@ -27,18 +35,16 @@ export async function PUT(request: NextRequest, response: NextResponse) {
   if (!session) return new Response('Unauthorized', { status: 401 });
 
   if (session.user.app_metadata.userrole !== 'ADMIN')
-    return new Response('Forbidden', { status: 403 });
+    return new NextResponse('Forbidden', { status: 403 });
 
   // extract body from NextRequest
-  const body = await request.json();
-
-  console.log('body', body);
+  const body: TBodyProps = await request.json();
 
   // Validate body
   try {
     bodySchema.parse(body);
   } catch (error) {
-    return new Response(error.errors, { status: 400 });
+    return new NextResponse(error.errors, { status: 400 });
   }
 
   const supabase = supabaseAdminClient();
@@ -46,6 +52,7 @@ export async function PUT(request: NextRequest, response: NextResponse) {
     email: body.email,
     user_metadata: {
       full_name: body.full_name
+      // TODO: ADD EMAIL
     }
   };
   if (body.password) {
@@ -60,26 +67,39 @@ export async function PUT(request: NextRequest, response: NextResponse) {
   }
 
   // Update company profiles linked table
-  const newCompanyProfiles = [];
   // Get all company_profiles
-  const { data: companyProfiles } = await supabase
+  const { data: companyProfilesRaw } = await supabase
     .from('company_profile')
     .select('*')
     .eq('profile_id', body.id);
 
-  // First check which companies are being removed or added
-  for (const companyId of body.companies) {
-    if (companyProfiles.filter((cp) => cp.company_id !== companyId)) {
-      newCompanyProfiles.push({ id: companyId });
+  const companyProfiles: TableRow<'company_profile'>[] | null =
+    companyProfilesRaw as TableRow<'company_profile'>[] | null;
+
+  // Delete companies requested to be removed
+  for (const companyProfile of companyProfiles) {
+    if (body.companies.includes(companyProfile.company_id) === false) {
+      await supabase
+        .from('company_profile')
+        .delete()
+        .eq('company_id', companyProfile.company_id)
+        .eq('profile_id', body.id);
     }
   }
+
   // Add new companies
-  for (const newCompany of newCompanyProfiles) {
-    await supabase.from('company_profile').insert({
-      profile_id: body.id,
-      company_id: newCompany.id
-    });
+  for (const companyId of body.companies) {
+    const hasNotBeenCreated =
+      companyProfiles.filter(
+        (companyProfile) => companyProfile.company_id === companyId
+      ).length === 0;
+    if (hasNotBeenCreated) {
+      await supabase.from('company_profile').insert({
+        profile_id: body.id,
+        company_id: companyId
+      });
+    }
   }
 
-  return new NextResponse('User Created', { status: 200 });
+  return new NextResponse('User Updated', { status: 200 });
 }

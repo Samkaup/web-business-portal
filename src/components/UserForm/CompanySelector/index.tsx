@@ -22,11 +22,11 @@ import { useInfiniteCompanies } from '@/utils/react_query_hooks/company';
 import { DebouncedInput } from '@/components/ui/Input/debouncedInput';
 import classNames from '@/utils/style/classNames';
 
-type Company = TableRow<'company'>;
+type TCompany = TableRow<'company'> | null;
 
 type Props = {
-  selectedCompany: Company | null;
-  onSelect: (company: Company) => void;
+  selectedCompany: TCompany;
+  onSelect: (company: TCompany) => void;
   className?: string;
 };
 
@@ -51,7 +51,7 @@ export function CompanySelector({
     }
   };
 
-  const handleSelect = (company: Company) => {
+  const handleSelect = (company: TCompany) => {
     setOpen(false);
     onSelect(company);
   };
@@ -69,7 +69,7 @@ export function CompanySelector({
             <div className="flex gap-1">
               <p>{selectedCompany.name}</p>-
               <p className="text-muted-foreground text-sm">
-                {selectedCompany.external_identifier}
+                {selectedCompany?.external_identifier}
               </p>
             </div>
           ) : (
@@ -94,7 +94,7 @@ export function CompanySelector({
               <CommandGroup>
                 {data.pages.map((page, pageIndex) => (
                   <React.Fragment key={pageIndex}>
-                    {page.map((company: Company) => (
+                    {page.map((company: TCompany) => (
                       <CommandItem
                         key={company.external_identifier}
                         onSelect={() => handleSelect(company)}

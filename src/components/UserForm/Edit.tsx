@@ -14,18 +14,19 @@ import { z } from 'zod';
 import { CompanySelector } from './CompanySelector';
 import { TableRow } from '@/types';
 import { useEffect, useState } from 'react';
-import { Profile } from '@/utils/react_query_hooks/profile';
+import { TProfile } from '@/utils/react_query_hooks/profile';
 import { Button as ShadcnButton } from '@/components/Shadcn/ui/button';
 import { TrashIcon } from 'lucide-react';
 import { PlusSmallIcon } from '@heroicons/react/24/outline';
 import CompanyForm from './CompanyForm';
 import { SlideOver } from '../ui/SlideOver/SlideOver';
 import toast from 'react-hot-toast';
+import { useQueryClient } from '@tanstack/react-query';
 
 type Props = {
   onCancel?: () => void;
   onSave?: () => void;
-  user: Profile;
+  user: TProfile;
 };
 
 const userCreationSchema = z.object({
@@ -41,15 +42,16 @@ const userCreationSchema = z.object({
 
 type UserCreationFormValues = z.infer<typeof userCreationSchema>;
 
-type CompanySelector = {
+type TCompanySelector = {
   value: TableRow<'company'> | null;
   isError: boolean;
 };
 
 export default function UserEdit({ onCancel, onSave, user }: Props) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const queryClient = useQueryClient();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [companies, setCompanies] = useState<CompanySelector[]>([
+  const [companies, setCompanies] = useState<TCompanySelector[]>([
     { value: null, isError: false }
   ]);
 
@@ -61,7 +63,7 @@ export default function UserEdit({ onCancel, onSave, user }: Props) {
     mode: 'onChange'
   });
 
-  const onSubmit = (data: UserCreationFormValues) => {
+  const onSubmit = async (data: UserCreationFormValues) => {
     setIsLoading(true);
     const hasError = companies.some((company) => company.value === null);
     if (hasError) {
@@ -74,25 +76,35 @@ export default function UserEdit({ onCancel, onSave, user }: Props) {
       setIsLoading(false);
       return;
     }
-
-    fetch('/api/admin/users/update', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        ...data,
-        companies: companies.map((company) => company.value.external_identifier)
-      })
-    });
-
-    setIsLoading(false);
-    toast.success('Notandi hefur verið búinn til!');
-    onSave();
+    try {
+      const response = await fetch('/api/admin/users/update', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          ...data,
+          id: user.id,
+          companies: companies.map(
+            (company) => company.value.external_identifier
+          )
+        })
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error: ${response.status}`);
+      }
+      toast.success('Notandi uppfærður.');
+      queryClient.invalidateQueries(['profiles']);
+      onSave();
+    } catch (e) {
+      return toast.error(`Villa kom upp við uppfærslu!: ${e}`);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleCompanySelect = (index: number, company: TableRow<'company'>) => {
-    const companySelector: CompanySelector = {
+    const companySelector: TCompanySelector = {
       value: company,
       isError: false
     };
@@ -112,7 +124,6 @@ export default function UserEdit({ onCancel, onSave, user }: Props) {
   };
 
   const removeCompanySelector = (index: number) => {
-    if (companies.length === 1) return;
     setCompanies(companies.filter((_, idx: number) => idx !== index));
   };
 
@@ -146,8 +157,20 @@ export default function UserEdit({ onCancel, onSave, user }: Props) {
   };
 
   useEffect(() => {
+    // Initialize form
     form.setValue('full_name', user.full_name);
     form.setValue('email', user.email);
+
+    // set company data
+    if (user.company.length > 0) {
+      const companySelectors: TCompanySelector[] = user.company.map(
+        (company) => ({
+          value: company,
+          isError: company.name === null
+        })
+      );
+      setCompanies(companySelectors);
+    }
   }, [form, user]);
 
   return (
@@ -187,7 +210,7 @@ export default function UserEdit({ onCancel, onSave, user }: Props) {
             Veljið fyrirtækin sem notandinn á að hafa aðgang að.
           </p>
 
-          {companies.map((selector: CompanySelector, idx: number) => {
+          {companies.map((selector: TCompanySelector, idx: number) => {
             return (
               <div key={idx}>
                 <div className="flex gap-2">
@@ -199,15 +222,13 @@ export default function UserEdit({ onCancel, onSave, user }: Props) {
                     }
                     className={selector.isError && 'border-red-500'}
                   />
-                  {companies.length > 1 && (
-                    <ShadcnButton
-                      variant="destructive"
-                      type="button"
-                      onClick={() => removeCompanySelector(idx)}
-                    >
-                      <TrashIcon className="h-5 w-5" />
-                    </ShadcnButton>
-                  )}
+                  <ShadcnButton
+                    variant="destructive"
+                    type="button"
+                    onClick={() => removeCompanySelector(idx)}
+                  >
+                    <TrashIcon className="h-5 w-5" />
+                  </ShadcnButton>
                 </div>
               </div>
             );
@@ -233,7 +254,7 @@ export default function UserEdit({ onCancel, onSave, user }: Props) {
       <SlideOver
         isOpen={isOpen}
         title="Fyrirtæki ekki tilbúið!"
-        description="Vinsamlegast fyllið út upplýsingar sem vanta fyrir fyrirtækið."
+        description="Vinsamlegast fyllið út nauðsynlegar upplýsingar fyrir fyrirtækið."
         toggleOpen={() => setIsOpen(true)}
         onCancel={() => onCompanyCancel(companyNeedingUpdate)}
       >

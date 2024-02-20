@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
 
   let baseQuery = supabase
     .from('profile')
-    .select('id, full_name, email, company(name)', { count: 'exact' })
+    .select('id, full_name, email, company(*)', { count: 'exact' })
     .range((page - 1) * pageSize, page * pageSize - 1)
     .order('full_name', { ascending: true });
 
@@ -43,7 +43,6 @@ export async function GET(request: NextRequest) {
   }
 
   const profiles = await baseQuery;
-
   const lastPage = Math.ceil(profiles.count / pageSize);
 
   const pagination = {
