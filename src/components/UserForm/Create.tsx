@@ -229,7 +229,7 @@ export default function UserCreate({ onCancel, onSave }: Props) {
               Hætta við
             </Button>
             <Button type="submit" isLoading={isLoading}>
-              Uppfæra
+              Stofna
             </Button>
           </div>
         </form>

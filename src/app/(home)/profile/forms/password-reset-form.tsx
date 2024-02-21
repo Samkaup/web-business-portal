@@ -17,6 +17,7 @@ import {
   FormMessage
 } from '@/components/Shadcn/ui/form';
 import TextInput from '@/components/ui/Input/textInput';
+import { useRouter } from 'next/navigation';
 
 const resetPassSchema = z
   .object({
@@ -41,7 +42,11 @@ const resetPassSchema = z
 
 type ProfileFormValues = z.infer<typeof resetPassSchema>;
 
-export function PassResetForm() {
+type Props = {
+  redirectToURLOnSuccess?: string;
+};
+export function PassResetForm({ redirectToURLOnSuccess }: Props) {
+  const router = useRouter();
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(resetPassSchema),
     mode: 'onChange'
@@ -54,13 +59,16 @@ export function PassResetForm() {
       })
       .then(({ error }) => {
         if (error) {
-          toast.error('Ekki er hægt að uppfæra lykilorð');
+          toast.error(`Ekki er hægt að uppfæra lykilorð: ${error.message}`);
           console.error(error);
           return;
         }
 
         form.reset({ password: '', confirmPassword: '' });
         toast.success('Lykilorðið uppfært.');
+        if (redirectToURLOnSuccess) {
+          router.replace(redirectToURLOnSuccess);
+        }
       });
   };
 
@@ -88,7 +96,7 @@ export function PassResetForm() {
               <FormControl>
                 <TextInput
                   {...field}
-                  placeholder="Lykilorð Aftur"
+                  placeholder="Lykilorð aftur"
                   type="password"
                 />
               </FormControl>
