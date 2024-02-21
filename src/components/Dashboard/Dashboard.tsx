@@ -43,9 +43,13 @@ export default function Dashboard() {
   const { company } = useCompany();
   const calcDiffPercentage = (prev: number, curr: number) => {
     // Check if the previous value is 0 or undefined
-    if (!prev || prev === 0) {
+    if (prev === 0 && curr > 0) {
       // If prev is 0 or undefined, a meaningful percentage change can't be calculated
       return '100';
+    }
+    if (prev === 0 && curr <= 0) {
+      // If prev is 0 or undefined, a meaningful percentage change can't be calculated
+      return '0';
     }
 
     // Calculate the percentage difference
@@ -214,9 +218,12 @@ export default function Dashboard() {
                         <Spinner />
                       ) : (
                         <p className="text-sm text-muted-foreground">
-                          {' hæst: '}
-                          {transactions?.max > 0 &&
-                            formatCurrency(transactions?.max)}
+                          {transactions?.max > 0 && (
+                            <>
+                              hæst:
+                              {formatCurrency(transactions?.max)}
+                            </>
+                          )}
                         </p>
                       )}
                     </>

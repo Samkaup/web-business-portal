@@ -26,10 +26,10 @@ export const getRecentCompanyTransactions = async ({
   supabase,
   companyId,
   limit
-}: RecentCompanyTransactionsProps): Promise<TableRow<'transaction'>[]> => {
+}: RecentCompanyTransactionsProps) => {
   const { data, error } = await supabase
     .from('transaction')
-    .select('*, department!inner (*)')
+    .select('*, department!inner (*), store (name)')
     .filter('department.company_id', 'eq', companyId)
     .order('date', { ascending: false })
     .limit(limit);

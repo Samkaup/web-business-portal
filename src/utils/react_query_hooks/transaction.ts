@@ -16,11 +16,15 @@ export const useTransactions = () => {
     return getTransactions(supabaseClient);
   });
 };
+type TStore = {
+  name: string;
+};
+type TransactionWithStore = TableRow<'transaction'> & { store: TStore };
 
 export const useRecentTransactions = (limit?: number) => {
   const { company } = useCompany();
 
-  return useQuery<TableRow<'transaction'>[]>(
+  return useQuery<TransactionWithStore[]>(
     ['recentTransaction', { company, limit }],
     async () => {
       // Extract transactions

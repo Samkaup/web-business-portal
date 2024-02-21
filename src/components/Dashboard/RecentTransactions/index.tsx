@@ -21,7 +21,7 @@ export default function ({ limit = 6 }: Props) {
               <div className="flex items-center" key={transaction.id}>
                 <div className="ml-4 space-y-1">
                   <p className="text-sm font-medium leading-none">
-                    {transaction.description}
+                    {transaction.store?.name}
                   </p>
                   <div className="flex">
                     <p className="text-sm text-muted-foreground pr-2">
