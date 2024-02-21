@@ -52,12 +52,8 @@ export async function PUT(request: NextRequest, response: NextResponse) {
     email: body.email,
     user_metadata: {
       full_name: body.full_name
-      // TODO: ADD EMAIL
     }
   };
-  if (body.password) {
-    updateObj['password'] = body.password;
-  }
 
   // Update user
   try {

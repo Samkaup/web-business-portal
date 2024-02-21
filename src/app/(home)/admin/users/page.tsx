@@ -38,7 +38,7 @@ export default function UserRegistationPage() {
     page,
     pageSize
   });
-
+  console.log(data);
   const onSearch = (value: string) => {
     setPage(1);
     setSearch(value);
@@ -69,8 +69,8 @@ export default function UserRegistationPage() {
       } catch (e) {
         console.error('Error while deleting user! ', e);
         toast.error('Villa kom upp við eyðslu á notanda, reyndu aftur.');
-        queryClient.invalidateQueries(['profile']);
       } finally {
+        queryClient.invalidateQueries(['profiles']);
         setIsLoadingDelete(false);
       }
     }
@@ -105,11 +105,14 @@ export default function UserRegistationPage() {
                 <div className="flex justify-end items-center col-span-4">
                   {profile.company.length > 0 ? (
                     <>
-                      {profile.company.map((company, index) => (
-                        <div key={index}>
+                      {profile.company.slice(0, 3).map((company, index) => (
+                        <div key={index} className="mr-1">
                           <Badge variant="outline">{company.name}</Badge>
                         </div>
                       ))}
+                      {profile.company.length > 3 && (
+                        <Badge variant="outline">...</Badge>
+                      )}
                     </>
                   ) : (
                     <p className="text-gray-500 text-xs">

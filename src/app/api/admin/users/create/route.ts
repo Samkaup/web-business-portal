@@ -32,8 +32,6 @@ export async function POST(request: NextRequest) {
   // extract body from NextRequest
   const body = await request.json();
 
-  console.log('body', body);
-
   // Validate body
   try {
     bodySchema.parse(body);
@@ -52,6 +50,9 @@ export async function POST(request: NextRequest) {
       full_name: body.full_name
     }
   });
+
+  // Invite user
+  await supabase.auth.admin.inviteUserByEmail(body.email);
 
   // Link profile to companies
   for (const companyId of body.companies) {
