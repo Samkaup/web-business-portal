@@ -1,2 +1,3 @@
 src/app/*.css
 src/lib/database.types.ts
+node_modules/
