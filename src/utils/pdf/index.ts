@@ -1,5 +1,5 @@
 export const downloadPDF = async (id: string) => {
-  const res = await fetch('/transactions/pdf?' + new URLSearchParams({ id }), {
+  const res = await fetch('/api/pdf?' + new URLSearchParams({ id }), {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'

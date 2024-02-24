@@ -333,6 +333,9 @@ export type Database = {
           store_number: number | null
           transaction_type: number | null
           vat: number | null
+          vat_dutiable1: number | null
+          vat_dutiable2: number | null
+          vat_dutiable3: number | null
           vat1: number | null
           vat2: number | null
           vat3: number | null
@@ -358,6 +361,9 @@ export type Database = {
           store_number?: number | null
           transaction_type?: number | null
           vat?: number | null
+          vat_dutiable1?: number | null
+          vat_dutiable2?: number | null
+          vat_dutiable3?: number | null
           vat1?: number | null
           vat2?: number | null
           vat3?: number | null
@@ -382,6 +388,9 @@ export type Database = {
           store_number?: number | null
           transaction_type?: number | null
           vat?: number | null
+          vat_dutiable1?: number | null
+          vat_dutiable2?: number | null
+          vat_dutiable3?: number | null
           vat1?: number | null
           vat2?: number | null
           vat3?: number | null

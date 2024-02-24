@@ -64,6 +64,7 @@ export const config = {
     '/auth/forgot-password/reset-pass',
     '/companies',
     '/admin/:path*',
-    '/void'
+    '/void',
+    '/api'
   ]
 };
