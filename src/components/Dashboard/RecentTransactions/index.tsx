@@ -23,20 +23,25 @@ export default function ({ limit = 6 }: Props) {
                   <p className="text-sm font-medium leading-none">
                     {transaction.store?.name}
                   </p>
-                  <div className="flex">
+                  <p className="text-sm text-muted-foreground pr-2">
+                    {transaction.department?.name}
+                  </p>
+                </div>
+                <div className="ml-auto font-medium">
+                  <div>
+                    <p>{formatCurrency(transaction.amount_debit)}</p>
                     <p className="text-sm text-muted-foreground pr-2">
                       {format(new Date(transaction.date), 'dd. LLL y', {
                         locale: is
                       })}
                     </p>
-                    <InvoiceDownloadButton
-                      transactionID={transaction.id}
-                      btnText=""
-                    />
                   </div>
                 </div>
-                <div className="ml-auto font-medium">
-                  <div>{formatCurrency(transaction.amount_debit)}</div>
+                <div className="items-start">
+                  <InvoiceDownloadButton
+                    transactionID={transaction.id}
+                    btnText=""
+                  />
                 </div>
               </div>
             );
