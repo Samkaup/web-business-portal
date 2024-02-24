@@ -126,7 +126,7 @@ export type Database = {
           closed: boolean | null
           closed_at: string | null
           created_at: string | null
-          department_id: string | null
+          department_id: string
           email_address: string | null
           external_identifier: string
           full_name: string | null
@@ -138,7 +138,7 @@ export type Database = {
           closed?: boolean | null
           closed_at?: string | null
           created_at?: string | null
-          department_id?: string | null
+          department_id: string
           email_address?: string | null
           external_identifier: string
           full_name?: string | null
@@ -150,7 +150,7 @@ export type Database = {
           closed?: boolean | null
           closed_at?: string | null
           created_at?: string | null
-          department_id?: string | null
+          department_id?: string
           email_address?: string | null
           external_identifier?: string
           full_name?: string | null
@@ -204,6 +204,45 @@ export type Database = {
             referencedColumns: ["external_identifier"]
           }
         ]
+      }
+      ledger_records: {
+        Row: {
+          account_number: string | null
+          amount_credit: number | null
+          amount_debit: number | null
+          closed_date: string | null
+          date: string | null
+          description: string | null
+          due_date: string | null
+          external_row_number: number
+          statement_date: string | null
+          transaction_type: number | null
+        }
+        Insert: {
+          account_number?: string | null
+          amount_credit?: number | null
+          amount_debit?: number | null
+          closed_date?: string | null
+          date?: string | null
+          description?: string | null
+          due_date?: string | null
+          external_row_number: number
+          statement_date?: string | null
+          transaction_type?: number | null
+        }
+        Update: {
+          account_number?: string | null
+          amount_credit?: number | null
+          amount_debit?: number | null
+          closed_date?: string | null
+          date?: string | null
+          description?: string | null
+          due_date?: string | null
+          external_row_number?: number
+          statement_date?: string | null
+          transaction_type?: number | null
+        }
+        Relationships: []
       }
       profile: {
         Row: {
@@ -285,15 +324,18 @@ export type Database = {
           due_date: string | null
           edi_reference: number | null
           external_row_number: number
-          id: string
+          id: string | null
           invoice_number: number
           invoice_reference: string | null
-          journal_number: string
+          journal_number: string | null
           sales_number: number
           statement_date: string | null
           store_number: number | null
           transaction_type: number | null
           vat: number | null
+          vat1: number | null
+          vat2: number | null
+          vat3: number | null
           full_text_search: string | null
         }
         Insert: {
@@ -307,15 +349,18 @@ export type Database = {
           due_date?: string | null
           edi_reference?: number | null
           external_row_number: number
-          id?: string
+          id?: string | null
           invoice_number: number
           invoice_reference?: string | null
-          journal_number: string
+          journal_number?: string | null
           sales_number: number
           statement_date?: string | null
           store_number?: number | null
           transaction_type?: number | null
           vat?: number | null
+          vat1?: number | null
+          vat2?: number | null
+          vat3?: number | null
         }
         Update: {
           account_number?: string | null
@@ -328,15 +373,18 @@ export type Database = {
           due_date?: string | null
           edi_reference?: number | null
           external_row_number?: number
-          id?: string
+          id?: string | null
           invoice_number?: number
           invoice_reference?: string | null
-          journal_number?: string
+          journal_number?: string | null
           sales_number?: number
           statement_date?: string | null
           store_number?: number | null
           transaction_type?: number | null
           vat?: number | null
+          vat1?: number | null
+          vat2?: number | null
+          vat3?: number | null
         }
         Relationships: [
           {
@@ -362,11 +410,10 @@ export type Database = {
           description: string
           discount_amount: number
           discount_percent: number
-          id: string
+          external_row_number: number
           invoice_number: number
           line_amount: number
           quantity: number
-          rownumber: number
           sales_number: number
           sales_price: number
           sku: string
@@ -379,11 +426,10 @@ export type Database = {
           description: string
           discount_amount: number
           discount_percent: number
-          id?: string
+          external_row_number: number
           invoice_number: number
           line_amount: number
           quantity: number
-          rownumber: number
           sales_number: number
           sales_price: number
           sku: string
@@ -396,26 +442,17 @@ export type Database = {
           description?: string
           discount_amount?: number
           discount_percent?: number
-          id?: string
+          external_row_number?: number
           invoice_number?: number
           line_amount?: number
           quantity?: number
-          rownumber?: number
           sales_number?: number
           sales_price?: number
           sku?: string
           vat_code?: string
           vat_factor?: number
         }
-        Relationships: [
-          {
-            foreignKeyName: "fk_invoice_sales"
-            columns: ["invoice_number", "sales_number"]
-            isOneToOne: false
-            referencedRelation: "transaction"
-            referencedColumns: ["invoice_number", "sales_number"]
-          }
-        ]
+        Relationships: []
       }
     }
     Views: {
