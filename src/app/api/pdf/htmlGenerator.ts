@@ -73,7 +73,6 @@ function generateTable(
   let pageMaxHeight = 1000; // Example height in pixels, adjust based on your content and page size
   const marginHeight = '20mm'; // Margin height to be added at the top of a new page
   const itemHeight = 20; // Estimated height of a single item, adjust based on your actual item height
-  const hasPageBreak = false;
 
   let html = `
     <div class="mt-10">
