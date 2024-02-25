@@ -8,7 +8,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html className="h-full">
+    <html className="h-full" suppressHydrationWarning>
       <head />
       <body className="h-full">
         <ClientLayout>{children}</ClientLayout>
