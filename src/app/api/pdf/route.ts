@@ -69,7 +69,16 @@ const generatePDF = async (
             'krambudin_logo.png',
             'kjorbudin_logo.png',
             'iceland_logo.png'
-          ]
+          ],
+          layout: {
+            size: 'A4',
+            margins: {
+              top: 20,
+              right: 20,
+              bottom: 20,
+              left: 20
+            }
+          }
         }
       ]
     })
