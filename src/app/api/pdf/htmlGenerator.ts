@@ -138,15 +138,15 @@ function generateTable(
             </tr>
             <tr>
               <td></td>
-              <td>VSK stofn 11%=T ${transaction.vat_dutiable1}</td>
-              <td>VSK Upph. ${transaction.vat1}</td>
+              <td>VSK stofn 11%=T ${Math.round(transaction.vat_dutiable1)}</td>
+              <td>VSK Upph. ${Math.round(transaction.vat1)}</td>
               <td></td>
               <td></td>
             </tr>
             <tr>
               <td></td>
-              <td>VSK stofn 24%=S ${transaction.vat_dutiable2}</td>
-              <td>VSK Upph. ${transaction.vat2}</td>
+              <td>VSK stofn 24%=S ${Math.round(transaction.vat_dutiable2)}</td>
+              <td>VSK Upph. ${Math.round(transaction.vat2)}</td>
               <td></td>
               <td></td>
             </tr>
