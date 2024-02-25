@@ -19,7 +19,9 @@ export const useTransactions = () => {
 type TStore = {
   name: string;
 };
-type TransactionWithStore = TableRow<'transaction'> & { store: TStore };
+type TransactionWithStore = TableRow<'transaction'> & { store: TStore } & {
+  department: TableRow<'department'>;
+};
 
 export const useRecentTransactions = (limit?: number) => {
   const { company } = useCompany();
