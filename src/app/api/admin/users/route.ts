@@ -29,9 +29,6 @@ export async function GET(request: NextRequest) {
 
   const supabase = supabaseAdminClient();
 
-  const { data, error } = await supabase.auth.admin.listUsers();
-  console.log(data, error);
-
   let baseQuery = supabase
     .from('profile')
     .select('id, full_name, email, company(*)', {
