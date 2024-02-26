@@ -11,7 +11,7 @@ import { useCompaniesPagination } from '@/utils/react_query_hooks/company';
 import { useGetProfile } from '@/utils/react_query_hooks/profile';
 import supabaseBrowser from '@/utils/supabase-browser';
 import { useQueryClient } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
 import {
   Pagination,
@@ -36,10 +36,6 @@ export default function Companies() {
     page: page,
     pageSize: 10
   });
-
-  useEffect(() => {
-    console.log(userProfile);
-  }, [userProfile]);
 
   const deleteCompanyProfile = (companyId: string) => {
     supabaseBrowser

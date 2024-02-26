@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useMemo, useState } from 'react';
@@ -60,7 +61,7 @@ export default function TransactionTable({
       filters: departmentIds.map((id: string) => `account_number.eq.${id}`),
       companyId: company.external_identifier
     });
-
+    console.log(transactions);
     downloadCSV(objectToCsv(transactions), 'hreyfingar');
     setCsvDownloading(false);
   };
@@ -84,7 +85,12 @@ export default function TransactionTable({
       {
         accessorKey: 'store_number',
         id: 'store_number',
-        header: () => <span>Verslun</span>
+        header: () => <span>Verslun</span>,
+        cell: (props: any) => {
+          return (
+            <span>{props.getValue() !== 0 && <>{props.getValue()}</>}</span>
+          );
+        }
       },
       {
         accessorKey: 'department_name', // Name of attribute to access its data
@@ -113,12 +119,16 @@ export default function TransactionTable({
         }
       },
       {
-        accessorKey: 'id',
-        id: 'id',
+        accessorKey: 'transaction_id',
+        id: 'transaction_id',
         header: null,
-        cell: (props: any) => (
-          <InvoiceDownloadButton transactionID={props.getValue()} />
-        )
+        cell: (props: any) => {
+          if (props.getValue() !== '') {
+            return <InvoiceDownloadButton transactionID={props.getValue()} />;
+          } else {
+            return <></>;
+          }
+        }
       }
     ],
     []

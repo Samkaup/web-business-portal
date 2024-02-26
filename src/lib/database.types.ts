@@ -242,7 +242,15 @@ export type Database = {
           statement_date?: string | null
           transaction_type?: number | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "public_ledger_records_account_number_fkey"
+            columns: ["account_number"]
+            isOneToOne: false
+            referencedRelation: "department"
+            referencedColumns: ["external_identifier"]
+          }
+        ]
       }
       profile: {
         Row: {
@@ -396,6 +404,13 @@ export type Database = {
           vat3?: number | null
         }
         Relationships: [
+          {
+            foreignKeyName: "public_transaction_external_row_number_fkey"
+            columns: ["external_row_number"]
+            isOneToOne: true
+            referencedRelation: "ledger_records"
+            referencedColumns: ["external_row_number"]
+          },
           {
             foreignKeyName: "transaction_account_number_fkey"
             columns: ["account_number"]

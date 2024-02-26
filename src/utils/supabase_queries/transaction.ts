@@ -175,13 +175,13 @@ export const getTransactionsTable = async ({
   filters,
   companyId
 }: TransactionTableProps) => {
-  let query = supabaseClient.from('transaction').select(
-    ` id,
+  let query = supabaseClient.from('ledger_records').select(
+    ` external_row_number,
       date,
       account_number,
       description,
       amount_debit,
-      store (name),
+      transaction(id,store_number,invoice_number),
       department!inner (
         name,
         company_id
@@ -212,7 +212,6 @@ export const getTransactionsTable = async ({
   if (companyId) query = query.filter('department.company_id', 'eq', companyId);
 
   const { data, count, error } = await query;
-
   if (error) {
     console.error(error.message);
     throw error;
@@ -220,12 +219,13 @@ export const getTransactionsTable = async ({
 
   return {
     data: data.map((t) => ({
-      id: t.id,
+      id: t.external_row_number,
       date: t.date,
-      store_number: t.store?.name,
+      store_number: t.transaction ? t.transaction.store_number : 0,
       department_name: t.department.name,
       description: t.description,
-      amount_debit: t.amount_debit
+      amount_debit: t.amount_debit,
+      transaction_id: t.transaction ? t.transaction.id : ''
     })),
     rowCount: count
   };
