@@ -205,42 +205,51 @@ export type Database = {
           }
         ]
       }
-      ledger_records: {
+      ledger: {
         Row: {
           account_number: string | null
           amount_credit: number | null
           amount_debit: number | null
           closed_date: string | null
+          created_at: string | null
           date: string | null
           description: string | null
           due_date: string | null
           external_row_number: number
           statement_date: string | null
+          statement_number: number | null
           transaction_type: number | null
+          voucher: string | null
         }
         Insert: {
           account_number?: string | null
           amount_credit?: number | null
           amount_debit?: number | null
           closed_date?: string | null
+          created_at?: string | null
           date?: string | null
           description?: string | null
           due_date?: string | null
           external_row_number: number
           statement_date?: string | null
+          statement_number?: number | null
           transaction_type?: number | null
+          voucher?: string | null
         }
         Update: {
           account_number?: string | null
           amount_credit?: number | null
           amount_debit?: number | null
           closed_date?: string | null
+          created_at?: string | null
           date?: string | null
           description?: string | null
           due_date?: string | null
           external_row_number?: number
           statement_date?: string | null
+          statement_number?: number | null
           transaction_type?: number | null
+          voucher?: string | null
         }
         Relationships: [
           {
@@ -249,6 +258,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "department"
             referencedColumns: ["external_identifier"]
+          },
+          {
+            foreignKeyName: "public_ledger_records_statement_number_fkey"
+            columns: ["statement_number"]
+            isOneToOne: false
+            referencedRelation: "statement"
+            referencedColumns: ["statement_number"]
           }
         ]
       }
@@ -286,6 +302,45 @@ export type Database = {
             referencedColumns: ["id"]
           }
         ]
+      }
+      statement: {
+        Row: {
+          account_number: string | null
+          created_at: string
+          end_saldo: number | null
+          external_row_number: number
+          from_date: string | null
+          original_saldo: number | null
+          statement_amount: number | null
+          statement_date: string | null
+          statement_number: number
+          to_date: string | null
+        }
+        Insert: {
+          account_number?: string | null
+          created_at?: string
+          end_saldo?: number | null
+          external_row_number: number
+          from_date?: string | null
+          original_saldo?: number | null
+          statement_amount?: number | null
+          statement_date?: string | null
+          statement_number: number
+          to_date?: string | null
+        }
+        Update: {
+          account_number?: string | null
+          created_at?: string
+          end_saldo?: number | null
+          external_row_number?: number
+          from_date?: string | null
+          original_saldo?: number | null
+          statement_amount?: number | null
+          statement_date?: string | null
+          statement_number?: number
+          to_date?: string | null
+        }
+        Relationships: []
       }
       store: {
         Row: {
@@ -408,7 +463,7 @@ export type Database = {
             foreignKeyName: "public_transaction_external_row_number_fkey"
             columns: ["external_row_number"]
             isOneToOne: true
-            referencedRelation: "ledger_records"
+            referencedRelation: "ledger"
             referencedColumns: ["external_row_number"]
           },
           {

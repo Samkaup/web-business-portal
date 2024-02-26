@@ -19,10 +19,10 @@ export type Row<T extends RowName> = T extends TableName
   : never;
 
 export type FilteredTransaction = {
-  id: Row<'ledger_records'>['external_row_number'];
-  date: Row<'ledger_records'>['date'];
+  id: Row<'ledger'>['external_row_number'];
+  date: Row<'ledger'>['date'];
   store_number: Row<'store'>['id'];
   department_name: Row<'department'>['name'];
-  description: Row<'ledger_records'>['description'];
-  amount_debit: Row<'ledger_records'>['amount_debit'];
+  description: Row<'ledger'>['description'];
+  amount_debit: Row<'ledger'>['amount_debit'];
 };

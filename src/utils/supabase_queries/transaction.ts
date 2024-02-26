@@ -175,7 +175,7 @@ export const getTransactionsTable = async ({
   filters,
   companyId
 }: TransactionTableProps) => {
-  let query = supabaseClient.from('ledger_records').select(
+  let query = supabaseClient.from('ledger').select(
     ` external_row_number,
       date,
       account_number,
