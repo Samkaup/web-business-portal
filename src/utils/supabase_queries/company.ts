@@ -26,7 +26,6 @@ export const getCompany = async (
   }
 
   const { data: companyData, error } = await query;
-
   if (error) {
     console.log(error);
     throw error;

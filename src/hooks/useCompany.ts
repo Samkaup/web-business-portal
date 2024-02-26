@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { Database } from '@/lib/database.types';
 import { useSessionStorage } from 'usehooks-ts';
 import { useCompanies } from '@/utils/react_query_hooks/company';
+import { TableRow } from '@/types';
 
-export type TCompany = Database['public']['Tables']['company']['Row'];
+export type TCompany = TableRow<'company'>;
 const useCompany = (search?: string) => {
   const queryClient = useQueryClient();
   const [company, setCompany] = useSessionStorage<TCompany | null>(
@@ -27,7 +27,9 @@ const useCompany = (search?: string) => {
             c.external_identifier === company?.external_identifier
         )
       ) {
-        setSelectedCompany(data[0]);
+        if (!company) {
+          setSelectedCompany(data[0]);
+        }
       }
     }
   }, [company, data, isSuccess]);
