@@ -18,7 +18,6 @@ export const getCompany = async (
   }
 
   // Set search if search string is provided
-
   if (search) {
     const searchTerm = `%${search}%`;
     query.or(

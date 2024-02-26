@@ -4,9 +4,9 @@ import supabaseClient from '@/utils/supabase-browser';
 import { getCompany } from '@/utils/supabase_queries/company';
 import { PaginationProps } from '../utilTypes';
 
-export const useCompanies = () => {
+export const useCompanies = (search?: string) => {
   return useQuery<TableRow<'company'>[]>(['company'], async () => {
-    return getCompany(supabaseClient, {});
+    return getCompany(supabaseClient, {}, search);
   });
 };
 
