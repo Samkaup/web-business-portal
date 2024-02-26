@@ -38,7 +38,6 @@ export default function UserRegistationPage() {
     page,
     pageSize
   });
-  console.log(data);
   const onSearch = (value: string) => {
     setPage(1);
     setSearch(value);

@@ -2,14 +2,6 @@
 
 import * as React from 'react';
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList
-} from '@/components/Shadcn/ui/command';
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
@@ -25,22 +17,21 @@ import { Avatar, AvatarFallback } from '../Shadcn/ui/avatar';
 import Link from 'next/link';
 import { useCompany } from '@/hooks/useCompany';
 import { TableRow } from '@/types';
+import { CompanySelector } from '../UserForm/CompanySelector';
 
 export default function CompanySwitcher() {
   const [open, setOpen] = React.useState(false);
-  const { company, companies, setSelectedCompany, isSuccess } = useCompany();
+  const { company, isSuccess, setSelectedCompany } = useCompany();
   const { data: user } = useGetProfile();
   function getInitals(fullName: string) {
     const parts: string[] = fullName.split(' ');
     const initalsArr = parts.map((part: string) => part.at(0)).slice(0, 2);
     return initalsArr.join('');
   }
-  const updateCompany = (name: string) => {
-    const selectedCompany = companies.find(
-      (c) => c.name.toString().toLowerCase() === name
-    );
-    setOpen(false);
-    setSelectedCompany(selectedCompany);
+
+  const handleCompanySelect = (company: TableRow<'company'>) => {
+    console.log('Selecting company');
+    setSelectedCompany(company);
   };
 
   return (
@@ -92,27 +83,12 @@ export default function CompanySwitcher() {
             <DropdownMenuSub>
               <DropdownMenuSubTrigger>Velja fyrirtæki</DropdownMenuSubTrigger>
               <DropdownMenuSubContent className="p-0">
-                <Command>
-                  <CommandInput
-                    placeholder="Leita..."
-                    autoFocus={true}
-                    className="h-9"
-                  />
-                  <CommandList>
-                    <CommandEmpty>Finn ekki fyrirtæki.</CommandEmpty>
-                    <CommandGroup>
-                      {companies?.map((c: TableRow<'company'>) => (
-                        <CommandItem
-                          key={c.external_identifier}
-                          value={c.name}
-                          onSelect={(e: string) => updateCompany(e)}
-                        >
-                          <p>{c.name}</p>
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
+                <CompanySelector
+                  selectedCompany={company}
+                  onSelect={(company: TableRow<'company'>) =>
+                    handleCompanySelect(company)
+                  }
+                />
               </DropdownMenuSubContent>
             </DropdownMenuSub>
             <DropdownMenuSeparator />

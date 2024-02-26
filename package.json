@@ -54,7 +54,7 @@
     "calendar": "^0.1.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
-    "cmdk": "^0.2.0",
+    "cmdk": "^0.2.1",
     "date-fns": "^2.30.0",
     "dropdown-menu": "^0.1.1",
     "eslint-config-next": "^14.1.0",
