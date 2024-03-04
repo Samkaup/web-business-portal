@@ -16,7 +16,6 @@ import {
   AlertDescription,
   AlertTitle
 } from '@/components/Shadcn/ui/alert';
-import { Terminal } from 'lucide-react';
 
 export default function Contacts() {
   const { isOpen, setIsOpen } = useSlideOver();
@@ -51,7 +50,6 @@ export default function Contacts() {
           <div>
             {departments.length === 1 && (
               <Alert className="my-4">
-                <Terminal className="h-4 w-4" />
                 <AlertTitle>Vissir þú?</AlertTitle>
                 <AlertDescription>
                   Ef fyrirtækið þitt er með margar deildir eða viðskiptaeiningar

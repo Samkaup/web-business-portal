@@ -52,7 +52,10 @@ export const createContact = async ({
   if (!contact) {
     throw Error('department parameter is missing');
   }
-  const { data, error } = await supabase.from('contact').insert(contact);
+  const { data, error } = await supabase
+    .from('contact')
+    .insert(contact)
+    .select('*');
 
   if (error) {
     console.log(error);

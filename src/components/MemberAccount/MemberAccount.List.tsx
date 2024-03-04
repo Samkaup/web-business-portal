@@ -4,7 +4,6 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
   InformationCircleIcon,
-  TrashIcon,
   UserIcon
 } from '@heroicons/react/24/outline';
 import { Disclosure, Transition } from '@headlessui/react';
@@ -29,12 +28,12 @@ export default function MemberAccountListWithContacts({ departments }: Props) {
       name: 'Stofna úttektaraðila',
       icon: <UserIcon className="w-4 h-4" />,
       onClick: () => setShowContact(!showContactCreate)
-    },
-    {
-      name: 'Eyða deild',
-      icon: <TrashIcon className="w-4 h-4 text-red-600" />,
-      onClick: () => setShowModal(true)
     }
+    // {
+    //   name: 'Eyða deild',
+    //   icon: <TrashIcon className="w-4 h-4 text-red-600" />,
+    //   onClick: () => setShowModal(true)
+    // }
   ];
   const sort = (obj: { [key: string]: any }[], key: string) => {
     return obj.sort(function (
@@ -67,7 +66,7 @@ export default function MemberAccountListWithContacts({ departments }: Props) {
               {({ open }) => (
                 <ul
                   role="list"
-                  className="divide-y divide-gray-100 overflow-hidden bg-white shadow-sm ring-1 ring-gray-900/5 z-5"
+                  className="divide-y divide-gray-100 overflow-hidden bg-white shadow-lg ring-4 ring-gray-900/5 z-5 "
                 >
                   <li
                     key={`dep-${department.external_identifier}`}
@@ -117,18 +116,18 @@ export default function MemberAccountListWithContacts({ departments }: Props) {
                     <Disclosure.Panel as="dd">
                       <ul
                         role="list"
-                        className="divide-y divide-gray-100 overflow-hidden bg-white shadow-sm ring-1 ring-gray-900/5"
+                        className="divide-y divide-gray-100 overflow-hidden shadow-sm ring-1 ring-gray-900/5"
                       >
                         <li
                           key={`dep-actions-${department.external_identifier}`}
-                          className={`sm:flex sm:justify-between gap-x-6 px-4 py-5 sm:px-6 ${
+                          className={`sm:flex sm:justify-between gap-x-6 px-4 py-5 sm:px-6 bg-black/10 shadow-sm ring-1 ring-gray-900/5 ${
                             department.contact.length > 0 ? 'bg-gray-50' : ''
                           }`}
                         >
                           <div className="flex min-w-0 gap-x-4 items-center">
                             <div className="min-w-0 flex-auto">
-                              <p className="text-lg leading-6 text-gray-900 pb-2">
-                                Úttektaraðilar deildar
+                              <p className="text-md text-gray-900 p-2">
+                                Úttektaraðilar skráðir á deild:
                               </p>
                             </div>
                           </div>
@@ -148,7 +147,7 @@ export default function MemberAccountListWithContacts({ departments }: Props) {
                         {showContactCreate && (
                           <li
                             key={`create-new-contact-${department.external_identifier}`}
-                            className="flex justify-between gap-x-6 px-4 py-5 sm:px-6"
+                            className="flex justify-between gap-x-6 px-4 py-5 sm:px-6 bg-black/10 shadow-sm ring-1 ring-gray-900/5"
                           >
                             <MemberContactNew
                               departmentId={department.external_identifier}
@@ -176,6 +175,7 @@ export default function MemberAccountListWithContacts({ departments }: Props) {
                               <MemberContact
                                 key={c.external_identifier}
                                 contact={c}
+                                departmentName={department.name}
                               />
                             </div>
                           )

@@ -4,7 +4,10 @@ export const getDepartments = async (
   supabase: AppSupabaseClient
 ): Promise<TableRow<'department'>[]> => {
   // RLS is enabled
-  const { data, error } = await supabase.from('department').select('*');
+  const { data, error } = await supabase
+    .from('department')
+    .select('*')
+    .order('name', { ascending: false });
 
   if (error) {
     console.log(error);
@@ -49,7 +52,8 @@ export const getDepartmentsWithContacts = async ({
   const { data: departments, error } = await supabase
     .from('department')
     .select('*, contact(*)')
-    .eq('company_id', company_id);
+    .eq('company_id', company_id)
+    .order('name', { ascending: true });
 
   if (error) {
     console.log(error);
@@ -66,7 +70,8 @@ export const getDepartmentsByCompany = async (
   const { data, error } = await supabase
     .from('department')
     .select('*')
-    .eq('company_id', company_id);
+    .eq('company_id', company_id)
+    .order('name', { ascending: false });
 
   if (error) {
     console.log(error);

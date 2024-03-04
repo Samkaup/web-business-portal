@@ -50,6 +50,7 @@
     "@tanstack/react-table": "^8.9.3",
     "add": "^2.0.6",
     "axios": "^1.6.2",
+    "axios-ntlm": "^1.4.2",
     "button": "^1.1.1",
     "calendar": "^0.1.1",
     "class-variance-authority": "^0.7.0",

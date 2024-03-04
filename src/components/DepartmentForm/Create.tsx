@@ -44,7 +44,8 @@ export default function DepartmentCreate({ onCancel, onSave }: Props) {
       const department = {
         name: name,
         external_identifier: externalIdentifier,
-        company_id: company.external_identifier
+        company_id: company.external_identifier,
+        web_changed_at: new Date().toISOString()
       };
       await createDepartment({ supabase, department });
       queryClient.invalidateQueries({

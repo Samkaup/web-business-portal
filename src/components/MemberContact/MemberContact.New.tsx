@@ -6,6 +6,7 @@ import { Spinner } from '../ui/Spinner/Spinner';
 import { createContact } from '@/utils/supabase_queries/contact';
 import supabase from '@/utils/supabase-browser';
 import { useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 type Props = {
   onSave?: () => void;
   departmentId: string;
@@ -37,6 +38,10 @@ export default function MemberContactNew({ departmentId, onSave }: Props) {
     if (fullName.length < 5 && fullName.length > 4) {
       setFullNameError('Nafn úttektaraðila verður að vera lengra en 5 stafir');
     }
+
+    if (cellPhone.length < 7) {
+      setCellPhoneError('Nafn úttektaraðila verður að vera lengra en 6 stafir');
+    }
   }, [fullName, externalIdentifier, cellPhone, emailAddress]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -48,16 +53,50 @@ export default function MemberContactNew({ departmentId, onSave }: Props) {
         full_name: fullName,
         email_address: emailAddress,
         cell_phone: cellPhone,
-        department_id: departmentId
+        department_id: departmentId,
+        closed: false,
+        web_changed_at: `${new Date().toISOString()}`
       };
 
-      await createContact({ supabase, contact });
-      queryClient.invalidateQueries({
-        queryKey: [`department_with_contacts`]
-      });
-      onSave();
+      const contactResponse = await createContact({ supabase, contact });
+      if (contactResponse) {
+        try {
+          const response = await fetch('/api/contact/create', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              full_name: fullName,
+              account_number: departmentId,
+              external_identifier: externalIdentifier,
+              cell_phone: cellPhone
+            })
+          });
+          if (!response.ok) {
+            throw new Error(`HTTP error: ${response.status}`);
+          }
+          toast.success('Úttektaraðili hefur verið búinn til!');
+          onSave();
+          queryClient.invalidateQueries({
+            queryKey: [`department_with_contacts`]
+          });
+        } catch (e) {
+          return toast.error(`Villa kom upp við stofnun!: ${e.message}`);
+        } finally {
+          setIsLoading(false);
+        }
+      } else {
+        console.error('Could not create contact in db: ' + contactResponse);
+        return toast.error(
+          `Villa kom upp við stofnun í gagnagrunni!!  ${contactResponse}`
+        );
+      }
     } catch (e) {
       setSubmitError(e);
+      return toast.error(
+        `Villa kom upp við stofnun í gagnagrunni!: ${e.message}`
+      );
     } finally {
       setIsLoading(false);
     }

@@ -81,45 +81,6 @@ export type Database = {
           }
         ]
       }
-      company_profile_duplicate: {
-        Row: {
-          company_id: string | null
-          created_at: string | null
-          id: string
-          profile_id: string
-          updated_at: string | null
-        }
-        Insert: {
-          company_id?: string | null
-          created_at?: string | null
-          id?: string
-          profile_id: string
-          updated_at?: string | null
-        }
-        Update: {
-          company_id?: string | null
-          created_at?: string | null
-          id?: string
-          profile_id?: string
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "company_profile_duplicate_company_id_fkey"
-            columns: ["company_id"]
-            isOneToOne: false
-            referencedRelation: "company"
-            referencedColumns: ["external_identifier"]
-          },
-          {
-            foreignKeyName: "company_profile_duplicate_profile_id_fkey"
-            columns: ["profile_id"]
-            isOneToOne: false
-            referencedRelation: "profile"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
       contact: {
         Row: {
           cell_phone: string | null
@@ -130,8 +91,10 @@ export type Database = {
           email_address: string | null
           external_identifier: string
           full_name: string | null
+          id: string
           main_contact: boolean | null
           updated_at: string | null
+          web_changed_at: string | null
         }
         Insert: {
           cell_phone?: string | null
@@ -142,8 +105,10 @@ export type Database = {
           email_address?: string | null
           external_identifier: string
           full_name?: string | null
+          id?: string
           main_contact?: boolean | null
           updated_at?: string | null
+          web_changed_at?: string | null
         }
         Update: {
           cell_phone?: string | null
@@ -154,8 +119,10 @@ export type Database = {
           email_address?: string | null
           external_identifier?: string
           full_name?: string | null
+          id?: string
           main_contact?: boolean | null
           updated_at?: string | null
+          web_changed_at?: string | null
         }
         Relationships: [
           {
@@ -176,6 +143,7 @@ export type Database = {
           external_identifier: string
           name: string | null
           updated_at: string | null
+          web_change_at: string | null
         }
         Insert: {
           closed?: boolean | null
@@ -185,6 +153,7 @@ export type Database = {
           external_identifier: string
           name?: string | null
           updated_at?: string | null
+          web_change_at?: string | null
         }
         Update: {
           closed?: boolean | null
@@ -194,6 +163,7 @@ export type Database = {
           external_identifier?: string
           name?: string | null
           updated_at?: string | null
+          web_change_at?: string | null
         }
         Relationships: [
           {

@@ -42,6 +42,7 @@ export default function Dashboard() {
   const { data: dateRange } = useDateRange({ queryKey: 'dateRangeDashboard' });
   const { company } = useCompany();
   const calcDiffPercentage = (prev: number, curr: number) => {
+    console.log(prev, curr);
     // Check if the previous value is 0 or undefined
     if (prev === 0 && curr > 0) {
       // If prev is 0 or undefined, a meaningful percentage change can't be calculated
@@ -220,7 +221,7 @@ export default function Dashboard() {
                         <p className="text-sm text-muted-foreground">
                           {transactions?.max > 0 && (
                             <>
-                              hæst:
+                              {'hæst: '}
                               {formatCurrency(transactions?.max)}
                             </>
                           )}
