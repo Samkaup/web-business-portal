@@ -3,8 +3,8 @@ import {
   PhoneArrowUpRightIcon
 } from '@heroicons/react/24/outline';
 import { Badge } from '@/components/Shadcn/ui/badge';
+import { DeleteItemButton } from '../DeleteItemButton/DeleteItemButton';
 import { AlertTriangleIcon } from 'lucide-react';
-import { Button } from '../Shadcn/ui/button';
 
 export default function MemberContact({ contact, departmentName }) {
   return (
@@ -51,7 +51,11 @@ export default function MemberContact({ contact, departmentName }) {
         </p>
       </div>
       <div className="gap-x-4">
-        <Button>Delete </Button>
+        <DeleteItemButton
+          id={contact.id}
+          table="contact"
+          verify={true}
+        ></DeleteItemButton>
       </div>
     </li>
   );
