@@ -3,10 +3,49 @@ import {
   PhoneArrowUpRightIcon
 } from '@heroicons/react/24/outline';
 import { Badge } from '@/components/Shadcn/ui/badge';
-import { DeleteItemButton } from '../DeleteItemButton/DeleteItemButton';
-import { AlertTriangleIcon } from 'lucide-react';
+import { AlertTriangleIcon, TrashIcon } from 'lucide-react';
+import { useState } from 'react';
+import Button from '../ui/Button/Button';
+import ModalSimpleWithDismiss from '../ui/ModalSimpleWithDismiss/ModalSimpleWithDismiss';
+import { Spinner } from '../ui/Spinner/Spinner';
+import { useQueryClient } from '@tanstack/react-query';
 
-export default function MemberContact({ contact, departmentName }) {
+export default function MemberContact({ contact, department }) {
+  const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [errorDeletingText, setErrorDeletingText] = useState('');
+  const queryClient = useQueryClient();
+  const verifyAction = async () => {
+    setShowModal(true);
+  };
+  const deleteItem = async (id: string) => {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `/api/contact/delete?id=${id}&account_no=${department.external_identifier}&contact_no=${contact.external_identifier}`,
+        { method: 'DELETE' }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error: ${response.status}`);
+      }
+
+      const body = await response.json();
+
+      if (body.success) {
+        queryClient.invalidateQueries([`department_with_contacts`]);
+        setErrorDeletingText('');
+        setShowModal(false);
+      } else {
+        console.error(body, response.status);
+        setErrorDeletingText('Operation unsuccessful');
+      }
+    } catch (e) {
+      setErrorDeletingText(e.message);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <li
       key={contact.id}
@@ -15,7 +54,7 @@ export default function MemberContact({ contact, departmentName }) {
       <div className="items-center lg:min-w-96">
         <p className="mt-1 text-sm items-center leading-6 inline-flex text-gray-900">
           {contact.full_name} ({contact.external_identifier})
-          {departmentName.replace('.', '') ===
+          {department.name.replace('.', '') ===
             contact.full_name.replace('.', '') && (
             <Badge
               variant="outline"
@@ -51,11 +90,20 @@ export default function MemberContact({ contact, departmentName }) {
         </p>
       </div>
       <div className="gap-x-4">
-        <DeleteItemButton
-          id={contact.id}
-          table="contact"
-          verify={true}
-        ></DeleteItemButton>
+        <Button secondary onClick={verifyAction}>
+          {loading ? (
+            <Spinner></Spinner>
+          ) : (
+            <TrashIcon className="w-4 h-4 text-red-700"></TrashIcon>
+          )}
+        </Button>
+        <ModalSimpleWithDismiss
+          open={showModal}
+          onAction={() => deleteItem(contact.id)}
+          onCancel={() => setShowModal(false)}
+          isLoading={loading}
+          errorText={errorDeletingText}
+        ></ModalSimpleWithDismiss>
       </div>
     </li>
   );

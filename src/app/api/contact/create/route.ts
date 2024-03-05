@@ -25,6 +25,7 @@ type ContactBCProps = {
   contactNo: string;
   accountNo: string;
   name: string;
+  emailAddress: string;
   mobilePhoneNo: string;
 };
 
@@ -32,12 +33,14 @@ const createContactInBusinessCentral = async ({
   contactNo,
   accountNo,
   name,
+  emailAddress,
   mobilePhoneNo
 }: ContactBCProps): Promise<boolean> => {
   const data = {
     Contact_No: contactNo,
     Account_No: accountNo,
     Name: name,
+    E_Mail: emailAddress,
     Mobile_Phone_No: mobilePhoneNo
   };
   const credentials: NtlmCredentials = {
@@ -48,7 +51,7 @@ const createContactInBusinessCentral = async ({
   const client = NtlmClient(credentials);
   try {
     const response = await client.post(
-      "https://bc-data.samkaup.is:7058/SamkaupWeb/ODataV4/Company('Samkaup')/MemberContactCard",
+      `${process.env.BC_API_URL}/MemberContactCard`,
       data,
       {
         headers: {
@@ -99,6 +102,7 @@ export async function POST(request: NextRequest) {
     contactNo: body.external_identifier,
     accountNo: body.account_number,
     name: body.full_name,
+    emailAddress: body.email_address,
     mobilePhoneNo: body.cell_phone
   });
   if (!didCreateUser) {

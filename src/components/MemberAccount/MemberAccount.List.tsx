@@ -147,10 +147,11 @@ export default function MemberAccountListWithContacts({ departments }: Props) {
                         {showContactCreate && (
                           <li
                             key={`create-new-contact-${department.external_identifier}`}
-                            className="flex justify-between gap-x-6 px-4 py-5 sm:px-6 bg-black/10 shadow-sm ring-1 ring-gray-900/5"
+                            className="gap-x-6 px-4 py-5 sm:px-6 bg-black/10 shadow-sm ring-1 ring-gray-900/5"
                           >
                             <MemberContactNew
                               departmentId={department.external_identifier}
+                              onSave={() => setShowContact(false)}
                             />
                           </li>
                         )}
@@ -175,7 +176,7 @@ export default function MemberAccountListWithContacts({ departments }: Props) {
                               <MemberContact
                                 key={c.external_identifier}
                                 contact={c}
-                                departmentName={department.name}
+                                department={department}
                               />
                             </div>
                           )
