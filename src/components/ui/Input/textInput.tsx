@@ -1,8 +1,9 @@
 import { Input } from '@/components/Shadcn/ui/input';
 import classNames from '@/utils/style/classNames';
-import { ExclamationCircleIcon } from '@heroicons/react/20/solid';
+import { AlertCircle } from 'lucide-react';
+import { Spinner } from '../Spinner/Spinner';
 
-type Props = {
+export type Props = {
   name: string;
   value: string | number;
   onChange: (value: string | number) => void;
@@ -13,6 +14,7 @@ type Props = {
   icon?: React.ReactNode;
   required?: boolean;
   isError?: boolean;
+  isLoading?: boolean;
   errorText?: string | null;
   className?: string | null;
   [key: string]: unknown;
@@ -26,6 +28,7 @@ export default function TextInput({
   placeholder,
   required,
   isError,
+  isLoading = false,
   errorText,
   value,
   onChange,
@@ -54,7 +57,7 @@ export default function TextInput({
           value={value}
           {...props}
         />
-
+        {isLoading ? <LoadingIcon /> : <></>}
         {isError ? <ErrorIcon /> : <></>}
       </div>
       {isError ? <ErrorText text={errorText} /> : <></>}
@@ -86,13 +89,18 @@ function ErrorText({ text }: { text: string }) {
   );
 }
 
+function LoadingIcon() {
+  return (
+    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+      <Spinner></Spinner>
+    </div>
+  );
+}
+
 function ErrorIcon() {
   return (
     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-      <ExclamationCircleIcon
-        className="h-5 w-5 text-red-500"
-        aria-hidden="true"
-      />
+      <AlertCircle className="h-5 w-5 text-red-500" aria-hidden="true" />
     </div>
   );
 }

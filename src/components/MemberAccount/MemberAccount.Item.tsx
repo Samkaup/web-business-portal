@@ -56,7 +56,10 @@ export function MemberAccountItem({ department, startOpened = false }: Props) {
       <Link href="#" scroll={false} onClick={() => setIsOpen(!isOpen)}>
         <div className="flex items-center justify-between space-x-4 px-4 py-3 shadow-md ring-1 ring-company-900/5 hover:bg-company-950/10  ">
           <div>
-            <h2 className="text-lg font-semibold">{department.name}</h2>
+            <h2 className="text-lg font-semibold">
+              {department.name}{' '}
+              <small>({department.external_identifier})</small>
+            </h2>
           </div>
           <div
             className="flex shrink-0 items-center gap-x-4"

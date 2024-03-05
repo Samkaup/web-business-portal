@@ -5,44 +5,51 @@ import type { Database } from '@/lib/database.types';
 import axios from 'axios';
 import { NtlmClient, NtlmCredentials } from 'axios-ntlm';
 import { z } from 'zod';
+import { createDepartment } from '@/utils/supabase_queries/department';
 
 const bodySchema = z.object({
-  no: z.string({
-    required_error: ''
+  department_number: z.optional(z.string()),
+  department_name: z.string({
+    required_error: 'Nafn deildar vantar'
   }),
-  external_identifier: z.string({
-    required_error: 'Vantar netfang'
-  }),
-  account_number: z.string({
-    required_error: 'Vantar deildarnúmer'
-  }),
-  cell_phone: z.string({
-    required_error: 'Vantar símanúmer'
+  customer_number: z.string({
+    required_error: 'Númer fyrirtæki vantar'
   })
 });
 
 type ContactBCProps = {
-  accountNo: string;
+  accountNo?: string;
   description: string;
   schemeCode: string;
-  accountType: string;
   linkedToCustomerNo: string;
+};
+
+type BCMemberAccountResponse = {
+  '@odata.context': string;
+  '@odata.etag': string;
+  No: string;
+  Description: string;
+  Club_Code: string;
+  Scheme_Code: string;
+  Account_Type: string;
+  Price_Group: string;
+  Cust_Disc_Group: string;
+  Linked_To_Customer_No: string;
+  Expiration_Period_Type: string;
+  Language_Code: string;
+  Blocked: boolean;
+  Date_Blocked: Date;
+  Reason_Blocked: string;
+  Blocked_By: string;
+  No_Series: string;
 };
 
 const createMemberAccountInBC = async ({
   accountNo,
   description,
   schemeCode,
-  accountType,
   linkedToCustomerNo
-}: ContactBCProps): Promise<boolean> => {
-  const data = {
-    No: accountNo,
-    Description: description,
-    Scheme_Code: schemeCode,
-    Account_Type: accountType,
-    Linked_To_Customer_No: linkedToCustomerNo
-  };
+}: ContactBCProps): Promise<BCMemberAccountResponse> => {
   const credentials: NtlmCredentials = {
     username: process.env.BC_USER,
     password: process.env.BC_PASS,
@@ -50,6 +57,15 @@ const createMemberAccountInBC = async ({
   };
   const client = NtlmClient(credentials);
   try {
+    const data = {
+      Description: description,
+      Scheme_Code: schemeCode,
+      Account_Type: 'Company',
+      Linked_To_Customer_No: linkedToCustomerNo
+    };
+    if (accountNo) {
+      data['No'] = accountNo;
+    }
     const response = await client.post(
       `${process.env.BC_API_URL}/MemberAccountCard`,
       data,
@@ -60,23 +76,22 @@ const createMemberAccountInBC = async ({
       }
     );
 
+    const bcData: BCMemberAccountResponse = response.data;
+
     // Check if the response status is in the range of 2xx
     if (response.status >= 200 && response.status < 300) {
-      return true;
+      return bcData;
     } else {
-      console.error(
+      throw Error(
         `Error while creating BC member acount: ${response.status} ${response.statusText}`
       );
-      return false;
     }
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.error(`Axios error: ${error.message}`);
+      throw new Error(`Axios error: ${error.message}`);
     } else {
-      console.error(`Unexpected error: ${error}`);
+      throw new Error(`Unexpected error: ${error}`);
     }
-
-    return false;
   }
 };
 
@@ -91,7 +106,6 @@ export async function POST(request: NextRequest) {
   // TODO - FIX: this essentially allow anyone to create a contact for any company.
 
   const body = await request.json();
-
   // Validate body
   try {
     bodySchema.parse(body);
@@ -100,18 +114,32 @@ export async function POST(request: NextRequest) {
   }
 
   // Need to fetch scheme code from other departments or perhaps company?
-  const didCreateUser = await createMemberAccountInBC({
-    accountNo: body.department_number,
-    description: body.department_name,
-    schemeCode: body.department_scheme_code,
-    accountType: body.account_type,
-    linkedToCustomerNo: body.customer_number
-  });
-  if (!didCreateUser) {
-    return new NextResponse(
-      'Unable to create member account in subsystem, please wait or try again',
-      { status: 400 }
-    );
+  const schemeCode = 'ENGINN'; //TODO: laga
+
+  try {
+    const bcUser = await createMemberAccountInBC({
+      accountNo: body.department_number,
+      description: body.department_name,
+      schemeCode: schemeCode,
+      linkedToCustomerNo: body.customer_number
+    });
+
+    console.log('BCUSER CREATED: ', bcUser);
+    if (!bcUser.No) {
+      throw new Error('Unable to create in BC system');
+    }
+
+    const department = {
+      name: body.department_name,
+      external_identifier: bcUser.No,
+      discount_scheme: schemeCode,
+      company_id: body.customer_number
+    };
+
+    await createDepartment({ supabase: supabaseRouteClient, department });
+  } catch (e) {
+    console.error(e);
+    return new NextResponse('Error creating member account', { status: 503 });
   }
 
   return new NextResponse('Member Account Created in subsystem', {
