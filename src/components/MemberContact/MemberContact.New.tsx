@@ -38,9 +38,15 @@ export default function MemberContactNew({ departmentId, onSave }: Props) {
       externalIdentifierError.length === 0 &&
       fullNameError.length === 0 &&
       emailAddressError.length === 0 &&
-      cellPhoneError.length === 0
+      cellPhoneError.length === 0 &&
+      externalIdentifier.length !== 0 &&
+      fullName.length !== 0 &&
+      cellPhone.length !== 0 &&
+      emailAddress.length !== 0
     ) {
       setFormDisabled(false);
+    } else {
+      setFormDisabled(true);
     }
   }, [
     externalIdentifierError,
@@ -128,7 +134,7 @@ export default function MemberContactNew({ departmentId, onSave }: Props) {
     <>
       <form
         id={`contact-${departmentId}`}
-        className="flex flex-col sm:flex-row lg:items-end lg:justify-evenly"
+        className="flex flex-col sm:flex-row lg:items-end lg:justify-evenly lg:py-6"
         onSubmit={handleSubmit}
       >
         <TextInput
@@ -169,7 +175,7 @@ export default function MemberContactNew({ departmentId, onSave }: Props) {
         <div className="items-end">
           <Button
             type="submit"
-            className="ml-2"
+            className="lg:ml-2 mt-2"
             disabled={formDisabled}
             secondary
           >

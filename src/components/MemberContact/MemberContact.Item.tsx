@@ -47,11 +47,11 @@ export default function MemberContact({ contact, department }) {
     }
   };
   return (
-    <li
+    <div
       key={contact.id}
       className="flex justify-between gap-x-6 px-4 py-5 hover:bg-company-600/10 sm:px-6"
     >
-      <div className="items-center lg:min-w-96">
+      <div className="items-center">
         <p className="mt-1 text-sm items-center leading-6 inline-flex text-gray-900">
           {contact.full_name} ({contact.external_identifier})
           {department.name.replace('.', '') ===
@@ -105,6 +105,6 @@ export default function MemberContact({ contact, department }) {
           errorText={errorDeletingText}
         ></ModalSimpleWithDismiss>
       </div>
-    </li>
+    </div>
   );
 }

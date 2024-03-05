@@ -7,8 +7,8 @@ import { NtlmClient, NtlmCredentials } from 'axios-ntlm';
 import { z } from 'zod';
 
 const bodySchema = z.object({
-  full_name: z.string({
-    required_error: 'Vantar fullt nafn'
+  no: z.string({
+    required_error: ''
   }),
   external_identifier: z.string({
     required_error: 'Vantar netfang'
@@ -22,26 +22,26 @@ const bodySchema = z.object({
 });
 
 type ContactBCProps = {
-  contactNo: string;
   accountNo: string;
-  name: string;
-  emailAddress: string;
-  mobilePhoneNo: string;
+  description: string;
+  schemeCode: string;
+  accountType: string;
+  linkedToCustomerNo: string;
 };
 
-const createContactInBusinessCentral = async ({
-  contactNo,
+const createMemberAccountInBC = async ({
   accountNo,
-  name,
-  emailAddress,
-  mobilePhoneNo
+  description,
+  schemeCode,
+  accountType,
+  linkedToCustomerNo
 }: ContactBCProps): Promise<boolean> => {
   const data = {
-    Contact_No: contactNo,
-    Account_No: accountNo,
-    Name: name,
-    E_Mail: emailAddress,
-    Mobile_Phone_No: mobilePhoneNo
+    No: accountNo,
+    Description: description,
+    Scheme_Code: schemeCode,
+    Account_Type: accountType,
+    Linked_To_Customer_No: linkedToCustomerNo
   };
   const credentials: NtlmCredentials = {
     username: process.env.BC_USER,
@@ -51,7 +51,7 @@ const createContactInBusinessCentral = async ({
   const client = NtlmClient(credentials);
   try {
     const response = await client.post(
-      `${process.env.BC_API_URL}/MemberContactCard`,
+      `${process.env.BC_API_URL}/MemberAccountCard`,
       data,
       {
         headers: {
@@ -65,7 +65,7 @@ const createContactInBusinessCentral = async ({
       return true;
     } else {
       console.error(
-        `Error while creating BC user: ${response.status} ${response.statusText}`
+        `Error while creating BC member acount: ${response.status} ${response.statusText}`
       );
       return false;
     }
@@ -99,19 +99,22 @@ export async function POST(request: NextRequest) {
     return new NextResponse(error.errors, { status: 400 });
   }
 
-  const didCreateUser = await createContactInBusinessCentral({
-    contactNo: body.external_identifier,
-    accountNo: body.account_number,
-    name: body.full_name,
-    emailAddress: body.email_address,
-    mobilePhoneNo: body.cell_phone
+  // Need to fetch scheme code from other departments or perhaps company?
+  const didCreateUser = await createMemberAccountInBC({
+    accountNo: body.department_number,
+    description: body.department_name,
+    schemeCode: body.department_scheme_code,
+    accountType: body.account_type,
+    linkedToCustomerNo: body.customer_number
   });
   if (!didCreateUser) {
     return new NextResponse(
-      'Unable to create user in subsystem, please wait or try again',
+      'Unable to create member account in subsystem, please wait or try again',
       { status: 400 }
     );
   }
 
-  return new NextResponse('User Created in subsystem', { status: 200 });
+  return new NextResponse('Member Account Created in subsystem', {
+    status: 200
+  });
 }
