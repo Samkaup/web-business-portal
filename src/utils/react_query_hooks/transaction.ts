@@ -8,7 +8,6 @@ import {
   getTransactionsTable
 } from '../supabase_queries/transaction';
 import { QueryDataAndCount } from '../utilTypes';
-import { PaginationState, SortingState } from '@tanstack/react-table';
 import { useCompany } from '@/hooks/useCompany';
 
 export const useTransactions = () => {
@@ -57,16 +56,12 @@ export type DepartmentsMap = {
 };
 
 type Payload = {
-  pagination?: PaginationState;
-  sorting?: SortingState;
   searchValue?: string | string[];
   dateRange?: Date[];
   filters?: string[];
 };
 
 export const useTransactionsTable = ({
-  pagination,
-  sorting,
   searchValue,
   dateRange,
   filters
@@ -77,8 +72,6 @@ export const useTransactionsTable = ({
     [
       'transactionsTable',
       {
-        pagination,
-        sorting,
         searchValue,
         dateRange,
         filters,
@@ -86,31 +79,14 @@ export const useTransactionsTable = ({
       }
     ],
     async () => {
-      if (!company) return { rowCount: 0, data: [] };
-
-      // Construct range
-      const rangeFrom = pagination.pageIndex * pagination.pageSize;
-      const rangeTo = (pagination.pageIndex + 1) * pagination.pageSize - 1;
+      if (!company) {
+        return { rowCount: 0, data: [] };
+      }
 
       // Extract transactions
       return await getTransactionsTable({
         supabaseClient,
-        range: {
-          from: rangeFrom,
-          to: rangeTo
-        },
-        sorting:
-          sorting.length > 0
-            ? {
-                column: sorting[0].id,
-                options: {
-                  ascending: !sorting[0].desc
-                }
-              }
-            : undefined,
-        searchValue,
         dateRange,
-        filters: filters,
         companyId: company.external_identifier
       });
     },

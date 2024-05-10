@@ -128,13 +128,14 @@ export default function UserEdit({ onCancel, onSave, user }: Props) {
   };
 
   const companyNeedsUpdate = (company: TableRow<'company'>) => {
-    return (
-      company.name === null ||
-      company.credit_limit_amount === null ||
-      company.address === null ||
-      company.city === null ||
-      company.post_code === null
-    );
+    // PKI did this since we will fix this with a very good integration from Concorde/BC!
+    return false;
+    // return (
+    //   company.name === null ||
+    //   company.address === null ||
+    //   company.city === null ||
+    //   company.post_code === null
+    // );
   };
 
   const onCompanySave = () => {

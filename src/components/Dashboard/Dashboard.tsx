@@ -42,7 +42,6 @@ export default function Dashboard() {
   const { data: dateRange } = useDateRange({ queryKey: 'dateRangeDashboard' });
   const { company } = useCompany();
   const calcDiffPercentage = (prev: number, curr: number) => {
-    console.log(prev, curr);
     // Check if the previous value is 0 or undefined
     if (prev === 0 && curr > 0) {
       // If prev is 0 or undefined, a meaningful percentage change can't be calculated
@@ -114,7 +113,7 @@ export default function Dashboard() {
     <>
       <div className="flex-col md:flex">
         <div className="flex items-center justify-between space-y-2 flex-wrap">
-          <Header title={company?.name} />
+          {company?.name && <Header title={company.name} />}
           <div className="flex items-center space-x-2 ">
             <CalendarDateRangePicker queryKey="dateRangeDashboard" />
           </div>
@@ -123,7 +122,6 @@ export default function Dashboard() {
           <TabsList>
             <TabsTrigger value="overview">Yfirlit</TabsTrigger>
             <TabsTrigger value="reikningar">Reikningar</TabsTrigger>
-            {/* <TabsTrigger value="notifications">Tilkynningar</TabsTrigger> */}
           </TabsList>
           <TabsContent value="overview" className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

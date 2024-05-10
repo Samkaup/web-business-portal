@@ -25,4 +25,5 @@ export type FilteredTransaction = {
   department_name: Row<'department'>['name'];
   description: Row<'ledger'>['description'];
   amount_debit: Row<'ledger'>['amount_debit'];
+  statement_saldo?: number;
 };

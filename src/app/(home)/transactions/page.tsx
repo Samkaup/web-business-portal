@@ -1,13 +1,6 @@
 'use client';
 import Header from '@/components/Header/Header';
 import { DateRangePreset } from '@/components/ui/DateRangePicker/index.types';
-import {
-  getDateDaysAgo,
-  getDateMonthsAgo,
-  getDateNow,
-  getStartOfYear,
-  getEndOfYear
-} from '@/utils/dateUtils';
 import { useState } from 'react';
 import TransactionTable from './transactionTable';
 import { useDepartments as useDepartmentsHook } from '@/utils/react_query_hooks/department';
@@ -15,30 +8,34 @@ import { Row } from '@/types';
 import { DebouncedInput } from '@/components/ui/Input/debouncedInput';
 import { CalendarDateRangePicker } from '@/components/DateRangePicker/DateRangePicker';
 import { useDateRange } from '@/hooks/useDateRange';
-import { PaginationState } from '@tanstack/react-table';
 import {
   type MultipleSelectOption,
   SelectMultiple
 } from '@/components/ui/SelectMultiple';
 import { useDepartments as useSelectedDepartments } from '@/hooks/useDepartments';
+import { useCompany } from '@/hooks/useCompany';
+import { formatCurrency } from '@/utils/currency/currency';
+import { useLastStatement } from '@/utils/react_query_hooks/statement';
+import { Spinner } from '@/components/ui/Spinner/Spinner';
+import { endOfMonth, startOfMonth, subMonths } from 'date-fns';
 
 export default function Transactions() {
-  const dateToday = getDateNow();
-
   const [searchValue, setSearchValue] = useState<string>('');
   const dateRangeQueryKey = 'transactionDateRange';
   const { data: dateRange } = useDateRange({ queryKey: dateRangeQueryKey });
-  const basePageSize = 15;
 
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: basePageSize
-  });
   const departments = useDepartmentsHook();
   const selectedDepartmentsQueryKey = 'selectedDepartmentsTransaction';
   const { data: selectedDepartments } = useSelectedDepartments({
     queryKey: selectedDepartmentsQueryKey
   }) as { data: MultipleSelectOption[] | undefined };
+
+  const { company } = useCompany();
+  const { data: statement, isFetching: isLoadingLastStatement } =
+    useLastStatement({
+      date: dateRange?.from.toISOString(),
+      accountNumber: company?.external_identifier
+    });
 
   const departmentsOptions = (
     departments: Row<'department'>[] | undefined
@@ -54,53 +51,41 @@ export default function Transactions() {
 
   const dateRangePresets: DateRangePreset[] = [
     {
-      label: 'Síðustu 5 dagar',
-      dates: [getDateDaysAgo(4), dateToday]
+      label: 'Núverandi mánuður',
+      dates: [startOfMonth(new Date()), endOfMonth(new Date())]
     },
     {
-      label: 'Síðustu 14 dagar',
-      dates: [getDateDaysAgo(13), dateToday]
-    },
-    {
-      label: 'Síðustu 30 dagar',
-      dates: [getDateDaysAgo(29), dateToday]
-    },
-    {
-      label: 'Síðustu 3 mánuðir',
-      dates: [getDateMonthsAgo(3), dateToday]
-    },
-    {
-      label: 'Síðustu 6 mánuðir',
-      dates: [getDateMonthsAgo(6), dateToday]
-    },
-    {
-      label: 'Síðustu 12 mánuðir',
-      dates: [getDateMonthsAgo(12), dateToday]
-    },
-    {
-      label: 'Fyrra ár',
+      label: 'Síðasti mánuður',
       dates: [
-        getStartOfYear(new Date(new Date().getFullYear() - 1, 1, 1, 0, 0, 0)),
-        getEndOfYear(new Date(new Date().getFullYear() - 1, 1, 1, 0, 0, 0))
-      ]
-    },
-    {
-      label: 'Núverandi ár',
-      dates: [
-        getStartOfYear(new Date(new Date().getFullYear(), 1, 1, 1, 0, 0)),
-        getEndOfYear(new Date(new Date().getFullYear(), 1, 1, 1, 0, 0))
+        startOfMonth(subMonths(new Date(), 1)),
+        endOfMonth(subMonths(new Date(), 1))
       ]
     }
   ];
 
   return (
     <div>
-      <Header title="Reikningar og hreyfingar" />
+      <Header title="Reikningar og hreyfingar">
+        <p className="text-company-950">
+          Staða í byrjun tímabils:
+          {isLoadingLastStatement ? (
+            <Spinner />
+          ) : (
+            <>
+              {statement && (
+                <span className="ml-1">
+                  {formatCurrency(statement.end_saldo)}
+                </span>
+              )}
+            </>
+          )}
+        </p>
+      </Header>
       <div className="flex flex-col md:flex-row gap-4 lg:py-6 items-start md:items-center">
         <div className="flex-none">
           <CalendarDateRangePicker
             queryKey={dateRangeQueryKey}
-            defaultPreset="Síðustu 30 dagar"
+            defaultPreset="Núverandi mánuður"
             presets={dateRangePresets}
           />
         </div>
@@ -129,8 +114,6 @@ export default function Transactions() {
       <TransactionTable
         searchValue={searchValue}
         dates={[dateRange?.from, dateRange?.to]}
-        pagination={pagination}
-        setPagination={setPagination}
         departmentIds={
           selectedDepartments?.map((o: MultipleSelectOption) => {
             return o?.value;

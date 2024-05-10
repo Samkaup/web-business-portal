@@ -1,6 +1,6 @@
-import { AppSupabaseClient, FilteredTransaction, Row, TableRow } from '@/types';
-import { RangeProps, SortingProps } from '@/utils/utilTypes';
+import { AppSupabaseClient, TableRow } from '@/types';
 import { formatDate } from '../dateUtils';
+import { getLastStatement } from './statement';
 
 export const getTransactions = async (
   supabase: AppSupabaseClient
@@ -135,9 +135,15 @@ export const getTransactionSumByDate = async ({
     ? query.filter('department.company_id', 'eq', companyId)
     : query;
   const { data, error } = await query;
+  if (error) {
+    console.log('Transaction error: ', error.message);
+    throw error;
+  }
+
   let amount = 0;
   let min = 0;
   let max = 0;
+
   data.forEach((item) => {
     amount += item.amount_debit;
     if (item.amount_debit <= min) min = item.amount_debit;
@@ -156,57 +162,49 @@ export const getTransactionSumByDate = async ({
 
 export type TransactionTableProps = {
   supabaseClient: AppSupabaseClient;
-  range?: RangeProps;
-  sorting?: SortingProps;
   searchValue?: string | string[];
   dateRange?: Date[];
   departmentFilters?: string[];
-  filters?: string[];
   companyId?: string;
   csv?: boolean;
 };
 
 export const getTransactionsTable = async ({
   supabaseClient,
-  range,
-  sorting,
   searchValue,
   dateRange,
-  filters,
   companyId
 }: TransactionTableProps) => {
   let query = supabaseClient.from('ledger').select(
-    ` external_row_number,
-      date,
-      account_number,
-      description,
-      amount_debit,
-      transaction(id,store_number,invoice_number),
-      department!inner (
-        name,
-        company_id
-      )`,
+    `external_row_number,
+     date,
+     account_number,
+     description,
+     amount_debit,
+     statement_number,
+     transaction(id,store_number,invoice_number),
+     department!inner (
+       name,
+       company_id
+     )`,
     { count: 'exact' }
   );
 
-  if (range) query = query.range(range.from, range.to);
+  // Always sort by date initially for correct saldo calculation
+  query = query.order('date', { ascending: true });
 
-  if (sorting)
-    query = query.order(sorting.column as string & keyof Row<'transaction'>, {
-      ascending: sorting.options.ascending
-    });
-
-  // Apply additional filters
-  query = filters.length > 0 ? query.or(filters.join()) : query;
-
-  // Apply search
-  query = searchValue ? query.ilike('description', `%${searchValue}%`) : query;
+  // Apply additional filters and search
+  if (searchValue) {
+    query = searchValue
+      ? query.ilike('description', `%${searchValue}%`)
+      : query;
+  }
 
   // Set Date Range
   const start: Date | null = dateRange.at(0);
   const end: Date | null = dateRange.at(1);
-  query = start ? query.filter('date', 'gte', formatDate(start)) : query;
-  query = end ? query.filter('date', 'lte', formatDate(end)) : query;
+  if (start) query = query.filter('date', 'gte', formatDate(start));
+  if (end) query = query.filter('date', 'lte', formatDate(end));
 
   // Set company_id
   if (companyId) query = query.filter('department.company_id', 'eq', companyId);
@@ -217,68 +215,54 @@ export const getTransactionsTable = async ({
     throw error;
   }
 
-  return {
-    data: data.map((t) => ({
+  console.log(data);
+
+  const statement = await getLastStatement({
+    supabase: supabaseClient,
+    date: start,
+    accountNumber: companyId
+  });
+
+  let currentSaldo = statement.end_saldo;
+
+  const updatedData = data.map((t) => {
+    if (t.amount_debit < 0) {
+      currentSaldo += t.amount_debit; // Add the absolute value of the negative debit
+    } else {
+      currentSaldo -= t.amount_debit; // Subtract the debit normally
+    }
+
+    return {
       id: t.external_row_number,
       date: t.date,
       store_number: t.transaction ? t.transaction.store_number : 0,
       department_name: t.department.name,
       description: t.description,
       amount_debit: t.amount_debit,
-      transaction_id: t.transaction ? t.transaction.id : ''
-    })),
+      transaction_id: t.transaction ? t.transaction.id : '',
+      statement_saldo: currentSaldo
+    };
+  });
+
+  return {
+    data: updatedData,
     rowCount: count
   };
 };
 
 export const getAllTransactions = async ({
   supabaseClient,
-  sorting,
   searchValue,
   dateRange,
-  filters,
   companyId
 }: TransactionTableProps) => {
-  let allTransactions: FilteredTransaction[] = [];
-  let pageIndex = 0;
-  const pageSize = 1000;
-
-  let { data } = await getTransactionsTable({
+  const { data } = await getTransactionsTable({
     supabaseClient,
-    range: {
-      from: pageIndex * pageSize,
-      to: (pageIndex + 1) * (pageSize - 1)
-    },
-    sorting: sorting,
     searchValue,
     dateRange,
-    filters: filters,
     companyId: companyId
   });
 
-  while (!data || data.length > 0) {
-    allTransactions = [...allTransactions, ...data];
-
-    if (data.length < pageSize) break;
-
-    pageIndex++;
-
-    const result = await getTransactionsTable({
-      supabaseClient,
-      range: {
-        from: pageIndex * pageSize,
-        to: (pageIndex + 1) * (pageSize - 1)
-      },
-      sorting: sorting,
-      searchValue,
-      dateRange,
-      filters: filters,
-      companyId: companyId
-    });
-
-    data = result.data;
-  }
-
   // Construct response
-  return allTransactions;
+  return data;
 };
