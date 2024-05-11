@@ -6,7 +6,7 @@ export type Props = {
   supabaseClient: AppSupabaseClient;
   searchValue?: string | string[];
   dateRange?: Date[];
-  departmentFilters?: string[];
+  filters?: string[];
   companyId?: string;
 };
 
@@ -14,6 +14,7 @@ export const getInvoiceTable = async ({
   supabaseClient,
   searchValue,
   dateRange,
+  filters,
   companyId
 }: Props): Promise<QueryDataAndCount<FilteredInvoices>> => {
   let query = supabaseClient.from('transaction').select(
@@ -33,7 +34,7 @@ export const getInvoiceTable = async ({
   );
 
   // Always sort by date
-  query = query.order('date', { ascending: true });
+  query = query.order('date', { ascending: false });
 
   // Apply additional filters and search
   if (searchValue) {
@@ -47,6 +48,9 @@ export const getInvoiceTable = async ({
   const end: Date | null = dateRange.at(1);
   if (start) query = query.filter('date', 'gte', formatDate(start));
   if (end) query = query.filter('date', 'lte', formatDate(end));
+
+  // Apply additional filters
+  query = filters.length > 0 ? query.or(filters.join()) : query;
 
   // Set company_id
   if (companyId) query = query.filter('department.company_id', 'eq', companyId);

@@ -34,6 +34,7 @@ export const useInvoiceTable = ({ searchValue, dateRange, filters }: Props) => {
         supabaseClient,
         dateRange,
         searchValue,
+        filters,
         companyId: company.external_identifier
       });
     },
