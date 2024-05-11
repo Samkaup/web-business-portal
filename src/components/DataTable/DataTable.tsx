@@ -101,9 +101,11 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className="py-4">
-        <DataTablePagination table={table} />
-      </div>
+      {table.getRowCount() > 0 && (
+        <div className="py-4">
+          <DataTablePagination table={table} />
+        </div>
+      )}
     </>
   );
 }
