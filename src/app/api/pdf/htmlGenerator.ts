@@ -10,8 +10,16 @@ export type JoinedTransaction = TableRow<'transaction'> & {
 
 export const generateHTML = (
   transaction: JoinedTransaction,
-  transactionLines: TableRow<'transaction_line'>[]
+  transactionLines: TableRow<'transaction_line'>[],
+  invoiceReference: string | null,
+  contact?: TableRow<'contact'>
 ) => {
+  const getContact = () => {
+    if (!invoiceReference) return 'Enginn úttextaraðili skráður';
+    if (!contact) return invoiceReference;
+    return `${contact.full_name} (${contact.external_identifier})`;
+  };
+
   return `
     <!DOCTYPE html>
     <html lang="en">
@@ -50,6 +58,7 @@ export const generateHTML = (
                 <p>Kennitala: ${transaction.department.company_id}</p>
                 <p>Gjalddagi: ${transaction.due_date}</p>
                 <p>Verslun: ${transaction.store.name}</p>
+                <p>Úttektaraðili: ${getContact()}</p>
               </div>
             </div>
           </div>
