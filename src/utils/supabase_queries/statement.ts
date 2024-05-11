@@ -1,5 +1,4 @@
 import { AppSupabaseClient, TableRow } from '@/types';
-import { formatDate } from '../dateUtils';
 
 type TGetStatementsProps = {
   supabase: AppSupabaseClient;
@@ -16,9 +15,10 @@ export const getLastStatement = async ({
     .from('statement')
     .select('*')
     .eq('account_number', accountNumber)
-    .lte('statement_date', formatDate(date))
+    .lte('statement_date', date.toISOString())
     .order('statement_date', { ascending: false })
     .limit(1);
+
   if (error) {
     console.log(error);
     throw error;

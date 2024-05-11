@@ -4,18 +4,37 @@ import supabaseClient from '@/utils/supabase-browser';
 import { getLastStatement } from '../supabase_queries/statement';
 
 type Props = {
-  date: string;
+  date: Date;
   accountNumber: string;
 };
 export const useLastStatement = ({ date, accountNumber }: Props) => {
   const enabled = date ? true : false;
   return useQuery<TableRow<'statement'>>({
-    queryKey: ['statements', accountNumber],
+    queryKey: ['statements', accountNumber, date],
+    refetchOnWindowFocus: false,
     queryFn: async () => {
       if (date) {
         return getLastStatement({
           supabase: supabaseClient,
-          date: new Date(date),
+          date: date,
+          accountNumber
+        });
+      }
+    },
+    enabled
+  });
+};
+
+export const useCurrentStatement = ({ date, accountNumber }: Props) => {
+  const enabled = date ? true : false;
+  return useQuery<TableRow<'statement'>>({
+    queryKey: ['current-statements', accountNumber],
+    refetchOnWindowFocus: false,
+    queryFn: async () => {
+      if (date) {
+        return getLastStatement({
+          supabase: supabaseClient,
+          date: date,
           accountNumber
         });
       }

@@ -5,7 +5,6 @@ import { format } from 'date-fns';
 import { is } from 'date-fns/locale';
 import { useTransactionsTable } from '@/utils/react_query_hooks/transaction';
 import { ColumnDef } from '@tanstack/react-table';
-import InvoiceDownloadButton from '@/components/InvoiceDownloader';
 import { formatCurrency } from '@/utils/currency/currency';
 import { DataTable } from '@/components/DataTable/DataTable';
 import { FilteredTransaction } from '@/types';
@@ -13,49 +12,13 @@ import { FilteredTransaction } from '@/types';
 type Props = {
   searchValue: string;
   dates: Date[];
-  departmentIds: string[];
 };
 
-export default function TransactionTable({
-  searchValue,
-  dates,
-  departmentIds
-}: Props) {
-  // const { company } = useCompany();
-
-  // const [csvDownloading, setCsvDownloading] = useState<boolean>(false);
-
+export default function TransactionTable({ searchValue, dates }: Props) {
   const query = useTransactionsTable({
     searchValue,
-    dateRange: dates,
-    filters: departmentIds.map((id: string) => `account_number.eq.${id}`)
+    dateRange: dates
   });
-
-  // const handleDownloadData = async () => {
-  //   setCsvDownloading(true);
-  //   const transactions = await getAllTransactions({
-  //     supabaseClient,
-  //     dateRange: dates,
-  //     companyId: company.external_identifier
-  //   });
-  //   const renamed = transactions.map((t) => {
-  //     return {
-  //       Dagsetning: t.date,
-  //       Deild: t.department_name,
-  //       Lýsing: t.description,
-  //       Upphæð: t.amount_debit,
-  //       Staða: t.statement_saldo
-  //     };
-  //   });
-  //   downloadCSV(
-  //     objectToCsv(renamed),
-  //     `hreyfingar_${format(dates[0], 'ddMMyyyy')}_${format(
-  //       dates[1],
-  //       'ddMMyyyy'
-  //     )}`
-  //   );
-  //   setCsvDownloading(false);
-  // };
 
   const columns: ColumnDef<FilteredTransaction>[] = [
     {
@@ -73,6 +36,11 @@ export default function TransactionTable({
       }
     },
     {
+      accessorKey: 'voucher', // Name of attribute to access its data
+      id: 'voucher', // Name of foriegn table and column for sorting
+      header: () => <span>Fylgiskjals. Nr.</span>
+    },
+    {
       accessorKey: 'department_name', // Name of attribute to access its data
       id: 'department(name)', // Name of foriegn table and column for sorting
       header: () => <span>Deild</span>
@@ -81,6 +49,20 @@ export default function TransactionTable({
       accessorKey: 'description',
       id: 'description',
       header: () => <span>Skýring</span>
+    },
+    {
+      accessorKey: 'statement_number',
+      id: 'statement_number',
+      header: () => <span>Reikning. Nr</span>,
+      cell: (props) => {
+        return (
+          <span>
+            {props.row.original.description.startsWith('Reikn.') && (
+              <>{props.row.original.voucher}</>
+            )}
+          </span>
+        );
+      }
     },
     {
       accessorKey: 'amount_debit',
@@ -96,18 +78,6 @@ export default function TransactionTable({
       header: () => <span>Staða</span>,
       cell: (props: any) => {
         return <span>{formatCurrency(props.getValue())}</span>;
-      }
-    },
-    {
-      accessorKey: 'transaction_id',
-      id: 'transaction_id',
-      header: null,
-      cell: (props: any) => {
-        if (props.getValue() !== '') {
-          return <InvoiceDownloadButton transactionID={props.getValue()} />;
-        } else {
-          return <></>;
-        }
       }
     }
   ];

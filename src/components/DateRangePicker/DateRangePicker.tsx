@@ -33,6 +33,7 @@ export function CalendarDateRangePicker({
   const selectPreset = (presetLabel: string) => {
     setSelectedPreset(presetLabel);
     const preset = presets.find((p) => p.label == presetLabel);
+
     updateDateRange({
       from: preset.dates[0],
       to: preset.dates[1]
@@ -72,7 +73,7 @@ export function CalendarDateRangePicker({
       <PopoverContent className="w-auto p-0" align="end">
         <div className="flex">
           {presets && presets.length >= 0 && (
-            <div className="px-16 py-4">
+            <div className="px-12 py-4">
               {presets.map((item) => (
                 <Link
                   href="#"
