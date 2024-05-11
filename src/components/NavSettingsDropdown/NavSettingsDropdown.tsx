@@ -24,6 +24,7 @@ export default function CompanySwitcher() {
   const { company, isSuccess, setSelectedCompany } = useCompany();
   const { data: user } = useGetProfile();
   function getInitals(fullName: string) {
+    if (!fullName) return '??';
     const parts: string[] = fullName.split(' ');
     const initalsArr = parts.map((part: string) => part.at(0)).slice(0, 2);
     return initalsArr.join('');

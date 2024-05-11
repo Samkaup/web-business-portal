@@ -2,7 +2,6 @@
 import Header from '@/components/Header/Header';
 import { DateRangePreset } from '@/components/ui/DateRangePicker/index.types';
 import { useState } from 'react';
-import TransactionTable from './transactionTable';
 import { useDepartments as useDepartmentsHook } from '@/utils/react_query_hooks/department';
 import { Row } from '@/types';
 import { DebouncedInput } from '@/components/ui/Input/debouncedInput';
@@ -18,8 +17,9 @@ import { formatCurrency } from '@/utils/currency/currency';
 import { useLastStatement } from '@/utils/react_query_hooks/statement';
 import { Spinner } from '@/components/ui/Spinner/Spinner';
 import { endOfMonth, startOfMonth, subMonths } from 'date-fns';
+import InvoiceTable from './invoiceTable';
 
-export default function Transactions() {
+export default function Invoices() {
   const [searchValue, setSearchValue] = useState<string>('');
   const dateRangeQueryKey = 'transactionDateRange';
   const { data: dateRange } = useDateRange({ queryKey: dateRangeQueryKey });
@@ -65,36 +65,7 @@ export default function Transactions() {
 
   return (
     <div>
-      <Header title="Hreyfingarlisti">
-        <p className="text-company-950 font-semibold">
-          Staða í byrjun tímabils:
-          {isLoadingLastStatement ? (
-            <Spinner />
-          ) : (
-            <>
-              {statement && (
-                <span className="ml-1">
-                  {formatCurrency(statement.end_saldo)}
-                </span>
-              )}
-            </>
-          )}
-        </p>
-        <p className="text-company-950 font-semibold">
-          Staða í lok tímabils:
-          {isLoadingLastStatement ? (
-            <Spinner />
-          ) : (
-            <>
-              {statement && (
-                <span className="ml-1">
-                  {formatCurrency(statement.original_saldo)}
-                </span>
-              )}
-            </>
-          )}
-        </p>
-      </Header>
+      <Header title="Reikningar" />
       <div className="flex flex-col md:flex-row gap-4 lg:py-6 items-start md:items-center">
         <div className="flex-none">
           <CalendarDateRangePicker
@@ -125,7 +96,7 @@ export default function Transactions() {
         </div>
       </div>
 
-      <TransactionTable
+      <InvoiceTable
         searchValue={searchValue}
         dates={[dateRange?.from, dateRange?.to]}
         departmentIds={

@@ -182,7 +182,6 @@ export const getTransactionsTable = async ({
      description,
      amount_debit,
      statement_number,
-     transaction(id,store_number,invoice_number),
      department!inner (
        name,
        company_id
@@ -207,15 +206,12 @@ export const getTransactionsTable = async ({
   if (end) query = query.filter('date', 'lte', formatDate(end));
 
   // Set company_id
-  if (companyId) query = query.filter('department.company_id', 'eq', companyId);
-
+  if (companyId) query = query.filter('account_number', 'eq', companyId);
   const { data, count, error } = await query;
   if (error) {
     console.error(error.message);
     throw error;
   }
-
-  console.log(data);
 
   const statement = await getLastStatement({
     supabase: supabaseClient,
@@ -226,20 +222,13 @@ export const getTransactionsTable = async ({
   let currentSaldo = statement.end_saldo;
 
   const updatedData = data.map((t) => {
-    if (t.amount_debit < 0) {
-      currentSaldo += t.amount_debit; // Add the absolute value of the negative debit
-    } else {
-      currentSaldo -= t.amount_debit; // Subtract the debit normally
-    }
-
+    currentSaldo += t.amount_debit;
     return {
       id: t.external_row_number,
       date: t.date,
-      store_number: t.transaction ? t.transaction.store_number : 0,
       department_name: t.department.name,
       description: t.description,
       amount_debit: t.amount_debit,
-      transaction_id: t.transaction ? t.transaction.id : '',
       statement_saldo: currentSaldo
     };
   });
