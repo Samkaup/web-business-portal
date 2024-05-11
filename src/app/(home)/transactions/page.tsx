@@ -65,8 +65,8 @@ export default function Transactions() {
 
   return (
     <div>
-      <Header title="Reikningar og hreyfingar">
-        <p className="text-company-950">
+      <Header title="Hreyfingarlisti">
+        <p className="text-company-950 font-semibold">
           Staða í byrjun tímabils:
           {isLoadingLastStatement ? (
             <Spinner />
@@ -75,6 +75,20 @@ export default function Transactions() {
               {statement && (
                 <span className="ml-1">
                   {formatCurrency(statement.end_saldo)}
+                </span>
+              )}
+            </>
+          )}
+        </p>
+        <p className="text-company-950 font-semibold">
+          Staða í lok tímabils:
+          {isLoadingLastStatement ? (
+            <Spinner />
+          ) : (
+            <>
+              {statement && (
+                <span className="ml-1">
+                  {formatCurrency(statement.original_saldo)}
                 </span>
               )}
             </>

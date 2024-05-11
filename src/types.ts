@@ -21,7 +21,6 @@ export type Row<T extends RowName> = T extends TableName
 export type FilteredTransaction = {
   id: Row<'ledger'>['external_row_number'];
   date: Row<'ledger'>['date'];
-  store_number: Row<'store'>['id'];
   department_name: Row<'department'>['name'];
   description: Row<'ledger'>['description'];
   amount_debit: Row<'ledger'>['amount_debit'];

@@ -9,8 +9,8 @@ import NavSettingsDropddown from '@/components//NavSettingsDropdown/NavSettingsD
 
 const navigation = [
   { name: 'Heim', href: '/' },
-  { name: 'Hreyfingaryfirlit', href: '/transactions' },
-  { name: 'Deildir & úttektaraðilar', href: '/contacts' }
+  { name: 'Hreyfingaryfirlit', href: '/transactions' }
+  // { name: 'Deildir & úttektaraðilar', href: '/contacts' }
 ];
 const userNavigation = [
   {

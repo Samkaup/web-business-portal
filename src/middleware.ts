@@ -38,10 +38,13 @@ export async function middleware(req: NextRequest) {
     return redirectTo('/auth/login', req);
 
   if (req.nextUrl.pathname.startsWith(ADMIN_ROUTE_PREFIX)) {
-    if (!session) return redirectTo('/auth/login', req);
+    if (!session) {
+      return redirectTo('/auth/login', req);
+    }
 
-    if (session.user.app_metadata.userrole !== 'ADMIN')
+    if (session.user.app_metadata.userrole !== 'ADMIN') {
       return redirectTo('/', req);
+    }
   }
 
   if (session && !VOID_ROUTES.includes(req.nextUrl.pathname)) {

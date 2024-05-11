@@ -73,14 +73,6 @@ export default function TransactionTable({
       }
     },
     {
-      accessorKey: 'store_number',
-      id: 'store_number',
-      header: () => <span>Verslun</span>,
-      cell: (props: any) => {
-        return <span>{props.getValue() !== 0 && <>{props.getValue()}</>}</span>;
-      }
-    },
-    {
       accessorKey: 'department_name', // Name of attribute to access its data
       id: 'department(name)', // Name of foriegn table and column for sorting
       header: () => <span>Deild</span>
