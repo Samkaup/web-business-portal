@@ -26,3 +26,13 @@ export type FilteredTransaction = {
   amount_debit: Row<'ledger'>['amount_debit'];
   statement_saldo?: number;
 };
+
+export type FilteredInvoices = {
+  id: Row<'transaction'>['id'];
+  date: Row<'transaction'>['date'];
+  invoice_number: Row<'transaction'>['invoice_number'];
+  store_name: Row<'store'>['name'];
+  department_name: Row<'department'>['name'];
+  description: Row<'transaction'>['description'];
+  amount: Row<'transaction'>['amount_debit'];
+};

@@ -19,11 +19,12 @@ export default function InvoiceDownloadButton({
     setDownloading(true);
     downloadPDF(transactionID)
       .then(() => setDownloading(false))
-      .catch(() =>
+      .catch(() => {
         toast.error(
           'Ekki var hægt að hlaða niður reikning. Vinsamlegast reynið aftur eða hafið samband við þjónustuver Samkaupa.'
-        )
-      );
+        );
+        setDownloading(false);
+      });
   };
 
   return (
