@@ -41,7 +41,24 @@ export async function GET(request: NextRequest) {
     .eq('invoice_number', transaction.invoice_number)
     .eq('sales_number', transaction.sales_number);
 
-  const pdfBytes = await generatePDF(transaction, transactionLines);
+  let contact: TableRow<'contact'> | undefined = undefined;
+
+  if (transaction.invoice_reference) {
+    const { data } = await supabase
+      .from('contact')
+      .select('*')
+      .eq('external_identifier', transaction.invoice_reference)
+      .single();
+
+    if (data) contact = data;
+  }
+
+  const pdfBytes = await generatePDF(
+    transaction,
+    transactionLines,
+    transaction.invoice_reference,
+    contact
+  );
 
   return new Response(pdfBytes, {
     headers: {
@@ -53,7 +70,9 @@ export async function GET(request: NextRequest) {
 
 const generatePDF = async (
   transaction: JoinedTransaction,
-  transactionLines: TableRow<'transaction_line'>[]
+  transactionLines: TableRow<'transaction_line'>[],
+  invoice_reference: string | null,
+  contact?: TableRow<'contact'>
 ) => {
   const formData = new FormData();
   formData.append(
@@ -85,7 +104,10 @@ const generatePDF = async (
   );
 
   // Append all files needed to build the PDF
-  formData.append('index.html', generateHTML(transaction, transactionLines));
+  formData.append(
+    'index.html',
+    generateHTML(transaction, transactionLines, invoice_reference, contact)
+  );
   formData.append(
     'style.css',
     fs.createReadStream(path.resolve('public/pdf/style.css'))
