@@ -12,10 +12,6 @@ import {
   SelectMultiple
 } from '@/components/ui/SelectMultiple';
 import { useDepartments as useSelectedDepartments } from '@/hooks/useDepartments';
-import { useCompany } from '@/hooks/useCompany';
-import { formatCurrency } from '@/utils/currency/currency';
-import { useLastStatement } from '@/utils/react_query_hooks/statement';
-import { Spinner } from '@/components/ui/Spinner/Spinner';
 import { endOfMonth, startOfMonth, subMonths } from 'date-fns';
 import InvoiceTable from './invoiceTable';
 
@@ -29,13 +25,6 @@ export default function Invoices() {
   const { data: selectedDepartments } = useSelectedDepartments({
     queryKey: selectedDepartmentsQueryKey
   }) as { data: MultipleSelectOption[] | undefined };
-
-  const { company } = useCompany();
-  const { data: statement, isFetching: isLoadingLastStatement } =
-    useLastStatement({
-      date: dateRange?.from.toISOString(),
-      accountNumber: company?.external_identifier
-    });
 
   const departmentsOptions = (
     departments: Row<'department'>[] | undefined
