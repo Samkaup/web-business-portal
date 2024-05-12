@@ -14,15 +14,16 @@ module.exports = {
       parser: '@typescript-eslint/parser',
       parserOptions: {
         project: tsConfigs,
-        "sourceType": "module",
-        "ecmaVersion": 2020
+        sourceType: 'module',
+        ecmaVersion: 2020
       },
       env: {
-        "es6": true
+        es6: true
       },
       plugins: ['@typescript-eslint', 'prettier'],
       rules: {
-        'prettier/prettier': 'error'
+        'prettier/prettier': 'error',
+        '@typescript-eslint/no-explicit-any': 'off'
       },
       files: [
         'src/**/*.ts',
