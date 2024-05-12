@@ -3,85 +3,62 @@ import Header from '@/components/Header/Header';
 import { DateRangePreset } from '@/components/ui/DateRangePicker/index.types';
 import { useState } from 'react';
 import TransactionTable from './transactionTable';
-import { useDepartments as useDepartmentsHook } from '@/utils/react_query_hooks/department';
-import { Row } from '@/types';
 import { DebouncedInput } from '@/components/ui/Input/debouncedInput';
 import { CalendarDateRangePicker } from '@/components/DateRangePicker/DateRangePicker';
 import { useDateRange } from '@/hooks/useDateRange';
-import {
-  type MultipleSelectOption,
-  SelectMultiple
-} from '@/components/ui/SelectMultiple';
-import { useDepartments as useSelectedDepartments } from '@/hooks/useDepartments';
 import { useCompany } from '@/hooks/useCompany';
 import { formatCurrency } from '@/utils/currency/currency';
-import { useLastStatement } from '@/utils/react_query_hooks/statement';
+import {
+  useCurrentStatement,
+  useLastStatement
+} from '@/utils/react_query_hooks/statement';
 import { Spinner } from '@/components/ui/Spinner/Spinner';
-import { endOfMonth, startOfMonth, subMonths } from 'date-fns';
+import { endOfMonth, format, startOfMonth, subMonths } from 'date-fns';
+import { is } from 'date-fns/locale';
 
 export default function Transactions() {
   const [searchValue, setSearchValue] = useState<string>('');
   const dateRangeQueryKey = 'transactionDateRange';
-  const { data: dateRange } = useDateRange({ queryKey: dateRangeQueryKey });
-
-  const departments = useDepartmentsHook();
-  const selectedDepartmentsQueryKey = 'selectedDepartmentsTransaction';
-  const { data: selectedDepartments } = useSelectedDepartments({
-    queryKey: selectedDepartmentsQueryKey
-  }) as { data: MultipleSelectOption[] | undefined };
+  const { data: dateRange } = useDateRange({
+    queryKey: dateRangeQueryKey
+  });
 
   const { company } = useCompany();
   const { data: statement, isFetching: isLoadingLastStatement } =
     useLastStatement({
-      date: dateRange?.from.toISOString(),
+      date: dateRange?.to,
       accountNumber: company?.external_identifier
     });
 
-  const departmentsOptions = (
-    departments: Row<'department'>[] | undefined
-  ): MultipleSelectOption[] => {
-    if (departments && departments.length > 0) {
-      return departments.map((d) => ({
-        value: d.external_identifier,
-        label: d.name
-      }));
-    }
-    return [];
-  };
+  const { data: currentStatement, isFetching: isLoadingCurrentStatement } =
+    useCurrentStatement({
+      date: new Date(),
+      accountNumber: company?.external_identifier
+    });
 
-  const dateRangePresets: DateRangePreset[] = [
-    {
-      label: 'Núverandi mánuður',
-      dates: [startOfMonth(new Date()), endOfMonth(new Date())]
-    },
-    {
-      label: 'Síðasti mánuður',
-      dates: [
-        startOfMonth(subMonths(new Date(), 1)),
-        endOfMonth(subMonths(new Date(), 1))
-      ]
-    }
-  ];
+  const getDateRangePresets = () => {
+    const dateRangePresets: DateRangePreset[] = Array.from({ length: 7 }).map(
+      (_, i) => {
+        return {
+          label: format(startOfMonth(subMonths(new Date(), i)), 'MMMM yyyy', {
+            locale: is
+          }),
+          dates: [
+            startOfMonth(subMonths(new Date(), i)),
+            endOfMonth(subMonths(new Date(), i))
+          ]
+        };
+      }
+    );
+    return dateRangePresets;
+  };
+  const dateRangePresets = getDateRangePresets();
 
   return (
     <div>
       <Header title="Hreyfingarlisti">
-        <p className="text-company-950 font-semibold">
-          Staða í byrjun tímabils:
-          {isLoadingLastStatement ? (
-            <Spinner />
-          ) : (
-            <>
-              {statement && (
-                <span className="ml-1">
-                  {formatCurrency(statement.end_saldo)}
-                </span>
-              )}
-            </>
-          )}
-        </p>
-        <p className="text-company-950 font-semibold">
-          Staða í lok tímabils:
+        <p className="text-company-950 font-medium text-right">
+          Upphafsstaða tímabils:
           {isLoadingLastStatement ? (
             <Spinner />
           ) : (
@@ -94,45 +71,59 @@ export default function Transactions() {
             </>
           )}
         </p>
+        <p className="text-company-950 font-medium text-right">
+          Lokastaða tímabils:
+          {isLoadingLastStatement ? (
+            <Spinner />
+          ) : (
+            <>
+              {statement && (
+                <span className="ml-1">
+                  {formatCurrency(statement.end_saldo)}
+                </span>
+              )}
+            </>
+          )}
+        </p>
+        <p className="text-company-950 font-medium text-right">
+          Lokastaða í dag:
+          {isLoadingCurrentStatement ? (
+            <Spinner />
+          ) : (
+            <>
+              {statement && (
+                <span className="ml-1">
+                  {formatCurrency(currentStatement.end_saldo)}
+                </span>
+              )}
+            </>
+          )}
+        </p>
       </Header>
-      <div className="flex flex-col md:flex-row gap-4 lg:py-6 items-start md:items-center">
-        <div className="flex-none">
-          <CalendarDateRangePicker
-            queryKey={dateRangeQueryKey}
-            defaultPreset="Núverandi mánuður"
-            presets={dateRangePresets}
-          />
-        </div>
-        <div className="flex-auto mt-2">
-          <SelectMultiple
-            options={departmentsOptions(departments.data)}
-            selectPlaceholder={
-              selectedDepartments && selectedDepartments?.length > 0
-                ? ''
-                : 'Allar deildir'
+      <div className="flex flex-col md:flex-row gap-4 lg:py-6 items-start md:items-center justify-between">
+        <CalendarDateRangePicker
+          queryKey={dateRangeQueryKey}
+          defaultPreset={format(
+            startOfMonth(subMonths(new Date(), 0)),
+            'MMMM yyyy',
+            {
+              locale: is
             }
-            queryKey={selectedDepartmentsQueryKey}
-          ></SelectMultiple>
-        </div>
-        <div className="flex-none">
-          <DebouncedInput
-            value={searchValue}
-            onChange={(value) => setSearchValue(value as string)}
-            name="search"
-            placeholder="Leita í lista"
-            className="w-96"
-          />
-        </div>
+          )}
+          presets={dateRangePresets}
+        />
+        <DebouncedInput
+          value={searchValue}
+          onChange={(value) => setSearchValue(value as string)}
+          name="search"
+          placeholder="Leita í lista"
+          className="w-96"
+        />
       </div>
 
       <TransactionTable
         searchValue={searchValue}
         dates={[dateRange?.from, dateRange?.to]}
-        departmentIds={
-          selectedDepartments?.map((o: MultipleSelectOption) => {
-            return o?.value;
-          }) ?? []
-        }
       />
     </div>
   );

@@ -179,6 +179,7 @@ export const getTransactionsTable = async ({
     `external_row_number,
      date,
      account_number,
+     voucher,
      description,
      amount_debit,
      statement_number,
@@ -226,6 +227,8 @@ export const getTransactionsTable = async ({
     return {
       id: t.external_row_number,
       date: t.date,
+      voucher: t.voucher,
+      statement_number: t.statement_number,
       department_name: t.department.name,
       description: t.description,
       amount_debit: t.amount_debit,

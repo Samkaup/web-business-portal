@@ -34,7 +34,6 @@ const updateDateRange = async (newDateRange: DateRange | undefined) => {
 
 export const useUpdateDateRange = (queryKey = 'dateRange') => {
   const queryClient = useQueryClient();
-
   return useMutation(updateDateRange, {
     onSuccess: () => {
       // Invalidate and refetch the date range to get the updated data

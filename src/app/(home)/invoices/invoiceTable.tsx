@@ -84,7 +84,7 @@ export default function InvoiceTable({
       header: null,
       cell: (props: any) => {
         if (props.getValue() !== '') {
-          return <InvoiceDownloadButton transactionID={props.getValue()} />;
+          return <InvoiceDownloadButton id={props.getValue()} />;
         } else {
           return <></>;
         }
