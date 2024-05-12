@@ -25,7 +25,7 @@ type TBodyProps = {
   companies: string[];
 };
 
-export async function PUT(request: NextRequest, response: NextResponse) {
+export async function PUT(request: NextRequest) {
   const supabaseRouteClient = createRouteHandlerClient<Database>({ cookies });
 
   const {

@@ -6,7 +6,7 @@ export type AppSupabaseClient = SupabaseClient<Database>;
 export type TableName = keyof Database['public']['Tables'];
 export type ViewName = keyof Database['public']['Views'];
 
-export type RowName = TableName | ViewName;
+export type RowName = TableName;
 
 export type TableRow<T extends TableName> =
   Database['public']['Tables'][T]['Row'];
