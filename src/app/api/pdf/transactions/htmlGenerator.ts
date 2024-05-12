@@ -49,7 +49,7 @@ export const generateHTML = (
                 <p>${company.city ? capitalizeFirstLetter(company.city) : ''} ${
     company.post_code ? `,${company.post_code}` : ''
   }</p>
-              </div>
+                </div>
             </div>
           </div>
           ${generateTable(ledgers, statement)}

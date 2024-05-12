@@ -38,10 +38,7 @@ export default function ({ limit = 6 }: Props) {
                   </div>
                 </div>
                 <div className="items-start">
-                  <InvoiceDownloadButton
-                    transactionID={transaction.id}
-                    btnText=""
-                  />
+                  <InvoiceDownloadButton id={transaction.id} btnText="" />
                 </div>
               </div>
             );
