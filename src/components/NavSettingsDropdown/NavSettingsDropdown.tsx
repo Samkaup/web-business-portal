@@ -31,7 +31,6 @@ export default function CompanySwitcher() {
   }
 
   const handleCompanySelect = (company: TableRow<'company'>) => {
-    console.log('Selecting company: ', company);
     setSelectedCompany(company);
   };
 

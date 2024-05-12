@@ -1,27 +1,31 @@
-import { downloadInvoicesPDF } from '@/utils/pdf';
+import { downloadTransactionsPDF } from '@/utils/pdf';
 import { DocumentIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 import { Spinner } from '../ui/Spinner/Spinner';
 import toast from 'react-hot-toast';
 
 type Props = {
-  id: string;
+  companyId: string;
+  dateFrom: Date;
+  dateTo: Date;
   btnText?: string;
 };
 
 export default function InvoiceDownloadButton({
-  id,
-  btnText = 'Reikningur'
+  companyId,
+  dateFrom,
+  dateTo,
+  btnText = 'Hreyfingaryfirlit'
 }: Props) {
   const [downloading, setDownloading] = useState<boolean>(false);
 
   const handleOnClick = () => {
     setDownloading(true);
-    downloadInvoicesPDF({ id })
+    downloadTransactionsPDF({ dateFrom, dateTo, companyId })
       .then(() => setDownloading(false))
       .catch(() => {
         toast.error(
-          'Ekki var hægt að hlaða niður reikningi. Vinsamlegast reynið aftur eða hafið samband við þjónustuver Samkaupa.'
+          'Ekki var hægt að hlaða niður yfirliti. Vinsamlegast reynið aftur eða hafið samband við þjónustuver Samkaupa.'
         );
         setDownloading(false);
       });

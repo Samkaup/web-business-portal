@@ -1,5 +1,46 @@
-export const downloadPDF = async (id: string) => {
-  const res = await fetch('/api/pdf?' + new URLSearchParams({ id }), {
+import { format } from 'date-fns';
+
+type Props = {
+  url: string;
+  identifier: string;
+};
+
+type InvoiceProps = {
+  id: string;
+};
+
+type TransactionsProps = {
+  dateFrom: Date;
+  dateTo: Date;
+  companyId: string;
+};
+export const downloadTransactionsPDF = async ({
+  dateFrom,
+  dateTo,
+  companyId
+}: TransactionsProps) => {
+  const url = `/api/pdf/transactions?dateFrom=${format(
+    dateFrom,
+    'dd-MM-yyyy'
+  )}&dateTo=${format(dateTo, 'dd-MM-yyyy')}&company=${companyId}`;
+  await downloadPDF({
+    url,
+    identifier: `hreyfingar-${format(dateFrom, 'ddMMyyyy')}-${format(
+      dateTo,
+      'ddMMyyyy'
+    )}`
+  });
+};
+export const downloadInvoicesPDF = async ({ id }: InvoiceProps) => {
+  const url = `/api/pdf/invoices?${new URLSearchParams({ id })}`;
+  await downloadPDF({
+    url,
+    identifier: `reikningur-${id}`
+  });
+};
+
+export const downloadPDF = async ({ url, identifier }: Props) => {
+  const res = await fetch(`${url}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
@@ -19,7 +60,7 @@ export const downloadPDF = async (id: string) => {
 
   const link = document.createElement('a');
   link.href = blobUrl;
-  link.setAttribute('download', `${id}.pdf`);
+  link.setAttribute('download', `${identifier}.pdf`);
   document.body.appendChild(link);
   link.click();
   link.parentNode.removeChild(link);

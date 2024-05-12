@@ -52,3 +52,8 @@ export const fuzzySearch = (objects, searchString, keys) => {
     });
   });
 };
+
+export const capitalizeFirstLetter = (word: string) => {
+  if (!word) return word; // returns the original word if it's empty or undefined
+  return word[0].toUpperCase() + word.substring(1).toLowerCase();
+};

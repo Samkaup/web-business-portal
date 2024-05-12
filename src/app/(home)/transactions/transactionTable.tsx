@@ -8,6 +8,8 @@ import { ColumnDef } from '@tanstack/react-table';
 import { formatCurrency } from '@/utils/currency/currency';
 import { DataTable } from '@/components/DataTable/DataTable';
 import { FilteredTransaction } from '@/types';
+import TransactionsDownloader from '@/components/TransactionsDownloader';
+import { useCompany } from '@/hooks/useCompany';
 
 type Props = {
   searchValue: string;
@@ -19,6 +21,7 @@ export default function TransactionTable({ searchValue, dates }: Props) {
     searchValue,
     dateRange: dates
   });
+  const { company } = useCompany();
 
   const columns: ColumnDef<FilteredTransaction>[] = [
     {
@@ -83,10 +86,22 @@ export default function TransactionTable({ searchValue, dates }: Props) {
   ];
 
   return (
-    <DataTable
-      columns={columns}
-      data={query.data ? query.data.data : []}
-      isLoading={query.isLoading}
-    />
+    <>
+      <DataTable
+        columns={columns}
+        data={query.data ? query.data.data : []}
+        isLoading={query.isLoading}
+      />
+      {query.data?.data.length > 0 && (
+        <div className="flex items-center justify-center">
+          <TransactionsDownloader
+            btnText="Sækja hreyfingaryfirlit fyrir tímabil (PDF)"
+            dateFrom={dates[0]}
+            dateTo={dates[1]}
+            companyId={company?.external_identifier}
+          />
+        </div>
+      )}
+    </>
   );
 }
