@@ -33,7 +33,7 @@ const companySchema = z.object({
     .number({
       required_error: 'Vantar kreditmörk'
     })
-    .min(1, 'Kreditmörk verður að vera hærra en 0'),
+    .optional(),
   address: z
     .string({
       required_error: 'Vantar heimilisfang'
@@ -117,20 +117,6 @@ export default function CompanyForm({ company, onCancel, onSave }: Props) {
 
         <FormField
           control={form.control}
-          name="credit_limit_amount"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Kreditmörk *</FormLabel>
-              <FormControl>
-                <TextInput {...field} placeholder="100000" type="number" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
           name="address"
           render={({ field }) => (
             <FormItem>
@@ -179,6 +165,20 @@ export default function CompanyForm({ company, onCancel, onSave }: Props) {
               <FormLabel>Heimilisfang 2</FormLabel>
               <FormControl>
                 <TextInput {...field} placeholder="Hæð 2" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="credit_limit_amount"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Kreditmörk</FormLabel>
+              <FormControl>
+                <TextInput {...field} placeholder="100000" type="number" />
               </FormControl>
               <FormMessage />
             </FormItem>
