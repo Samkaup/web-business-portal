@@ -129,7 +129,6 @@ export default function UserCreate({ onCancel, onSave }: Props) {
   const companyNeedsUpdate = (company: TableRow<'company'>) => {
     return (
       company.name === null ||
-      company.credit_limit_amount === null ||
       company.address === null ||
       company.city === null ||
       company.post_code === null
